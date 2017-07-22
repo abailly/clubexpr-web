@@ -18,10 +18,11 @@
   [src]
   (let [react-mathjax (aget js/window "deps" "react-mathjax")
         ctx (aget react-mathjax "Context")
-        node (aget react-mathjax "Node")]
-    [:div
-      [:> ctx [:> node {:inline true} src]]]))
-
+        node (aget react-mathjax "Node")
+        clubexpr (aget js/window "deps" "clubexpr")
+        renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
+    [:> ctx [:> node {:inline true} (renderLispAsLaTeX src)]]))
+ 
 (defn main-panel []
   (let [name @(rf/subscribe [:attempt-code])]
     (fn []
