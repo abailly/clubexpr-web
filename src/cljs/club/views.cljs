@@ -4,4 +4,6 @@
 (defn main-panel []
   (let [name (re-frame/subscribe [:name])]
     (fn []
-      [:div "Bonjour " @name])))
+      [:div
+        [:h1 "Club des Expressions"]
+        [:p "Bonjour " @name]])))
