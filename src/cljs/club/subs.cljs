@@ -3,6 +3,6 @@
   (:require [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
- :name
+ :attempt-code
  (fn [db]
-   (:name db)))
+   (:attempt-code db)))
