@@ -1,6 +1,7 @@
 (ns club.views
   (:require [re-frame.core :as rf]
             [re-frame.db :refer [app-db]]
+            [webpack.bundle]
             [club.config :as config]
             [cljs.pprint :refer [pprint]]))
 
@@ -14,8 +15,12 @@
                                       (-> % .-target .-value)])}]])
 
 (defn rendition
-  []
-  [:div @(rf/subscribe [:attempt-code])])
+  [src]
+  (let [react-mathjax (aget js/window "deps" "react-mathjax")
+        ctx (aget react-mathjax "Context")
+        node (aget react-mathjax "Node")]
+    [:div
+      [:> ctx [:> node {:inline true} src]]]))
 
 (defn main-panel []
   (let [name @(rf/subscribe [:attempt-code])]
@@ -25,4 +30,4 @@
         (when config/debug? [:pre (with-out-str (pprint @app-db))])
         [:p "Bonjour, veuillez taper du Code Club ci-dessous."]
         [src-input]
-        [rendition]])))
+        [rendition @(rf/subscribe [:attempt-code])]])))
