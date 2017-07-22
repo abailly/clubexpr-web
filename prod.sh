@@ -1,5 +1,5 @@
 git co gh-pages
-git merge master
+git merge master --no-edit
 lein clean
 lein cljsbuild once min
 cp resources/public/js/compiled/app.js resources/public/js/compiled/prod.js
