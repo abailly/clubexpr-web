@@ -1,6 +1,7 @@
 (ns club.views
   (:require [re-frame.core :as rf]
             [re-frame.db :refer [app-db]]
+            [goog.object :refer [getValueByKeys]]
             [webpack.bundle]
             [club.config :as config]
             [cljs.pprint :refer [pprint]]))
@@ -16,10 +17,10 @@
 
 (defn rendition
   [src]
-  (let [react-mathjax (aget js/window "deps" "react-mathjax")
-        ctx (aget react-mathjax "Context")
-        node (aget react-mathjax "Node")
-        clubexpr (aget js/window "deps" "clubexpr")
+  (let [react-mathjax (getValueByKeys js/window "deps" "react-mathjax")
+        ctx (getValueByKeys react-mathjax "Context")
+        node (getValueByKeys react-mathjax "Node")
+        clubexpr (getValueByKeys js/window "deps" "clubexpr")
         renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
     [:> ctx [:> node {:inline true} (renderLispAsLaTeX src)]]))
  
