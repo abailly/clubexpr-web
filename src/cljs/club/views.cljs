@@ -6,10 +6,13 @@
             [club.config :as config]
             [cljs.pprint :refer [pprint]]))
 
+; Placeholder for future translation mechanism
+(defn t [[txt]] txt)
+
 (defn src-input
   []
   [:div
-   "Code Club: "
+   (t ["Code Club: "])
    [:input {:type "text"
             :value @(rf/subscribe [:attempt-code])
             :on-change #(rf/dispatch [:user-code-club-src-change
@@ -28,8 +31,8 @@
   (let [name @(rf/subscribe [:attempt-code])]
     (fn []
       [:div
-        [:h1 "Club des Expressions"]
+        [:h1 (t ["Club des Expressions"])]
         (when config/debug? [:pre (with-out-str (pprint @app-db))])
-        [:p "Bonjour, veuillez taper du Code Club ci-dessous."]
+        [:p (t ["Bonjour, veuillez taper du Code Club ci-dessous."])]
         [src-input]
         [rendition @(rf/subscribe [:attempt-code])]])))
