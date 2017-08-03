@@ -1,8 +1,9 @@
 window.deps = {
     'react' : require('react'),
     'react-dom' : require('react-dom'),
+    'react-bootstrap' : require('react-bootstrap'),
     'react-mathjax' : require('react-mathjax'),
-    'clubexpr' : require('clubexpr'),
+    'clubexpr' : require('clubexpr')
 };
 
 window.React = window.deps['react'];
