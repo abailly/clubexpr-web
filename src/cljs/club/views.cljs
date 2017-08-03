@@ -1,5 +1,7 @@
 (ns club.views
   (:require [re-frame.core :as rf]
+            [taoensso.tempura :as tempura
+                              :refer [tr load-resource-at-compile-time]]
             [re-frame.db :refer [app-db]]
             [goog.object :refer [getValueByKeys]]
             [webpack.bundle]
@@ -8,8 +10,34 @@
             [club.db]
             [cljs.pprint :refer [pprint]]))
 
-; Placeholder for future translation mechanism
-(defn t [[txt]] txt)
+(load-resource-at-compile-time "fichier.edn")
+(def my-tempura-dictionary
+  {:en-GB ; Locale
+   {:missing ":en-GB missing text" ; Fallback for missing resources
+    :example ; You can nest ids if you like
+    {:greet "Good day %1!" ; Note Clojure fn-style %1 args
+     }}
+   :en ; A second locale
+   {:missing ":en missing text"
+    :example
+    {:greet "Hello %1"
+     :farewell "Goodbye %1"
+     :foo "foo"
+     :bar "bar"
+     :bar-copy :en.example/bar ; Can alias entries
+     :baz [:div "This is a **Hiccup** form"]
+
+     ;; Can use arbitrary fns as resources
+     :qux (fn [[arg1 arg2]] (str arg1 " and " arg2))}
+
+    :example-copy :en/example ; Can alias entire subtrees
+
+    :import-example
+    {:__load-resource ; Inline edn content loaded from disk/resource
+     "resources/i18n.clj"}}})
+
+(def opts {:dict my-tempura-dictionary})
+(def t (partial tr opts [:en]))
 
 (defn bs
   ([component]
