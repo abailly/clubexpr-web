@@ -9,6 +9,11 @@
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
 
+(def react-bootstrap (getValueByKeys js/window "deps" "react-bootstrap"))
+(def bs-grid (getValueByKeys react-bootstrap "Grid"))
+(def bs-row  (getValueByKeys react-bootstrap "Row"))
+(def bs-col  (getValueByKeys react-bootstrap "Col"))
+
 (defn src-input
   []
   [:div
@@ -29,9 +34,16 @@
  
 (defn main-panel []
   (fn []
-    [:div
-      [:h1 (t ["Club des Expressions"])]
-      (when config/debug? [:pre (with-out-str (pprint @app-db))])
-      [:p (t ["Bonjour, veuillez taper du Code Club ci-dessous."])]
-      [src-input]
-      [rendition @(rf/subscribe [:attempt-code])]]))
+    [:div.container-fluid
+      (when (and true config/debug?) [:pre (with-out-str (pprint @app-db))])
+      [:> bs-grid
+        [:> bs-row
+          [:> bs-col {:xs 6 :md 6}
+            [:h1 (t ["Club des Expressions"])]
+            [:p (t ["Bonjour, veuillez taper du Code Club ci-dessous."])]
+            [src-input]
+            [rendition @(rf/subscribe [:attempt-code])]]
+          [:> bs-col {:xs 6 :md 6}
+            [:h2 "Instructions et commentaires"]
+            [:p "Pour l’instant rien."]]
+      ]]]))
