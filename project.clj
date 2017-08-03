@@ -13,7 +13,9 @@
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
-  :figwheel {:css-dirs ["resources/public/css"]}
+  :figwheel {:css-dirs ["resources/public/css"]
+             :server-port 3451
+             :repl false}
 
   :profiles
   {:dev
