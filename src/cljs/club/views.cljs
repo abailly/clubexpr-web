@@ -28,11 +28,10 @@
     [:> ctx [:> node {:inline true} (renderLispAsLaTeX src)]]))
  
 (defn main-panel []
-  (let [name @(rf/subscribe [:attempt-code])]
-    (fn []
-      [:div
-        [:h1 (t ["Club des Expressions"])]
-        (when config/debug? [:pre (with-out-str (pprint @app-db))])
-        [:p (t ["Bonjour, veuillez taper du Code Club ci-dessous."])]
-        [src-input]
-        [rendition @(rf/subscribe [:attempt-code])]])))
+  (fn []
+    [:div
+      [:h1 (t ["Club des Expressions"])]
+      (when config/debug? [:pre (with-out-str (pprint @app-db))])
+      [:p (t ["Bonjour, veuillez taper du Code Club ci-dessous."])]
+      [src-input]
+      [rendition @(rf/subscribe [:attempt-code])]]))
