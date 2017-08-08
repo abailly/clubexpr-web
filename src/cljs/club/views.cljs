@@ -44,6 +44,6 @@
             [src-input]
             [rendition @(rf/subscribe [:attempt-code])]]
           [:> bs-col {:xs 6 :md 6}
-            [:h2 "Instructions et commentaires"]
-            [:p "Pour l’instant rien."]]
+            [:h2 (t ["Instructions et commentaires"])]
+            [:p (t ["Pour l’instant rien."])]]
       ]]]))
