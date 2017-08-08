@@ -2,6 +2,7 @@
   (:require
     [re-frame.core :as re-frame]
     [club.db]
+    [club.utils :refer [parse-url]]
     [re-frame.core :refer [reg-event-db
                            after debug]]
     [cljs.spec     :as s]))
@@ -31,3 +32,11 @@
   [check-spec-interceptor]
   (fn  [_ _]
     club.db/default-db))
+
+(re-frame/reg-event-db
+  :nav
+  (fn [db _]
+    (if (empty? db) db  ; do not alter app-db on loading the page
+      (let [parsed-url (parse-url (-> js/window .-location .-href))
+            page (:page parsed-url)]
+            (assoc db :current-page page)))))

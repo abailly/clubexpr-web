@@ -32,10 +32,24 @@
         renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
     [:> ctx [:> node {:inline true} (renderLispAsLaTeX src)]]))
  
+(defn nav-controls
+  []
+  (let [page @(rf/subscribe [:current-page])]
+    [:div
+     [:ul.list-inline
+      [:li [:a {:href "#/"
+                :class (str "btn" (when (= page :landing) " active"))}
+            (t ["Accueil"])]]
+      [:li [:a {:href "#/profile"
+                :class (str "btn" (when (= page :profile) " active"))}
+            (t ["Profil"])]]
+     ]]))
+
 (defn main-panel []
   (fn []
     [:div.container-fluid
       (when (and true config/debug?) [:pre (with-out-str (pprint @app-db))])
+      [:div.pull-right [nav-controls]]
       [:> bs-grid
         [:> bs-row
           [:> bs-col {:xs 6 :md 6}

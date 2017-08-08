@@ -1,16 +1,25 @@
 (ns club.core
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
+            [goog.events :as events]
             [club.events]
             [club.subs]
             [club.views :as views]
-            [club.config :as config]))
-
+            [club.config :as config])
+  (:import  [goog History]
+            [goog.history EventType]))
 
 (defn dev-setup []
   (when config/debug?
     (enable-console-print!)
     (println "dev mode")))
+
+; Install the navigation: listen to NAVIGATE events and dispatch to :nav
+(def history
+  (doto (History.)
+    (events/listen EventType.NAVIGATE
+                   (fn [event] (re-frame/dispatch [:nav (.-token event)])))
+    (.setEnabled true)))
 
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
