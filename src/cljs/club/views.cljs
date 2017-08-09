@@ -49,34 +49,39 @@
           ]]]]
      ))
 
+(defn page-landing
+  []
+  [:div.container
+    [:div.jumbotron
+      [:h2 (t ["Nouveau venu ?"])]
+      [:p (t ["Bonjour, tapez du Code Club ci-dessous pour former une expression mathématique."])]
+      [:p (t ["Parmi les commandes disponibles, il y a :"])
+          [:code "Somme"] ", "
+          [:code "Diff"] ", "
+          [:code "Produit"] ", "
+          [:code "Produit"] ", "
+          [:code "Carre"] ", "
+          [:code "Racine"] "."]
+      [src-input]
+      [rendition @(rf/subscribe [:attempt-code])]]
+    [:> bs-grid
+      [:> bs-row
+        [:h2 (t ["Qu’est-ce que le Club des Expressions ?"])]
+        [:> bs-col {:xs 6 :md 6}
+          [:h3 (t ["Pour les enseignants"])]
+          [:p (t ["Le Club des Expressions vous permet de faire travailler vos élèves sur le sens et la structure des expressions mathématiques."])]
+          [:p (t ["Vous vous créez un compte, vous faites créer un compte à vos élèves, et vous pourrez leur attribuer des séries d’expressions à reconstituer."])]]
+        [:> bs-col {:xs 6 :md 6}
+          [:h3 (t ["Pour les élèves"])]
+          [:p (t ["Le Club des Expressions vous permet de travailler sur le sens et la structure des expressions mathématiques."])]
+          [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]
+      ]]])
+
 (defn main-panel []
   (fn []
     [:div.container-fluid
       [nav-bar]
-      [:div.jumbotron
-        [:h2 (t ["Nouveau venu ?"])]
-        [:p (t ["Bonjour, tapez du Code Club ci-dessous pour former une expression mathématique."])]
-        [:p (t ["Parmi les commandes disponibles, il y a :"])
-            [:code "Somme"] ", "
-            [:code "Diff"] ", "
-            [:code "Produit"] ", "
-            [:code "Produit"] ", "
-            [:code "Carre"] ", "
-            [:code "Racine"] "."]
-        [src-input]
-        [rendition @(rf/subscribe [:attempt-code])]]
-      [:> bs-grid
-        [:> bs-row
-          [:h2 (t ["Qu’est-ce que le Club des Expressions ?"])]
-          [:> bs-col {:xs 6 :md 6}
-            [:h3 (t ["Pour les enseignants"])]
-            [:p (t ["Le Club des Expressions vous permet de faire travailler vos élèves sur le sens et la structure des expressions mathématiques."])]
-            [:p (t ["Vous vous créez un compte, vous faites créer un compte à vos élèves, et vous pourrez leur attribuer des séries d’expressions à reconstituer."])]]
-          [:> bs-col {:xs 6 :md 6}
-            [:h3 (t ["Pour les élèves"])]
-            [:p (t ["Le Club des Expressions vous permet de travailler sur le sens et la structure des expressions mathématiques."])]
-            [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]
-        ]]
+      [page-landing]
       (when (and false config/debug?) [:pre {:style {:bottom "0px"}}
                                            (with-out-str (pprint @app-db))])
     ]
