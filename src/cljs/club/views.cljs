@@ -77,11 +77,21 @@
           [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]
       ]]])
 
+(defn page-profile
+  []
+  [:div.container
+    [:div.jumbotron
+      [:h2 (t ["Votre profil"])]
+    ]
+  ])
+
 (defn main-panel []
   (fn []
     [:div.container-fluid
       [nav-bar]
-      [page-landing]
+      (case @(rf/subscribe [:current-page])
+        :profile [page-profile]
+        :landing [page-landing])
       (when (and false config/debug?) [:pre {:style {:bottom "0px"}}
                                            (with-out-str (pprint @app-db))])
     ]
