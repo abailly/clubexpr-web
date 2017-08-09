@@ -7,4 +7,4 @@
 
 (def default-db
   {:current-page :landing
-   :attempt-code "(Somme 2 2)"})
+   :attempt-code "(Somme 1 (Produit 2 x))"})

@@ -30,34 +30,54 @@
         node (getValueByKeys react-mathjax "Node")
         clubexpr (getValueByKeys js/window "deps" "clubexpr")
         renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
-    [:> ctx [:> node {:inline true} (renderLispAsLaTeX src)]]))
+    [:> ctx [:> node (renderLispAsLaTeX src)]]))
  
-(defn nav-controls
+(defn nav-bar
   []
-  (let [page @(rf/subscribe [:current-page])]
-    [:div
-     [:ul.list-inline
-      [:li [:a {:href "#/"
-                :class (str "btn" (when (= page :landing) " active"))}
-            (t ["Accueil"])]]
-      [:li [:a {:href "#/profile"
-                :class (str "btn" (when (= page :profile) " active"))}
-            (t ["Profil"])]]
-     ]]))
+  (let [page @(rf/subscribe [:current-page])
+        active #(if (= %1 %2) "active" "")]
+    [:nav.navbar.navbar-default.navbar-fixed-top
+      [:div.container
+        [:div.navbar-header
+          [:a.navbar-brand {:href "#/"} (t ["Club des Expressions"])]]
+        [:div {:class "navbar-collapse collapse"}
+          [:ul {:class "nav navbar-nav"}
+           [:li {:class (active page :landing)}
+             [:a {:href "#/"} (t ["Accueil"])]]
+           [:li {:class (active page :profile)}
+             [:a {:href "#/profile"} (t ["Profil"])]]
+          ]]]]
+     ))
 
 (defn main-panel []
   (fn []
     [:div.container-fluid
-      (when (and true config/debug?) [:pre (with-out-str (pprint @app-db))])
-      [:div.pull-right [nav-controls]]
+      [nav-bar]
+      [:div.jumbotron
+        [:h2 (t ["Nouveau venu ?"])]
+        [:p (t ["Bonjour, tapez du Code Club ci-dessous pour former une expression mathématique."])]
+        [:p (t ["Parmi les commandes disponibles, il y a :"])
+            [:code "Somme"] ", "
+            [:code "Diff"] ", "
+            [:code "Produit"] ", "
+            [:code "Produit"] ", "
+            [:code "Carre"] ", "
+            [:code "Racine"] "."]
+        [src-input]
+        [rendition @(rf/subscribe [:attempt-code])]]
       [:> bs-grid
         [:> bs-row
+          [:h2 (t ["Qu’est-ce que le Club des Expressions ?"])]
           [:> bs-col {:xs 6 :md 6}
-            [:h1 (t ["Club des Expressions"])]
-            [:p (t ["Bonjour, veuillez taper du Code Club ci-dessous."])]
-            [src-input]
-            [rendition @(rf/subscribe [:attempt-code])]]
+            [:h3 (t ["Pour les enseignants"])]
+            [:p (t ["Le Club des Expressions vous permet de faire travailler vos élèves sur le sens et la structure des expressions mathématiques."])]
+            [:p (t ["Vous vous créez un compte, vous faites créer un compte à vos élèves, et vous pourrez leur attribuer des séries d’expressions à reconstituer."])]]
           [:> bs-col {:xs 6 :md 6}
-            [:h2 (t ["Instructions et commentaires"])]
-            [:p (t ["Pour l’instant rien."])]]
-      ]]]))
+            [:h3 (t ["Pour les élèves"])]
+            [:p (t ["Le Club des Expressions vous permet de travailler sur le sens et la structure des expressions mathématiques."])]
+            [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]
+        ]]
+      (when (and false config/debug?) [:pre {:style {:bottom "0px"}}
+                                           (with-out-str (pprint @app-db))])
+    ]
+    ))
