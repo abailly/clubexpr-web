@@ -16,12 +16,14 @@
 
 (defn src-input
   []
-  [:div
-   (t ["Code Club: "])
-   [:input {:type "text"
-            :value @(rf/subscribe [:attempt-code])
-            :on-change #(rf/dispatch [:user-code-club-src-change
-                                      (-> % .-target .-value)])}]])
+  [:form {:role "form"}
+    [:div.form-group
+      [:label {:for "codeclub"} (t ["Code Club: "])]
+        [:input#codeclub {:type "text"
+                 :class "form-control"
+                 :value @(rf/subscribe [:attempt-code])
+                 :on-change #(rf/dispatch [:user-code-club-src-change
+                                          (-> % .-target .-value)])}]]])
 
 (defn rendition
   [src]
