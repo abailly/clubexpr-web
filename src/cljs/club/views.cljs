@@ -36,12 +36,12 @@
   []
   (let [page @(rf/subscribe [:current-page])
         active #(if (= %1 %2) "active" "")]
-    [:nav.navbar.navbar-default.navbar-fixed-top
+    [:nav.navbar.navbar-default
       [:div.container
         [:div.navbar-header
           [:a.navbar-brand {:href "#/"} (t ["Club des Expressions"])]]
-        [:div {:class "navbar-collapse collapse"}
-          [:ul {:class "nav navbar-nav"}
+        [:div#navbar.navbar-collapse
+          [:ul.nav.navbar-nav
            [:li {:class (active page :landing)}
              [:a {:href "#/"} (t ["Accueil"])]]
            [:li {:class (active page :profile)}
@@ -51,7 +51,7 @@
 
 (defn page-landing
   []
-  [:div.container
+  [:div
     [:div.jumbotron
       [:h2 (t ["Nouveau venu ?"])]
       [:p (t ["Bonjour, tapez du Code Club ci-dessous pour former une expression mathématique."])]
@@ -79,7 +79,7 @@
 
 (defn page-profile
   []
-  [:div.container
+  [:div
     [:div.jumbotron
       [:h2 (t ["Votre profil"])]
     ]
@@ -87,7 +87,7 @@
 
 (defn main-panel []
   (fn []
-    [:div.container-fluid
+    [:div.container
       [nav-bar]
       (case @(rf/subscribe [:current-page])
         :profile [page-profile]
