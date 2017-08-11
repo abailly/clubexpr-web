@@ -9,10 +9,9 @@
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
 
-(def react-bootstrap (getValueByKeys js/window "deps" "react-bootstrap"))
-(def Grid (getValueByKeys react-bootstrap "Grid"))
-(def Row  (getValueByKeys react-bootstrap "Row"))
-(def Col  (getValueByKeys react-bootstrap "Col"))
+
+(defn bs [component]
+  (getValueByKeys js/window "deps" "react-bootstrap" (str component)))
 
 (defn src-input
   []
@@ -75,14 +74,14 @@
           [:code "Racine"] "."]
       [src-input]
       [rendition @(rf/subscribe [:attempt-code])]]
-    [:> Grid
-      [:> Row
+    [:> (bs 'Grid)
+      [:> (bs 'Row)
         [:h1 (t ["Qu’est-ce que le Club des Expressions ?"])]
-        [:> Col {:xs 6 :md 6}
+        [:> (bs 'Col) {:xs 6 :md 6}
           [:h2 (t ["Pour les enseignants"])]
           [:p (t ["Le Club des Expressions vous permet de faire travailler vos élèves sur le sens et la structure des expressions mathématiques."])]
           [:p (t ["Créez votre compte, faites créer un compte à vos élèves, et vous pourrez leur attribuer des séries d’expressions à reconstituer."])]]
-        [:> Col {:xs 6 :md 6}
+        [:> (bs 'Col) {:xs 6 :md 6}
           [:h2 (t ["Pour les élèves"])]
           [:p (t ["Le Club des Expressions vous permet de travailler sur le sens et la structure des expressions mathématiques."])]
           [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Pour cela, créez votre compte."])]
