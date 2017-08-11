@@ -10,8 +10,11 @@
 (defn t [[txt]] txt)
 
 
-(defn bs [component]
-  (getValueByKeys js/window "deps" "react-bootstrap" (str component)))
+(defn bs
+  ([component]
+   (getValueByKeys js/window "deps" "react-bootstrap" (str component)))
+  ([c subc]
+   (getValueByKeys js/window "deps" "react-bootstrap" (str c) (str subc))))
 
 (defn src-input
   []
