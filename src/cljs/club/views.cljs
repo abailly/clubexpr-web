@@ -40,26 +40,21 @@
   []
   (let [page @(rf/subscribe [:current-page])
         active #(if (= %1 %2) "active" "")]
-    [:nav.navbar.navbar-default
-      [:div.container
-        [:div.navbar-header
-          [:button.navbar-toggle {:type "button"
-                                  :data-toggle "collapse"
-                                  :data-target "#navbar"
-                                  :aria-expanded "false"
-                                  :aria-controls "navbar"}
-            [:span.sr-only "Toggle navigation"]
-            [:span.icon-bar]
-            [:span.icon-bar]
-            [:span.icon-bar]]
-          [:a.navbar-brand {:href "#/"} (t ["Club des Expressions"])]]
-        [:div#navbar.navbar-collapse
-          [:ul.nav.navbar-nav
-           [:li {:class (active page :landing)}
-             [:a {:href "#/"} (t ["Accueil"])]]
-           [:li {:class (active page :profile)}
-             [:a {:href "#/profile"} (t ["Profil"])]]
-          ]]]]
+    [:> (bs 'Navbar)
+      [:> (bs 'Navbar 'Header)
+        [:> (bs 'Navbar 'Brand)
+          [:a {:href "/"} (t ["Club des Expressions"])]]
+        [:> (bs 'Navbar 'Toggle)]]
+      [:> (bs 'Navbar 'Collapse)
+        [:> (bs 'Nav)
+          [:> (bs 'NavItem) {:eventKey 1
+                             :href "#/"
+                             :class (active page :landing)}
+            [:a {} (t ["Accueil"])]]
+          [:> (bs 'NavItem) {:eventKey 2
+                             :href "#/profile"
+                             :class (active page :profile)}
+            [:a {} (t ["Profil"])]]]]]
      ))
 
 (defn page-landing
