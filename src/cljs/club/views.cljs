@@ -34,7 +34,8 @@
         node (getValueByKeys react-mathjax "Node")
         clubexpr (getValueByKeys js/window "deps" "clubexpr")
         renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
-    [:> ctx [:> node (renderLispAsLaTeX src)]]))
+    [:div {:style {:min-height "2em"}}
+      [:> ctx [:> node (renderLispAsLaTeX src)]]]))
  
 (defn nav-bar
   []
