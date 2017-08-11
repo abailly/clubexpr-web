@@ -41,6 +41,15 @@
     [:nav.navbar.navbar-default
       [:div.container
         [:div.navbar-header
+          [:button.navbar-toggle {:type "button"
+                                  :data-toggle "collapse"
+                                  :data-target "#navbar"
+                                  :aria-expanded "false"
+                                  :aria-controls "navbar"}
+            [:span.sr-only "Toggle navigation"]
+            [:span.icon-bar]
+            [:span.icon-bar]
+            [:span.icon-bar]]
           [:a.navbar-brand {:href "#/"} (t ["Club des Expressions"])]]
         [:div#navbar.navbar-collapse
           [:ul.nav.navbar-nav
