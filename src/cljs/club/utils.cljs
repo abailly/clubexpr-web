@@ -13,4 +13,17 @@
                 (str/split after-qmark #"(&|=)"))
         query-params (keywordize-keys (apply hash-map array))
         ]
-      {:page page}))
+      {:page page
+       :query-params query-params}))
+
+(defn get-url-all
+  []
+  (-> js/window .-location .-href))
+
+(defn get-url-root
+  []
+  (let [hostname (-> js/window .-location .-hostname)
+        port (-> js/window .-location .-port)]
+    (if (empty? port)
+      hostname
+      (str hostname ":" port "/"))))

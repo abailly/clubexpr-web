@@ -55,7 +55,15 @@
           [:> (bs 'NavItem) {:eventKey 2
                              :href "#/profile"
                              :class (active page :profile)}
-            [:a {} (t ["Profil"])]]]]]
+            [:a {} (t ["Profil"])]]]
+        [:> (bs 'Nav) {:pullRight true}
+          [:> (bs 'NavItem) {:eventKey 1
+                             :href "#access_token=vz5yciAapGMaZj2f&expires_in=86400&id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1qZ3dOVFZGUkVRMU9FTkNNVEV6UWpreVJVVkVRa1EwUmpGRlJVVkZPVVZGUXpjelJFWTJSQSJ9.eyJpc3MiOiJodHRwczovL2NsdWJleHByLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDEwNDY3NjMzMjUwNjQ4NDkwOTAzNSIsImF1ZCI6IlFLcTQ4ak5acVE4NFZRQUxTWkVBQmt1VW5NNzR1SFVhIiwiZXhwIjoxNTAyNTU5NDM4LCJpYXQiOjE1MDI1MjM0MzgsIm5vbmNlIjoiUGFHUn5GcC02a2F1NnV4RFI4TU8xeW1hNUp1OTJJUi0iLCJhdF9oYXNoIjoickNDQ09oN2w0Q2NmbFM3MXRGRHR0USJ9.obNRi9dlaL6mB-06OHyr9As5Ny-2PPC6QZGNPm0nLE0nv174VaUK3NhLpVKxvBAtggIcelK0IqVf7v4Wm6tOoCl4FcO8tUKCbz3oWqY5_pBAoWmW2mOVIJeEa9nMixMZdJgZ0U_F1d-jxC4ueLRTTNom0eY8e4gHICcfeh50al3qCjgCIQnvxWrKXDZOuBAM3r7pk5ofHawEWxI-2U9UxVlJwMeQER2yceb_i7zJ2d2SCyeeHc5SA3XogFpYYtSrSudBfT9h-53cK56xhvRksmf9kS0YATqVB0_ZYiC8vqDnmbBnWpbGuneSQm4HZWi22uKIQ1SX7Snnr_mfUvjYww&token_type=Bearer&state=TAaUZxkG6LpdcyTaRScVk8SjUrxiKRMa"}
+            (t ["Direct Token"])]
+          [:> (bs 'NavItem) {:eventKey 1
+                             :on-click #(rf/dispatch [:login])
+                             :href "#/"}
+            (t ["Login"])]]]]
      ))
 
 (defn page-landing

@@ -1,8 +1,9 @@
 (ns club.events
   (:require
     [re-frame.core :as rf]
+    [goog.object :refer [getValueByKeys]]
     [club.db]
-    [club.utils :refer [parse-url]]
+    [club.utils :refer [parse-url get-url-all get-url-root]]
     [cljs.spec     :as s]))
 
 
@@ -19,6 +20,25 @@
 
 ;; Event Handlers
 
+(rf/reg-event-fx
+  :login
+  (fn []
+    {:login nil}))
+
+(def webauth
+  (let [auth0 (getValueByKeys js/window "deps" "auth0")
+        opts (clj->js {:domain "clubexpr.eu.auth0.com"
+                       :clientID "QKq48jNZqQ84VQALSZEABkuUnM74uHUa"
+                       :responseType "token id_token"
+                       :redirectUri (get-url-root)
+                       })]
+    (new auth0.WebAuth opts)))
+
+(rf/reg-fx
+  :login
+  (fn [_]
+    (.authorize webauth)))
+
 (rf/reg-event-db
   :user-code-club-src-change
   [check-spec-interceptor]
@@ -31,10 +51,21 @@
   (fn  [_ _]
     club.db/default-db))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   :nav
-  (fn [db _]
+  (fn [{:keys [db]}  _]
     (if (empty? db) db  ; do not alter app-db on loading the page
-      (let [parsed-url (parse-url (-> js/window .-location .-href))
-            page (:page parsed-url)]
-            (assoc db :current-page page)))))
+      (let [parsed-url (parse-url (get-url-all))
+            page (:page parsed-url)
+            query-params (:query-params parsed-url)
+            new-db (assoc db :current-page page)]
+        {:db new-db
+         :auth query-params
+         }))))
+
+(rf/reg-fx
+  :auth
+  (fn [query-params]
+    (println "query-params:")
+    (println query-params)))
+
