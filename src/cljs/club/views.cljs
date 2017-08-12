@@ -10,7 +10,6 @@
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
 
-
 (defn bs
   ([component]
    (getValueByKeys js/window "deps" "react-bootstrap" (str component)))
