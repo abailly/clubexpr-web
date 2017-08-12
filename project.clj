@@ -9,8 +9,6 @@
 
   :min-lein-version "2.5.3"
 
-  :source-paths ["src/clj"]
-
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
   :figwheel {:css-dirs ["resources/public/css"]
@@ -29,7 +27,7 @@
    [{:id           "dev"
      :source-paths ["src/cljs"]
      :figwheel     {:on-jsload "club.core/mount-root"}
-     :compiler     {:main                 club.core
+     :compiler     {:main club.core
                     :foreign-libs
                       [{:file "public/js/bundle.js"
                         :provides ["cljsjs.react" "cljsjs.react.dom" "webpack.bundle"]}]
@@ -43,7 +41,7 @@
 
     {:id           "min"
      :source-paths ["src/cljs"]
-     :compiler     {:main            club.core
+     :compiler     {:main club.core
                     :foreign-libs
                       [{:file "public/js/bundle.js"
                         :provides ["cljsjs.react" "cljsjs.react.dom" "webpack.bundle"]}]
