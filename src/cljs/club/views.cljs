@@ -19,13 +19,17 @@
 (defn src-input
   []
   [:form {:role "form"}
-    [:div.form-group
-      [:label {:for "codeclub"} (t ["Code Club: "])]
-        [:input#codeclub {:type "text"
-                 :class "form-control"
-                 :value @(rf/subscribe [:attempt-code])
-                 :on-change #(rf/dispatch [:user-code-club-src-change
-                                          (-> % .-target .-value)])}]]])
+    [:> (bs 'FormGroup) {:controlId "formBasicText"
+                         :validationState nil} ; "success" "warning" "success"
+      [:> (bs 'ControlLabel) (t ["Code Club: "])]
+      [:> (bs 'FormControl) {:type "text"
+                             :value @(rf/subscribe [:attempt-code])
+                             :placeholder "(Somme 1 2)"
+                             :on-change #(rf/dispatch
+                                           [:user-code-club-src-change
+                                            (-> % .-target .-value)])}]
+      [:> (bs 'FormControl 'Feedback)]
+      [:> (bs 'HelpBlock) (t ["Taper du Code Club"])]]])
 
 (defn rendition
   [src]
