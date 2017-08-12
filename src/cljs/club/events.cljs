@@ -3,7 +3,7 @@
     [re-frame.core :as rf]
     [goog.object :refer [getValueByKeys]]
     [club.db]
-    [club.utils :refer [parse-url get-url-all get-url-root]]
+    [club.utils :refer [parse-url get-url-all! get-url-root!]]
     [cljs.spec     :as s]))
 
 
@@ -30,7 +30,7 @@
         opts (clj->js {:domain "clubexpr.eu.auth0.com"
                        :clientID "QKq48jNZqQ84VQALSZEABkuUnM74uHUa"
                        :responseType "token id_token"
-                       :redirectUri (get-url-root)
+                       :redirectUri (get-url-root!)
                        })]
     (new auth0.WebAuth opts)))
 
@@ -55,7 +55,7 @@
   :nav
   (fn [{:keys [db]}  _]
     (if (empty? db) db  ; do not alter app-db on loading the page
-      (let [parsed-url (parse-url (get-url-all))
+      (let [parsed-url (parse-url (get-url-all!))
             page (:page parsed-url)
             query-params (:query-params parsed-url)
             new-db (assoc db :current-page page)]

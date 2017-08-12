@@ -16,11 +16,11 @@
       {:page page
        :query-params query-params}))
 
-(defn get-url-all
+(defn get-url-all!
   []
   (-> js/window .-location .-href))
 
-(defn get-url-root
+(defn get-url-root!
   []
   (let [hostname (-> js/window .-location .-hostname)
         port (-> js/window .-location .-port)]
