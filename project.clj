@@ -1,11 +1,14 @@
 (defproject club "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.229"]
+                 [org.clojure/clojurescript "1.9.854"]
                  [reagent  "0.6.0" :exclusions [cljsjs/react
                                                 cljsjs/react-dom]]
                  [re-frame "0.9.4"]]
 
-  :plugins [[lein-cljsbuild "1.1.4"]]
+  :plugins [[lein-cljsbuild "1.1.7"]]
+
+  ;:plugins [[lein-figwheel "0.5.12"]
+  ;          [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]]
 
   :min-lein-version "2.5.3"
 
