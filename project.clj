@@ -5,7 +5,8 @@
                                                 cljsjs/react-dom]]
                  [re-frame "0.9.4"]]
 
-  :plugins [[lein-cljsbuild "1.1.4"]]
+  :plugins [[lein-cljsbuild "1.1.4"]
+            [lein-doo "0.1.7"]]
 
   :min-lein-version "2.5.3"
 
@@ -14,6 +15,12 @@
   :figwheel {:css-dirs ["resources/public/css"]
              :server-port 3451
              :repl true}
+
+  :doo {:build "test"
+        :paths {:slimer "./node_modules/.bin/slimerjs"}
+        :alias {:default [:slimer]
+                :browsers [:chrome :firefox]
+                :all [:browsers :headless]}}
 
   :profiles
   {:dev
@@ -50,7 +57,10 @@
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}
 
-
+    {:id           "test"
+     :source-paths ["src" "test"]
+     :compiler     {:main club.runner
+                    :output-to       "resources/public/js/compiled/testable.js"
+                    :optimizations   :none}}
     ]}
-
   )

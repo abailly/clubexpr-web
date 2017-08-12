@@ -5,7 +5,8 @@
     "build": "webpack -p"
   },
   "devDependencies": {
-    "webpack": "3.3.0"
+    "webpack": "3.3.0",
+    "slimerjs": "0.10.3"
   },
   "dependencies": {
     "react": "15.6.1",
