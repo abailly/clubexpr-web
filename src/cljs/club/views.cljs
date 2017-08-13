@@ -23,12 +23,12 @@
     [:> (bs 'FormGroup) {:controlId "formBasicText"
                          :validationState nil} ; "success" "warning" "success"
       [:> (bs 'ControlLabel) (t ["Code Club: "])]
-      [:> (FormControlFixed {:type "text"
-                             :value @(rf/subscribe [:attempt-code])
-                             :placeholder "(Somme 1 2)"
-                             :on-change #(rf/dispatch
-                                           [:user-code-club-src-change
-                                            (-> % .-target .-value)])})]
+      [FormControlFixed {:type "text"
+                         :value @(rf/subscribe [:attempt-code])
+                         :placeholder "(Somme 1 2)"
+                         :on-change #(rf/dispatch
+                                       [:user-code-club-src-change
+                                        (-> % .-target .-value)])}]
       [:> (bs 'FormControl 'Feedback)]
       [:> (bs 'HelpBlock) (t ["Taper du Code Club"])]]])
 
