@@ -1,9 +1,9 @@
 (ns club.utils
- (:require [clojure.string :as str]
-           [clojure.walk :refer [keywordize-keys]]
-           [goog.object :refer [getValueByKeys]]
-           [reagent.core :as r]
-           [webpack.bundle]))
+  (:require [clojure.string :as str]
+            [clojure.walk :refer [keywordize-keys]]
+            [goog.object :refer [getValueByKeys]]
+            [reagent.core :as r]
+            [webpack.bundle]))
  
 (defn parse-url
   [url]
