@@ -1,6 +1,8 @@
 (ns club.utils
  (:require [clojure.string :as str]
            [clojure.walk :refer [keywordize-keys]]
+           [goog.object :refer [getValueByKeys]]
+           [reagent.core :as r]
            [webpack.bundle]))
  
 (defn parse-url
@@ -29,7 +31,10 @@
       hostname
       (str hostname ":" port "/"))))
 
-(def r (getValueByKeys js/window "deps" "react"))
+;(def FormControl (r/adapt-react-class (.-FormControl js/ReactBootstrap)))
+(def FormControl
+     (r/adapt-react-class (getValueByKeys js/window "deps" "react-bootstrap"
+                                                    "FormControl")))
 
 ; https://gist.github.com/metametadata/3b4e9d5d767dfdfe85ad7f3773696a60
 (defn FormControlFixed

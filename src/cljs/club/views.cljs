@@ -3,6 +3,7 @@
             [re-frame.db :refer [app-db]]
             [goog.object :refer [getValueByKeys]]
             [webpack.bundle]
+            [club.utils :refer [FormControlFixed]]
             [club.config :as config]
             [cljs.pprint :refer [pprint]]))
 
@@ -22,12 +23,12 @@
     [:> (bs 'FormGroup) {:controlId "formBasicText"
                          :validationState nil} ; "success" "warning" "success"
       [:> (bs 'ControlLabel) (t ["Code Club: "])]
-      [:> (bs 'FormControl) {:type "text"
+      [:> (FormControlFixed {:type "text"
                              :value @(rf/subscribe [:attempt-code])
                              :placeholder "(Somme 1 2)"
                              :on-change #(rf/dispatch
                                            [:user-code-club-src-change
-                                            (-> % .-target .-value)])}]
+                                            (-> % .-target .-value)])})]
       [:> (bs 'FormControl 'Feedback)]
       [:> (bs 'HelpBlock) (t ["Taper du Code Club"])]]])
 
