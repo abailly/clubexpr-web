@@ -33,4 +33,5 @@
   (mount-root))
 
 ; Test app-db at loading time
-(club.events/check-and-throw :club.db/db @app-db)
+(if (club.events/check-and-throw :club.db/db @app-db)
+  (.log js/console "DB ok"))

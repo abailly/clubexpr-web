@@ -12,8 +12,10 @@
 (defn check-and-throw
   "Throw an exception if db doesn't match the spec"
   [a-spec db]
-  (when-not (s/valid? a-spec db)
-    (throw (ex-info (str "spec check failed: " (s/explain-str a-spec db)) {}))))
+  (let [valid (s/valid? a-spec db)]
+  (when-not valid
+    (throw (ex-info (str "spec check failed: " (s/explain-str a-spec db)) {})))
+  valid))
 
 (def check-spec-interceptor (rf/after (partial check-and-throw :club.db/db)))
 
