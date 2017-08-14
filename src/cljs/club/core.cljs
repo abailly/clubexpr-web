@@ -1,6 +1,7 @@
 (ns club.core
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
+            [re-frame.db :refer [app-db]]
             [goog.events :as events]
             [club.events]
             [club.subs]
@@ -30,3 +31,6 @@
   (re-frame/dispatch-sync [:initialize-db])
   (dev-setup)
   (mount-root))
+
+; Test app-db at loading time
+(club.events/check-and-throw :club.db/db @app-db)
