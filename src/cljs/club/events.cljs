@@ -56,14 +56,13 @@
 (rf/reg-event-fx
   :nav
   (fn [{:keys [db]}  _]
-    (if (empty? db) db  ; do not alter app-db on loading the page
-      (let [parsed-url (parse-url (get-url-all!))
-            page (:page parsed-url)
-            query-params (:query-params parsed-url)
-            new-db (assoc db :current-page page)]
-        {:db new-db
-         :auth query-params
-         }))))
+    (let [parsed-url (parse-url (get-url-all!))
+          page (:page parsed-url)
+          query-params (:query-params parsed-url)
+          new-db (assoc db :current-page page)]
+      {:db new-db
+       :auth query-params
+       })))
 
 (rf/reg-fx
   :auth
