@@ -41,4 +41,5 @@
   (fn [profile-quality query-v _]
     (case profile-quality
       "scholar" (t ["pour que votre professeur puisse vous retrouver"])
-      "teacher" (t ["pour que les élèves puissent vous retrouver"]))))
+      "teacher" (t ["pour que les élèves puissent vous retrouver"])
+      (t ["pour que l’on puisse vous retrouver"]))))
