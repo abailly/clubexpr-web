@@ -127,7 +127,18 @@
                                              " "
                                              @(rf/subscribe [:help-text-find-you]))
                                   :value-id :profile-firstname
-                                  :event-id :profile-firstname}]]
+                                  :event-id :profile-firstname}]
+        school [:> (bs 'DropdownButton)
+                   {:title @(rf/subscribe [:profile-school-pretty])
+                    :on-select #(rf/dispatch [:profile-school %])}
+                  [:> (bs 'MenuItem) {:eventKey "fake-id-no-school"}
+                                     (t ["Aucun établissement"])]
+                  [:> (bs 'MenuItem) {:divider true}]
+                  [:> (bs 'MenuItem) {:eventKey "fake-id-carcouet"}
+                                     "Lycée Caca"]
+                  [:> (bs 'MenuItem) {:eventKey "fake-id-mandela"}
+                                     "Lycée Nelson Mandelah"]]
+       ]
     [:div
       [:div.jumbotron
         [:h2 (t ["Votre profil"])]]
@@ -141,6 +152,8 @@
                  :on-change #(rf/dispatch [:profile-quality %])}
               [:> (bs 'ToggleButton) {:value "scholar"} (t ["Élève"])]
               [:> (bs 'ToggleButton) {:value "teacher"} (t ["Professeur"])]]]]
+        [:div {:style {:margin-bottom "1em"}}  ; TODO CSS
+          school]
         lastname
         (if (= "scholar" @(rf/subscribe [:profile-quality]))
           firstname

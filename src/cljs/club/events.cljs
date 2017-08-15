@@ -54,6 +54,12 @@
     (assoc-in db [:profile-page :quality] new-value)))
 
 (rf/reg-event-db
+  :profile-school
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:profile-page :school] new-value)))
+
+(rf/reg-event-db
   :profile-lastname
   [check-spec-interceptor]
   (fn [db [_ new-value]]

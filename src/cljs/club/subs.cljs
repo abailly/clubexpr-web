@@ -23,6 +23,11 @@
    (-> db :profile-page :quality)))
 
 (rf/reg-sub
+ :profile-school
+ (fn [db]
+   (-> db :profile-page :school)))
+
+(rf/reg-sub
  :profile-lastname
  (fn [db]
    (-> db :profile-page :lastname)))
@@ -43,3 +48,12 @@
       "scholar" (t ["pour que votre professeur puisse vous retrouver"])
       "teacher" (t ["pour que les élèves puissent vous retrouver"])
       (t ["pour que l’on puisse vous retrouver"]))))
+
+(rf/reg-sub
+ :profile-school-pretty
+  (fn [query-v _]
+     (rf/subscribe [:profile-school]))
+  (fn [profile-school query-v _]
+    (case profile-school
+      "fake-id-no-school" (t ["Aucun établissemet"])
+      profile-school)))
