@@ -13,7 +13,7 @@
 
   :figwheel {:css-dirs ["resources/public/css"]
              :server-port 3451
-             :repl false}
+             :repl true}
 
   :profiles
   {:dev
