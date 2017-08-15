@@ -1,13 +1,13 @@
 (ns club.subs
   (:require-macros [reagent.ratom :refer [reaction]])
-  (:require [re-frame.core :as re-frame]))
+  (:require [re-frame.core :as rf]))
 
-(re-frame/reg-sub
+(rf/reg-sub
  :current-page
  (fn [db]
    (:current-page db)))
 
-(re-frame/reg-sub
+(rf/reg-sub
  :attempt-code
  (fn [db]
    (:attempt-code db)))
