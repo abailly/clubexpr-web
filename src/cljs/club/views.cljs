@@ -20,7 +20,7 @@
   []
   [:form {:role "form"}
     [:> (bs 'FormGroup) {:controlId "formBasicText"
-                         :validationState nil} ; "success" "warning" "success"
+                         :validationState nil}
       [:> (bs 'ControlLabel) (t ["Code Club: "])]
       [FormControlFixed {:type "text"
                          :value @(rf/subscribe [:attempt-code])
