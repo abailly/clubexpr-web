@@ -123,9 +123,9 @@
                                   :event-id :profile-lastname}]
         firstname [profile-input {:label (t ["Prénom"])
                                   :placeholder (t ["Georgette"])
-                                 :help (str (t ["Votre prénom"])
-                                            " "
-                                            @(rf/subscribe [:help-text-find-you]))
+                                  :help (str (t ["Votre prénom"])
+                                             " "
+                                             @(rf/subscribe [:help-text-find-you]))
                                   :value-id :profile-firstname
                                   :event-id :profile-firstname}]]
     [:div
