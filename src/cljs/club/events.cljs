@@ -48,6 +48,24 @@
     (assoc db :attempt-code new-value)))
 
 (rf/reg-event-db
+  :profile-quality
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:profile-page :quality] new-value)))
+
+(rf/reg-event-db
+  :profile-lastname
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:profile-page :lastname] new-value)))
+
+(rf/reg-event-db
+  :profile-firstname
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:profile-page :firstname] new-value)))
+
+(rf/reg-event-db
   :initialize-db
   [check-spec-interceptor]
   (fn  [_ _]

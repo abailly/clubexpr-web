@@ -16,6 +16,19 @@
   ([c subc]
    (getValueByKeys js/window "deps" "react-bootstrap" (str c) (str subc))))
 
+; Profile components
+(defn profile-input [{:keys [label placeholder help value-id event-id]}]
+  [:> (bs 'FormGroup) {:controlId "formBasicText"
+                       :validationState nil}
+    [:> (bs 'ControlLabel) label]
+    [FormControlFixed {:type "text"
+                       :value @(rf/subscribe [value-id])
+                       :placeholder placeholder
+                       :on-change #(rf/dispatch [event-id
+                                                 (-> % .-target .-value)])}]
+    [:> (bs 'FormControl 'Feedback)]
+    [:> (bs 'HelpBlock) help]])
+
 (defn src-input
   []
   [:form {:role "form"}
@@ -101,11 +114,37 @@
 
 (defn page-profile
   []
-  [:div
-    [:div.jumbotron
-      [:h2 (t ["Votre profil"])]
-    ]
-  ])
+  (let [lastname  [profile-input {:label (t ["Nom"])
+                                  :placeholder (t ["Klougliblouk"])
+                                  :help (str (t ["Votre nom de famille"])
+                                             " "
+                                             @(rf/subscribe [:help-text-find-you]))
+                                  :value-id :profile-lastname
+                                  :event-id :profile-lastname}]
+        firstname [profile-input {:label (t ["Prénom"])
+                                  :placeholder (t ["Georgette"])
+                                 :help (str (t ["Votre prénom"])
+                                            " "
+                                            @(rf/subscribe [:help-text-find-you]))
+                                  :value-id :profile-firstname
+                                  :event-id :profile-firstname}]]
+    [:div
+      [:div.jumbotron
+        [:h2 (t ["Votre profil"])]]
+      [:form {:role "form"}
+        [:div {:style {:margin-bottom "1em"}}  ; TODO CSS
+          [:> (bs 'ButtonToolbar)
+            [:> (bs 'ToggleButtonGroup)
+                {:type "radio"
+                 :name "quality"
+                 :defaultValue "scholar"
+                 :on-change #(rf/dispatch [:profile-quality %])}
+              [:> (bs 'ToggleButton) {:value "scholar"} (t ["Élève"])]
+              [:> (bs 'ToggleButton) {:value "teacher"} (t ["Professeur"])]]]]
+        lastname
+        firstname
+      ]
+    ]))
 
 (defn main-panel []
   (fn []
