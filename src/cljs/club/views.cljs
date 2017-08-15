@@ -115,8 +115,9 @@
 
 (defn school->menu-item
   [school]
-  [:> (bs 'MenuItem) {:eventKey (:id school) :key (:id school)} (:name school)]
-)
+  ^{:key (:id school)} [:> (bs 'MenuItem)
+                           {:eventKey (:id school)}
+                           (:name school)])
 
 (defn page-profile
   []
