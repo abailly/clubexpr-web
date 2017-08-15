@@ -142,7 +142,9 @@
               [:> (bs 'ToggleButton) {:value "scholar"} (t ["Élève"])]
               [:> (bs 'ToggleButton) {:value "teacher"} (t ["Professeur"])]]]]
         lastname
-        firstname
+        (if (= "scholar" @(rf/subscribe [:profile-quality]))
+          firstname
+          "")
       ]
     ]))
 
