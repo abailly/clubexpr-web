@@ -55,5 +55,8 @@
      (rf/subscribe [:profile-school]))
   (fn [profile-school query-v _]
     (case profile-school
-      "fake-id-no-school" (t ["Aucun établissemet"])
-      profile-school)))
+      "fake-id-no-school" (t ["Aucun établissement"])
+      (->> (club.db/get-schools!)
+           (filter #(= profile-school (:id %)))
+           first
+           :name))))

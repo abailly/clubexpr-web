@@ -5,6 +5,7 @@
             [webpack.bundle]
             [club.utils :refer [FormControlFixed]]
             [club.config :as config]
+            [club.db]
             [cljs.pprint :refer [pprint]]))
 
 ; Placeholder for future translation mechanism
@@ -112,6 +113,11 @@
           [:p (t ["Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]
       ]]])
 
+(defn school->menu-item
+  [school]
+  [:> (bs 'MenuItem) {:eventKey (:id school) :key (:id school)} (:name school)]
+)
+
 (defn page-profile
   []
   (let [lastname  [profile-input {:label (t ["Nom"])
@@ -134,10 +140,8 @@
                   [:> (bs 'MenuItem) {:eventKey "fake-id-no-school"}
                                      (t ["Aucun établissement"])]
                   [:> (bs 'MenuItem) {:divider true}]
-                  [:> (bs 'MenuItem) {:eventKey "fake-id-carcouet"}
-                                     "Lycée Caca"]
-                  [:> (bs 'MenuItem) {:eventKey "fake-id-mandela"}
-                                     "Lycée Nelson Mandelah"]]
+                  (map school->menu-item (club.db/get-schools!))
+               ]
        ]
     [:div
       [:div.jumbotron

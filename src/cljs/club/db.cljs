@@ -24,3 +24,10 @@
                   :school "fake-id-no-school"
                   :lastname ""
                   :firstname ""}})
+
+(defn get-schools!
+  []
+  [
+    {:id "fake-id-carcouet" :code "0441993c" :name "Lycée Carcouët"}
+    {:id "fake-id-mandela"  :code "0442765s" :name "Lycée Nelson Mandela"}
+  ])
