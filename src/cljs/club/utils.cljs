@@ -7,17 +7,27 @@
  
 (defn parse-url
   [url]
-  (let [after-hash (get (str/split url "#/") 1)
-        after-hash-splitted (str/split after-hash "?")
-        before-qmark (get after-hash-splitted 0)
-        page (keyword (if (empty? before-qmark) "landing" before-qmark))
-        after-qmark (get after-hash-splitted 1)
-        array (filter (complement #(some #{%} ["&" "=" ""]))
-                (str/split after-qmark #"(&|=)"))
-        query-params (keywordize-keys (apply hash-map array))
-        ]
-      {:page page
-       :query-params query-params}))
+  (let [splitted-url (str/split url "#/")]
+    (if (str/includes? url "#/")
+      ; #/ in the URL
+      (let [after-hash-slash (get splitted-url 1)
+            page (if (empty? after-hash-slash)
+                     :landing
+                     (keyword after-hash-slash))]
+        {:page page
+         :query-params {}})
+      ; no #/ in the URL
+      (let [after-hash (get (str/split url "#") 1)]
+        (if after-hash
+          ; no #/ but a # in the URL with data after it
+          (let [array (filter (complement #(some #{%} ["&" "=" ""]))
+                              (str/split after-hash #"(&|=)"))
+                query-params (keywordize-keys (apply hash-map array))]
+            {:page :landing
+             :query-params query-params})
+          ; neither #/ nor an interesting # in the URL
+          {:page :landing
+           :query-params {}})))))
 
 (defn get-url-all!
   []
