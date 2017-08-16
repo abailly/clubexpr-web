@@ -31,11 +31,11 @@
     [:> (bs 'HelpBlock) help]])
 
 (defn src-input
-  []
+  [{:keys [label help]}]
   [:form {:role "form"}
     [:> (bs 'FormGroup) {:controlId "formBasicText"
                          :validationState nil}
-      [:> (bs 'ControlLabel) (t ["Code Club: "])]
+      [:> (bs 'ControlLabel) label]
       [FormControlFixed {:type "text"
                          :value @(rf/subscribe [:attempt-code])
                          :placeholder "(Somme 1 2)"
@@ -43,7 +43,7 @@
                                        [:user-code-club-src-change
                                         (-> % .-target .-value)])}]
       [:> (bs 'FormControl 'Feedback)]
-      [:> (bs 'HelpBlock) (t ["Taper du Code Club"])]]])
+      [:> (bs 'HelpBlock) help]]])
 
 (defn rendition
   [src]
@@ -89,15 +89,15 @@
   [:div
     [:div.jumbotron
       [:h2 (t ["Nouveau venu ?"])]
-      [:p (t ["Bonjour, tapez du Code Club ci-dessous pour former une expression mathématique."])]
-      [:p (t ["Parmi les commandes disponibles, il y a :"])
-          [:code "Somme"] ", "
-          [:code "Diff"] ", "
-          [:code "Produit"] ", "
-          [:code "Produit"] ", "
-          [:code "Carre"] ", "
-          [:code "Racine"] "."]
-      [src-input]
+      (let [label (t ["Tapez du Code Club ci-dessous pour former une expression mathématique."])
+            help [:span (t ["Commandes disponibles :"])
+                   [:code "Somme"] ", "
+                   [:code "Diff"] ", "
+                   [:code "Produit"] ", "
+                   [:code "Produit"] ", "
+                   [:code "Carre"] ", "
+                   [:code "Racine"] "."]]
+        [src-input {:label label :help help}])
       [rendition @(rf/subscribe [:attempt-code])]]
     [:> (bs 'Grid)
       [:> (bs 'Row)
