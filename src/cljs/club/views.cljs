@@ -78,9 +78,9 @@
           [:> (bs 'Nav) {:pullRight true}
             (if authenticated
               [:> (bs 'NavItem)
-                  {:eventKey 1 :on-click #(rf/dispatch [:logout])} (t ["Logout"])]
+                  {:eventKey 1 :on-click #(rf/dispatch [:logout])} (t ["Déconnexion"])]
               [:> (bs 'NavItem)
-                  {:eventKey 1 :on-click #(rf/dispatch [:login])}  (t ["Login"])])
+                  {:eventKey 1 :on-click #(rf/dispatch [:login])}  (t ["Connexion"])])
           ]]]]
      ))
 
