@@ -50,6 +50,28 @@
                           :id-token     ""
                           :expires-at   ""})))
 
+(rf/reg-event-fx
+  :profile-cancel
+  (fn []
+    {:profile-cancel nil}))
+
+(rf/reg-fx
+  :profile-cancel
+  (fn [_]
+    (println "cancel")
+    ))
+
+(rf/reg-event-fx
+  :profile-save
+  (fn []
+    {:profile-save nil}))
+
+(rf/reg-fx
+  :profile-save
+  (fn [_]
+    (println "save")
+    ))
+
 (rf/reg-event-db
   :user-code-club-src-change
   [check-spec-interceptor]
