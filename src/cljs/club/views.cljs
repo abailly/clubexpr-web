@@ -58,7 +58,8 @@
 (defn nav-bar
   []
   (let [page @(rf/subscribe [:current-page])
-        active #(if (= %1 %2) "active" "")]
+        active #(if (= %1 %2) "active" "")
+        authenticated @(rf/subscribe [:authenticated])]
     [:> (bs 'Navbar)
       [:> (bs 'Navbar 'Header)
         [:> (bs 'Navbar 'Brand)
@@ -70,17 +71,19 @@
                              :href "#/"
                              :class (active page :landing)}
             [:a {} (t ["Accueil"])]]
-          [:> (bs 'NavItem) {:eventKey 2
-                             :href "#/profile"
-                             :class (active page :profile)}
-            [:a {} (t ["Profil"])]]]
+          (if authenticated
+            [:> (bs 'NavItem) {:eventKey 2
+                               :href "#/profile"
+                               :class (active page :profile)}
+              [:a {} (t ["Profil"])]])]
         [:> (bs 'Nav) {:pullRight true}
-          (if (let [auth @(rf/subscribe [:authenticated])]
-                (or (not auth) (nil? auth))) ; temp fix for a subs problem
+          (if authenticated
             [:> (bs 'NavItem)
-                {:eventKey 1 :on-click #(rf/dispatch [:login])} (t ["Login"])]
+                {:eventKey 1 :on-click #(rf/dispatch [:logout])}
+              [:a (t ["Logout"])]]
             [:> (bs 'NavItem)
-                {:eventKey 1 :on-click #(rf/dispatch [:logout])} (t ["Logout"])])
+                {:eventKey 1 :on-click #(rf/dispatch [:login])}
+              [:a (t ["Login"])]])
          ]]]
      ))
 
