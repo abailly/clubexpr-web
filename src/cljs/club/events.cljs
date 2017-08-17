@@ -58,7 +58,7 @@
 (rf/reg-fx
   :profile-cancel
   (fn [_]
-    (println "cancel")
+    (club.db/fetch-profile-data!)
     ))
 
 (rf/reg-event-fx

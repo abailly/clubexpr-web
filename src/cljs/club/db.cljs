@@ -1,5 +1,6 @@
 (ns club.db
-  (:require [cljs.spec :as s]))
+  (:require [cljs.spec :as s]
+            [re-frame.db :refer [app-db]]))
 
 (s/def ::current-page keyword?)
 (s/def ::attempt-code string?)
@@ -38,6 +39,14 @@
                   :school "fake-id-no-school"
                   :lastname ""
                   :firstname ""}})
+
+(defn fetch-profile-data!
+  []
+  (swap! app-db assoc-in [:profile-page]
+    {:quality "teacher"
+     :school "fake-id-0441993C"
+     :lastname "Gragnic"
+     :firstname "Christophe"}))
 
 (defn get-schools!
   []
