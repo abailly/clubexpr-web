@@ -79,7 +79,7 @@
 
 (rf/reg-event-fx
   :nav
-  (fn [{:keys [db]}  _]
+  (fn [{:keys [db]} _]
     (let [parsed-url (parse-url (get-url-all!))
           page (:page parsed-url)
           query-params (:query-params parsed-url)
