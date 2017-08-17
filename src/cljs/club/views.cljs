@@ -69,21 +69,17 @@
         [:> (bs 'Nav)
           [:> (bs 'NavItem) {:eventKey 1
                              :href "#/"
-                             :class (active page :landing)}
-            [:a {} (t ["Accueil"])]]
+                             :class (active page :landing)} (t ["Accueil"])]
           (if authenticated
             [:> (bs 'NavItem) {:eventKey 2
                                :href "#/profile"
-                               :class (active page :profile)}
-              [:a {} (t ["Profil"])]])]
+                               :class (active page :profile)} (t ["Profil"])])]
         [:> (bs 'Nav) {:pullRight true}
           (if authenticated
             [:> (bs 'NavItem)
-                {:eventKey 1 :on-click #(rf/dispatch [:logout])}
-              [:a (t ["Logout"])]]
+                {:eventKey 1 :on-click #(rf/dispatch [:logout])} (t ["Logout"])]
             [:> (bs 'NavItem)
-                {:eventKey 1 :on-click #(rf/dispatch [:login])}
-              [:a (t ["Login"])]])
+                {:eventKey 1 :on-click #(rf/dispatch [:login])}  (t ["Login"])])
          ]]]
      ))
 
