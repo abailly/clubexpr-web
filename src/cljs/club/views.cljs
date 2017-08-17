@@ -165,6 +165,7 @@
             [:> (bs 'ToggleButtonGroup)
                 {:type "radio"
                  :name "quality"
+                 :value @(rf/subscribe [:profile-quality])
                  :defaultValue "scholar"
                  :on-change #(rf/dispatch [:profile-quality %])}
               [:> (bs 'ToggleButton) {:value "scholar"} (t ["Élève"])]
