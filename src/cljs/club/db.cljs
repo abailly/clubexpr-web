@@ -12,13 +12,27 @@
 (s/def ::lastname string?)
 (s/def ::firstname string?)
 
+(s/def ::authenticated boolean?)
+(s/def ::auth-data
+  (s/and ;map?
+         (s/keys :req-un [::access-token ::id-token ::expires-at])))
+(s/def ::access-token string?)
+(s/def ::id-token     string?)
+(s/def ::expires-at   string?)
+
 (s/def ::db (s/keys :req-un [::current-page
+                             ::authenticated
+                             ::auth-data
                              ::attempt-code
                              ::profile-page
                              ]))
 
 (def default-db
   {:current-page :landing
+   :authenticated false
+   :auth-data {:access-token ""
+               :id-token     ""
+               :expires-at   ""}
    :attempt-code "(Somme 1 (Produit 2 x))"
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"

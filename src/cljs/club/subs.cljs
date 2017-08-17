@@ -13,6 +13,11 @@
    (:current-page db)))
 
 (rf/reg-sub
+ :authenticated
+ (fn [db]
+   (:authenticated db)))
+
+(rf/reg-sub
  :attempt-code
  (fn [db]
    (:attempt-code db)))

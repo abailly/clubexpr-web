@@ -1,6 +1,7 @@
 (ns club.events
   (:require
     [re-frame.core :as rf]
+    [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
     [club.db]
     [club.utils :refer [parse-url get-url-all! get-url-root!]]
@@ -40,6 +41,14 @@
   :login
   (fn [_]
     (.authorize webauth)))
+
+(rf/reg-event-db
+  :logout
+  (fn [db _]
+    (assoc db :authenticated false
+              :auth-data {:access-token ""
+                          :id-token     ""
+                          :expires-at   ""})))
 
 (rf/reg-event-db
   :user-code-club-src-change
@@ -92,7 +101,17 @@
 
 (rf/reg-fx
   :auth
-  (fn [query-params]
-    (println "query-params:")
-    (println query-params)))
+  (fn [{:keys [access_token expires_in id_token]}]  ; we left: token_type state
+    ; Clean the URL
+    ; window.location.hash = '';
+
+    ; Store auth time
+    ; TODO
+
+    (let [expires-in (js/parseInt expires_in)
+          expires-at (str (+ (* expires-in 1000) (.getTime (new js/Date))))]
+      (swap! app-db assoc-in [:authenticated] true)
+      (swap! app-db assoc-in [:auth-data :access-token] access_token)
+      (swap! app-db assoc-in [:auth-data :id-token] id_token)
+      (swap! app-db assoc-in [:auth-data :expires-at] expires-at))))
 
