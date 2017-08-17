@@ -83,10 +83,12 @@
     (let [parsed-url (parse-url (get-url-all!))
           page (:page parsed-url)
           query-params (:query-params parsed-url)
-          new-db (assoc db :current-page page)]
-      {:db new-db
-       :auth query-params
-       })))
+          ; 'empty?' prevents wrecking the state at loading time
+          new-db (if (empty? db) db (assoc db :current-page page))
+          cofx (if (empty? query-params)
+                 {:db new-db}
+                 {:db new-db :auth query-params})]
+       cofx)))
 
 (rf/reg-fx
   :auth
