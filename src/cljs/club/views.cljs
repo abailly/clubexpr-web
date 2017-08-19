@@ -197,16 +197,20 @@
   (fn []
     (let [authenticated  @(rf/subscribe [:authenticated])
           current-page   @(rf/subscribe [:current-page])]
-      [:div.container
-        [nav-bar]
-        (if  authenticated
-          (case current-page
-            :profile [page-profile]
-            :landing [page-landing])
-          (case current-page
-            :landing [page-landing]
-            [page-forbidden]))
-        (when (and true config/debug?) [:pre {:style {:bottom "0px"}}
+      [:div
+        [:div.container
+          [nav-bar]
+          (if  authenticated
+            (case current-page
+              :profile [page-profile]
+              :landing [page-landing])
+            (case current-page
+              :landing [page-landing]
+              [page-forbidden]))
+        ]
+        (when (and true config/debug?) [:pre {:style {:position "absolute"
+                                                      :bottom "0px"
+                                                      :width "100%"}}
                                              (with-out-str (pprint @app-db))])
       ]
     )))
