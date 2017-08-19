@@ -3,6 +3,7 @@ window.deps = {
     'react-dom' : require('react-dom'),
     'react-bootstrap' : require('react-bootstrap'),
     'auth0' : require('auth0-js'),
+    'kinto' : require('kinto'),
     'react-mathjax' : require('react-mathjax'),
     'clubexpr' : require('clubexpr')
 };
