@@ -202,6 +202,8 @@
           [nav-bar]
           (if (or authenticated
                   (some #{current-page} [:landing]))
+            ; TODO: try to replace the case below with this:
+            ; (array (symbol (str "page-" (subs (str current-page) 1))))
             (case current-page
               :landing [page-landing]
               :profile [page-profile])
