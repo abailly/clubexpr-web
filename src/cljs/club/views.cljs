@@ -71,6 +71,9 @@
             [:> (bs 'NavItem) {:eventKey 1
                                :href "#/"
                                :class (active page :landing)} (t ["Accueil"])]
+            [:> (bs 'NavItem) {:eventKey 1
+                               :href "#/help"
+                               :class (active page :help)} (t ["Aide"])]
             (if authenticated
               [:> (bs 'NavItem) {:eventKey 2
                                  :href "#/profile"
@@ -124,6 +127,86 @@
      [:br]
      [:br]
   ])
+
+(defn page-help-guest
+  []
+  [:div
+    [:div.jumbotron
+      [:h2 (t ["Aide pour les invités"])]]
+    [:h2 (t ["Commencez par vous connecter (bouton en haut à droite)."])]])
+
+(defn page-help-scholar
+  []
+  [:div
+    [:div.jumbotron
+      [:h2 (t ["Aide pour les élèves"])]
+      [:p (t ["Si vous n’êtes pas élève, modifiez votre profil."])]]
+    [:> (bs 'Grid)
+      [:> (bs 'Row)
+        [:h1 (t ["Qu’est-ce que le Club des Expressions ?"])]
+        [:> (bs 'Col) {:xs 6 :md 6}
+          [:h2 (t ["Pour les élèves"])]
+          [:p (t ["Le Club des Expressions vous permet de travailler sur le sens et la structure des expressions mathématiques."])]
+          [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Pour cela, créez votre compte."])]
+          [:p (t ["Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]
+        [:> (bs 'Col) {:xs 6 :md 6}
+          [:h2 (t ["Pour les enseignants"])]
+          [:p (t ["Le Club des Expressions permet aux enseignants de faire travailler leurs élèves sur le sens et la structure des expressions mathématiques."])]]
+       ]]
+    [:h1 "Contact"]
+    [:p "Le Club des Expressions est en constante évolution. Pour signaler des bugs ou nous faire par de suggestions, vous avez le choix :"]
+    [:ul
+     [:li "Twitter : " [:a {:href "https://twitter"}
+                        "@ClubExpr"] " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
+     [:li "Email : "   [:a {:href "mailto:profgraorg.org@gmail.com"}
+                        "profgra@gmail.com"]]
+     [:li "Github : "  [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
+                        "ClubExpressions/clubexpr"]]]
+     [:br]
+     [:br]
+     [:br]
+  ])
+
+(defn page-help-teacher
+  []
+  [:div
+    [:div.jumbotron
+      [:h2 (t ["Aide pour les professeurs"])]
+      [:p (t ["Si vous n’êtes pas professeur, modifiez votre profil."])]]
+    [:> (bs 'Grid)
+      [:> (bs 'Row)
+        [:h1 (t ["Qu’est-ce que le Club des Expressions ?"])]
+        [:> (bs 'Col) {:xs 6 :md 6}
+          [:h2 (t ["Pour les enseignants"])]
+          [:p (t ["Le Club des Expressions vous permet de faire travailler vos élèves sur le sens et la structure des expressions mathématiques."])]]
+        [:> (bs 'Col) {:xs 6 :md 6}
+          [:h2 (t ["Pour les élèves"])]
+          [:p (t ["Le Club des Expressions permet aux élèves de travailler sur le sens et la structure des expressions mathématiques."])]
+          [:p (t ["Si leur professeur n’utilise pas le Club, les élèves peuvent quand même obtenir des séries d’expressions à reconstituer grâce à des professeurs-robots."])]
+          [:p (t ["Il est préférable bien sûr que leur professeur les guide !"])]]
+       ]]
+    [:h1 "Contact"]
+    [:p "Le Club des Expressions est en constante évolution. Pour signaler des bugs ou nous faire par de suggestions, vous avez le choix :"]
+    [:ul
+     [:li "Twitter : " [:a {:href "https://twitter"}
+                        "@ClubExpr"] " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
+     [:li "Email : "   [:a {:href "mailto:profgraorg.org@gmail.com"}
+                        "profgra@gmail.com"]]
+     [:li "Github : "  [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
+                        "ClubExpressions/clubexpr"]]]
+     [:br]
+     [:br]
+     [:br]
+  ])
+
+(defn page-help
+  []
+  (if (not @(rf/subscribe [:authenticated]))
+    [page-help-guest]
+    (case @(rf/subscribe [:profile-quality])
+      "scholar" [page-help-scholar]
+      "teacher" [page-help-teacher]
+      [page-help-guest])))
 
 (defn school->menu-item
   [school]
@@ -201,11 +284,12 @@
         [:div.container
           [nav-bar]
           (if (or authenticated
-                  (some #{current-page} [:landing]))
+                  (some #{current-page} [:landing :help]))
             ; TODO: try to replace the case below with this:
             ; (array (symbol (str "page-" (subs (str current-page) 1))))
             (case current-page
               :landing [page-landing]
+              :help [page-help]
               :profile [page-profile])
             [page-forbidden]
           )
