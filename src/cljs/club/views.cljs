@@ -87,6 +87,22 @@
           ]]]]
      ))
 
+(defn footer
+  []
+  [:div
+   [:h1 "Contact"]
+   [:p "Le Club des Expressions est en constante évolution. Pour signaler des bugs ou nous faire par de suggestions, vous avez le choix :"]
+   [:ul
+     [:li "Twitter : " [:a {:href "https://twitter"}
+                        "@ClubExpr"] " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
+     [:li "Email : "   [:a {:href "mailto:profgraorg.org@gmail.com"}
+                        "profgra@gmail.com"]]
+     [:li "Github : "  [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
+                        "ClubExpressions/clubexpr"]]]
+     [:br]
+     [:br]
+     [:br]])
+
 (defn page-landing
   []
   [:div
@@ -114,18 +130,6 @@
           [:p (t ["Le Club des Expressions vous permet de travailler sur le sens et la structure des expressions mathématiques."])]
           [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Pour cela, créez votre compte."])]
           [:p (t ["Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]]]
-    [:h1 "Contact"]
-    [:p "Le Club des Expressions est en constante évolution. Pour signaler des bugs ou nous faire par de suggestions, vous avez le choix :"]
-    [:ul
-     [:li "Twitter : " [:a {:href "https://twitter"}
-                        "@ClubExpr"] " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
-     [:li "Email : "   [:a {:href "mailto:profgraorg.org@gmail.com"}
-                        "profgra@gmail.com"]]
-     [:li "Github : "  [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
-                        "ClubExpressions/clubexpr"]]]
-     [:br]
-     [:br]
-     [:br]
   ])
 
 (defn page-help-guest
@@ -153,18 +157,6 @@
           [:h2 (t ["Pour les enseignants"])]
           [:p (t ["Le Club des Expressions permet aux enseignants de faire travailler leurs élèves sur le sens et la structure des expressions mathématiques."])]]
        ]]
-    [:h1 "Contact"]
-    [:p "Le Club des Expressions est en constante évolution. Pour signaler des bugs ou nous faire par de suggestions, vous avez le choix :"]
-    [:ul
-     [:li "Twitter : " [:a {:href "https://twitter"}
-                        "@ClubExpr"] " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
-     [:li "Email : "   [:a {:href "mailto:profgraorg.org@gmail.com"}
-                        "profgra@gmail.com"]]
-     [:li "Github : "  [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
-                        "ClubExpressions/clubexpr"]]]
-     [:br]
-     [:br]
-     [:br]
   ])
 
 (defn page-help-teacher
@@ -185,18 +177,6 @@
           [:p (t ["Si leur professeur n’utilise pas le Club, les élèves peuvent quand même obtenir des séries d’expressions à reconstituer grâce à des professeurs-robots."])]
           [:p (t ["Il est préférable bien sûr que leur professeur les guide !"])]]
        ]]
-    [:h1 "Contact"]
-    [:p "Le Club des Expressions est en constante évolution. Pour signaler des bugs ou nous faire par de suggestions, vous avez le choix :"]
-    [:ul
-     [:li "Twitter : " [:a {:href "https://twitter"}
-                        "@ClubExpr"] " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
-     [:li "Email : "   [:a {:href "mailto:profgraorg.org@gmail.com"}
-                        "profgra@gmail.com"]]
-     [:li "Github : "  [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
-                        "ClubExpressions/clubexpr"]]]
-     [:br]
-     [:br]
-     [:br]
   ])
 
 (defn page-help
@@ -293,6 +273,7 @@
               :profile [page-profile])
             [page-forbidden]
           )
+          [footer]
         ]
         (when (and true config/debug?) [:pre {:style {:position "absolute"
                                                       :bottom "0px"
