@@ -89,19 +89,36 @@
 
 (defn footer
   []
-  [:div
-   [:h1 "Contact"]
-   [:p "Le Club des Expressions est en constante évolution. Pour signaler des bugs ou nous faire par de suggestions, vous avez le choix :"]
-   [:ul
-     [:li "Twitter : " [:a {:href "https://twitter"}
-                        "@ClubExpr"] " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
-     [:li "Email : "   [:a {:href "mailto:profgraorg.org@gmail.com"}
-                        "profgra@gmail.com"]]
-     [:li "Github : "  [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
-                        "ClubExpressions/clubexpr"]]]
-     [:br]
-     [:br]
-     [:br]])
+  [:div.container.small {:style {:color "#aaa"}}  ; TODO CSS
+    [:br]
+    [:br]
+    [:br]
+    [:hr]
+    [:> (bs 'Grid)
+      [:> (bs 'Row)
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Contact"])]
+          [:ul
+            [:li "Twitter : "
+              [:a {:href "https://twitter"} "@ClubExpr"]
+              " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
+            [:li "Email : "
+              [:a {:href "mailto:profgraorg.org@gmail.com"} "profgra@gmail.com"]]
+            [:li "Github : "
+              [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
+                  "ClubExpressions/clubexpr"]]]]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Statut"])]
+          [:p "Le Club des Expressions est en constante évolution. N’hésitez pas à signaler des bugs ou nous faire part de suggestions."]]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Remerciements"])]
+          [:p (t ["Réalisé avec l’aide, aimable autant que redoutable, de :"])]
+          [:ul
+            [:li "Jean-Philippe Rouquès (aide pédagogique)"]
+            [:li "Damien Lecan (aide technique)"]
+            [:li "tous les collègues et élèves sympathisants (aide moral)"]
+            [:li "tous les logiciels sur lesquels est bâti le Club (épaules de géants)"]]]
+       ]]])
 
 (defn page-landing
   []
