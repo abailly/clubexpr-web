@@ -45,7 +45,8 @@
 (rf/reg-event-db
   :logout
   (fn [db _]
-    (assoc db :authenticated false
+    (assoc db :current-page :landing
+              :authenticated false
               :auth-data {:access-token ""
                           :id-token     ""
                           :expires-at   ""})))
