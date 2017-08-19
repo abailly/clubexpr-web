@@ -188,14 +188,25 @@
       ]
     ]))
 
+(defn page-forbidden
+  []
+  [:div.jumbotron
+    [:h2 (t ["Désolé, il faut se connecter pour accéder à cette page."])]])
+
 (defn main-panel []
   (fn []
-    [:div.container
-      [nav-bar]
-      (case @(rf/subscribe [:current-page])
-        :profile [page-profile]
-        :landing [page-landing])
-      (when (and false config/debug?) [:pre {:style {:bottom "0px"}}
-                                           (with-out-str (pprint @app-db))])
-    ]
-    ))
+    (let [authenticated  @(rf/subscribe [:authenticated])
+          current-page   @(rf/subscribe [:current-page])]
+      [:div.container
+        [nav-bar]
+        (if  authenticated
+          (case current-page
+            :profile [page-profile]
+            :landing [page-landing])
+          (case current-page
+            :landing [page-landing]
+            [page-forbidden]))
+        (when (and true config/debug?) [:pre {:style {:bottom "0px"}}
+                                             (with-out-str (pprint @app-db))])
+      ]
+    )))
