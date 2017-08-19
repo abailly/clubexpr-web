@@ -200,13 +200,13 @@
       [:div
         [:div.container
           [nav-bar]
-          (if  authenticated
-            (case current-page
-              :profile [page-profile]
-              :landing [page-landing])
+          (if (or authenticated
+                  (some #{current-page} [:landing]))
             (case current-page
               :landing [page-landing]
-              [page-forbidden]))
+              :profile [page-profile])
+            [page-forbidden]
+          )
         ]
         (when (and true config/debug?) [:pre {:style {:position "absolute"
                                                       :bottom "0px"
