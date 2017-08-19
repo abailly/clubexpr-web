@@ -134,6 +134,7 @@
                    [:code "Carre"] ", "
                    [:code "Racine"] "."]]
         [src-input {:label label :help help}])
+      [:br]
       [rendition @(rf/subscribe [:attempt-code])]]
     [:> (bs 'Grid)
       [:> (bs 'Row)
