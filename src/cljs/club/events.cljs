@@ -1,11 +1,13 @@
 (ns club.events
   (:require
+    [clojure.string :as str]
     [re-frame.core :as rf]
     [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
     [club.db]
     [club.utils :refer [parse-url get-url-all! get-url-root!]]
-    [cljs.spec     :as s]))
+    [cljs.spec     :as s]
+    [goog.crypt.base64 :refer [decodeString]]))
 
 
 ;; Interceptors
@@ -132,9 +134,15 @@
     ; TODO
 
     (let [expires-in (js/parseInt expires_in)
-          expires-at (str (+ (* expires-in 1000) (.getTime (new js/Date))))]
+          expires-at (str (+ (* expires-in 1000) (.getTime (new js/Date))))
+          decoded-json (-> id_token
+                          (str/split ".")
+                          second
+                          decodeString)
+          decoded-js (.parse js/JSON decoded-json)
+          user-id (getValueByKeys decoded-js "sub")]
       (swap! app-db assoc-in [:authenticated] true)
       (swap! app-db assoc-in [:auth-data :access-token] access_token)
-      (swap! app-db assoc-in [:auth-data :id-token] id_token)
-      (swap! app-db assoc-in [:auth-data :expires-at] expires-at))))
-
+      (swap! app-db assoc-in [:auth-data :expires-at] expires-at)
+      (swap! app-db assoc-in [:auth-data :user-id] user-id)
+    )))
