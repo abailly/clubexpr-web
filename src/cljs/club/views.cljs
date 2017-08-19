@@ -130,8 +130,11 @@
                    [:code "Somme"] ", "
                    [:code "Diff"] ", "
                    [:code "Produit"] ", "
-                   [:code "Produit"] ", "
+                   [:code "Quotient"] ", "
+                   [:code "Oppose"] ", "
+                   [:code "Inverse"] ", "
                    [:code "Carre"] ", "
+                   [:code "Puissance"] " et "
                    [:code "Racine"] "."]]
         [src-input {:label label :help help}])
       [:br]
