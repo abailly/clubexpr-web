@@ -139,10 +139,17 @@
                           (str/split ".")
                           second
                           decodeString)
-          decoded-js (.parse js/JSON decoded-json)
+          decoded-js (try (.parse js/JSON decoded-json)
+                          (catch js/Object e (println e)
+                                             (println id_token)
+                                             (println decoded-json)
+                                             js/Object))
           user-id (getValueByKeys decoded-js "sub")]
-      (swap! app-db assoc-in [:authenticated] true)
-      (swap! app-db assoc-in [:auth-data :access-token] access_token)
-      (swap! app-db assoc-in [:auth-data :expires-at] expires-at)
-      (swap! app-db assoc-in [:auth-data :user-id] user-id)
+      (if (not (nil? user-id))
+        (do
+          (swap! app-db assoc-in [:authenticated] true)
+          (swap! app-db assoc-in [:auth-data :access-token] access_token)
+          (swap! app-db assoc-in [:auth-data :expires-at] expires-at)
+          (swap! app-db assoc-in [:auth-data :user-id] user-id)))
+          (check-and-throw :club.db/db @app-db)
     )))
