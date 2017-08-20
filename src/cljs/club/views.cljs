@@ -158,7 +158,18 @@
   [:div
     [:div.jumbotron
       [:h2 (t ["Aide pour les invités"])]]
-    [:h2 (t ["Commencez par vous connecter (bouton en haut à droite)."])]])
+    [:h2 (t ["Commencez par vous connecter (bouton en haut à droite)."])]
+    [:p (t ["Une aide vous sera proposée en fonction de votre profil."])]
+    [:p (t ["En cas de problème pour vous connecter, veuillez nous contacter :"])]
+    [:ul
+      [:li "par email : "
+        [:a {:href "mailto:profgraorg.org@gmail.com"} "profgra@gmail.com"]]
+      [:li "sur Github : "
+        [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
+            "ClubExpressions/clubexpr"]]
+      [:li "via Twitter : "
+        [:a {:href "https://twitter"} "@ClubExpr"]]]
+   ])
 
 (defn page-help-scholar
   []
@@ -172,13 +183,30 @@
         [:> (bs 'Col) {:xs 6 :md 6}
           [:h2 (t ["Pour les élèves"])]
           [:p (t ["Le Club des Expressions vous permet de travailler sur le sens et la structure des expressions mathématiques."])]
-          [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Pour cela, créez votre compte."])]
-          [:p (t ["Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]]
+          [:p (t ["Si votre professeur n’utilise pas le Club, vous pourrez quand même obtenir des séries d’expressions à reconstituer. Il est préférable bien sûr que votre professeur vous guide, mettez cette personne au courant !"])]
+        ]
         [:> (bs 'Col) {:xs 6 :md 6}
           [:h2 (t ["Pour les enseignants"])]
-          [:p (t ["Le Club des Expressions permet aux enseignants de faire travailler leurs élèves sur le sens et la structure des expressions mathématiques."])]]
-       ]]
-  ])
+          [:p (t ["Le Club des Expressions permet aux enseignants de faire travailler leurs élèves sur le sens et la structure des expressions mathématiques."])]
+        ]
+      ]
+      [:> (bs 'Row)
+        [:h1 (t ["Ce que l’on peut faire au Club"])]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Définir son profil"])]
+          [:p (t ["Dans la partie « Profil », déclarez votre établissement puis votre professeur (si vous n’en avez pas, choisissez « Pas de professeur »)."])]
+          [:p (t ["Grâce à votre nom et prénom, votre professeur pourra vous inclure dans un ou plusieurs groupes de travail."])]
+        ]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Faire le travail donné"])]
+          [:p (t ["Dans la partie « Travail », vous trouverez le travail que votre professeur vous propose de faire."])]
+        ]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["S’entraîner"])]
+          [:p (t ["Le Club des Expressions vous proposera parfois, dans la partie « Travail », des séries à faire pour vous entraîner."])]
+        ]
+      ]
+    ]])
 
 (defn page-help-teacher
   []
@@ -196,8 +224,36 @@
           [:h2 (t ["Pour les élèves"])]
           [:p (t ["Le Club des Expressions permet aux élèves de travailler sur le sens et la structure des expressions mathématiques."])]
           [:p (t ["Si leur professeur n’utilise pas le Club, les élèves peuvent quand même obtenir des séries d’expressions à reconstituer grâce à des professeurs-robots."])]
-          [:p (t ["Il est préférable bien sûr que leur professeur les guide !"])]]
-       ]]
+          [:p (t ["Il est préférable bien sûr que leur professeur les guide !"])]]]
+      [:> (bs 'Row)
+        [:h1 (t ["Ce que l’on peut faire au Club"])]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Définir son profil"])]
+          [:p (t ["Dans la partie « Profil », déclarez votre établissement puis votre professeur."])]
+          [:p (t ["Grâce à votre nom, vos élèves pourront vous choisir comme « professeur référent » et apparaîtront dans votre partie « Groupes »."])]
+        ]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Regrouper ses élèves"])]
+          [:p (t ["Dans la partie « Groupes », vous définirez des listes d’élèves. Ces listes peuvent correspondre :"])]
+          [:ul
+            [:li (t ["à des classes entières ;"])]
+            [:li (t ["à des demis-groupes d’une classe ;"])]
+            [:li (t ["à des élèves ayant des besoins spécifiques (remédiation ou approfondissement) au sein de l’Accompagnement Personnalisé ou non ;"])]
+            [:li (t ["…"])]]
+        ]
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Assigner des séries à ses groupes"])]
+          [:p (t ["Une fois que vous aurez créé une série dans la partie « Séries », vous pourrez l’attribuer à un groupe. Cette attribution se fait dans la partie « Groupes »."])]
+        ]
+      ]
+      [:> (bs 'Row)
+        [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Ce que voit un élève"])]
+          [:p (t ["Il est possible de se connecter au Club avec plusieurs comptes. Un de ces comptes sera votre compte principal, avec un profil de professeur. Les autres comptes pourront avoir un profil d’élève."])]
+          [:p (t ["Attention, vous ne pouvez pas gérer vos vrais élèves depuis différents comptes, même s’ils ont un profil de professeur."])]
+        ]
+      ]
+    ]
   ])
 
 (defn page-help
