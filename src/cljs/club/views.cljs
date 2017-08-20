@@ -54,7 +54,7 @@
         renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
     [:div {:style {:min-height "2em"}}
       [:> ctx [:> node (renderLispAsLaTeX src)]]]))
- 
+
 (defn nav-bar
   []
   (let [page @(rf/subscribe [:current-page])
