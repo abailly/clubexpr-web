@@ -50,8 +50,8 @@
     (assoc db :current-page :landing
               :authenticated false
               :auth-data {:access-token ""
-                          :id-token     ""
-                          :expires-at   ""})))
+                          :expires-at   ""
+                          :user-id      ""})))
 
 (rf/reg-event-fx
   :profile-cancel
