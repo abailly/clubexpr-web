@@ -11,7 +11,7 @@
 
 (s/def ::profile-page
   (s/and ;map?
-         (s/keys :req-un [::quality ::lastname ::firstname])))
+         (s/keys :req-un [::quality ::school ::lastname ::firstname])))
 (s/def ::quality string?)
 (s/def ::school string?)
 (s/def ::lastname string?)
