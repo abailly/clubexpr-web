@@ -1,6 +1,7 @@
 (ns club.events
   (:require
     [clojure.string :as str]
+    [clojure.walk :refer [keywordize-keys]]
     [re-frame.core :as rf]
     [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
@@ -124,6 +125,48 @@
                  {:db new-db :auth query-params})]
        cofx)))
 
+(defn base-user-record
+  [auth0-id]
+  {:auth0-id auth0-id
+   :quality "scholar"
+   :school "fake-id-no-school"
+   :lastname ""
+   :firstname ""})
+
+(defn set-auth-data!
+  [{:keys [auth0-id access-token expires-at         ; from new-user-data
+           id quality school lastname firstname]}]  ; from the new record
+  (swap! app-db assoc-in [:authenticated] true)
+  ; from new-user-data
+  (swap! app-db assoc-in [:auth-data :auth0-id] auth0-id)
+  (swap! app-db assoc-in [:auth-data :access-token] access-token)
+  (swap! app-db assoc-in [:auth-data :expires-at] expires-at)
+  ; from a record
+  (swap! app-db assoc-in [:auth-data :kinto-id] id)
+  (swap! app-db assoc-in [:profile-page] {:quality quality
+                                          :school school
+                                          :lastname lastname
+                                          :firstname firstname})
+  (check-and-throw :club.db/db @app-db))
+
+(defn process-user-check!
+  [result new-user-data]
+  (let [new-auth0-id (:auth0-id new-user-data)
+        user-with-same-auth0-id (->> result
+                                     js->clj
+                                     keywordize-keys
+                                     :data
+                                     (filter #(= new-auth0-id (:auth0-id %)))
+                                     first)]
+    (if (nil? user-with-same-auth0-id)
+      (.. club.db/k-users
+         (createRecord (clj->js (base-user-record new-auth0-id)))
+         (then #(set-auth-data! (merge new-user-data (->> %
+                                                          js->clj
+                                                          keywordize-keys
+                                                          :data)))))
+      (set-auth-data! (merge new-user-data user-with-same-auth0-id)))))
+
 (rf/reg-fx
   :auth
   (fn [{:keys [access_token expires_in id_token]}]  ; we left: token_type state
@@ -141,23 +184,18 @@
                                              (println id_token)
                                              (println decoded-json)
                                              js/Object))
-          user-id (getValueByKeys decoded-js "sub")]
-      (if (not (nil? user-id))
+          auth0-id (getValueByKeys decoded-js "sub")
+          new-user-data {:auth0-id auth0-id
+                         :access-token access_token
+                         :expires-at expires-at}]
+      (if (not (nil? auth0-id))
         (do
-          (swap! app-db assoc-in [:authenticated] true)
-          (swap! app-db assoc-in [:auth-data :access-token] access_token)
-          (swap! app-db assoc-in [:auth-data :expires-at] expires-at)
-          (swap! app-db assoc-in [:auth-data :user-id] user-id)))
-          (check-and-throw :club.db/db @app-db)
-          ; create the user
+          ; check if the user already exists
           (.. club.db/k-users
-              (createRecord (clj->js {:auth0-id user-id
-                                     :quality "scholar"
-                                     :school "fake-id-no-school"
-                                     :lastname ""
-                                     :firstname "" })))
+              (listRecords)
+              (then #(process-user-check! % new-user-data))))
 
-          ; Store auth time
+          ; Store authentication time
           ; TODO
-
+      )
     )))
