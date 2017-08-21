@@ -130,9 +130,6 @@
     ; Clean the URL
     ; window.location.hash = '';
 
-    ; Store auth time
-    ; TODO
-
     (let [expires-in (js/parseInt expires_in)
           expires-at (str (+ (* expires-in 1000) (.getTime (new js/Date))))
           decoded-json (-> id_token
@@ -152,4 +149,15 @@
           (swap! app-db assoc-in [:auth-data :expires-at] expires-at)
           (swap! app-db assoc-in [:auth-data :user-id] user-id)))
           (check-and-throw :club.db/db @app-db)
+          ; create the user
+          (.. club.db/k-users
+              (createRecord (clj->js {:auth0-id user-id
+                                     :quality "scholar"
+                                     :school "fake-id-no-school"
+                                     :lastname ""
+                                     :firstname "" })))
+
+          ; Store auth time
+          ; TODO
+
     )))

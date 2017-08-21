@@ -1,6 +1,10 @@
 (ns club.db
   (:require [cljs.spec :as s]
-            [re-frame.db :refer [app-db]]))
+            [webpack.bundle]
+            [goog.object :refer [getValueByKeys]]
+            [re-frame.core :as rf]
+            [re-frame.db :refer [app-db]]
+            [club.config :as config]))
 
 (s/def ::current-page keyword?)
 (s/def ::attempt-code string?)
@@ -40,6 +44,21 @@
                   :lastname ""
                   :firstname ""}})
 
+
+(def k-client
+  (let [b64 (js/window.btoa "user:pass")
+        url (if club.config/debug?
+              "http://localhost:8887/v1"
+              "https://kinto.expressions.club/v1")
+        opts (clj->js {:remote url
+                       :headers {:Authorization (str "Basic " b64)}})
+        kinto (getValueByKeys js/window "deps" "kinto")
+        kinto-instance (new kinto opts)]
+    (.-api kinto-instance)))
+
+(def k-users (.. k-client
+                 (bucket "default")
+                 (collection "users")))
 (defn fetch-profile-data!
   []
   (swap! app-db assoc-in [:profile-page]
