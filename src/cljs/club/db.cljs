@@ -66,6 +66,14 @@
                  (bucket "default")
                  (collection "users")))
 
+(defn base-user-record
+  [auth0-id]
+  {:auth0-id auth0-id
+   :quality "scholar"
+   :school "fake-id-no-school"
+   :lastname ""
+   :firstname ""})
+
 (defn set-auth-data!
   [{:keys [auth0-id access-token expires-at         ; from new-user-data
            id quality school lastname firstname]}]  ; from the new record

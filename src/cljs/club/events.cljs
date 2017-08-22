@@ -6,7 +6,7 @@
     [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
     [club.db]
-    [club.db :refer [set-auth-data!]]
+    [club.db :refer [base-user-record set-auth-data!]]
     [club.utils :refer [parse-url get-url-all! get-url-root!]]
     [cljs.spec     :as s]
     [goog.crypt.base64 :refer [decodeString]]))
@@ -158,14 +158,6 @@
                  {:db new-db}
                  {:db new-db :auth query-params :clean-url nil})]
        cofx)))
-
-(defn base-user-record
-  [auth0-id]
-  {:auth0-id auth0-id
-   :quality "scholar"
-   :school "fake-id-no-school"
-   :lastname ""
-   :firstname ""})
 
 (defn process-user-check!
   [result new-user-data]
