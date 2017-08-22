@@ -64,6 +64,21 @@
   :profile-cancel
   (fn [_]
     (club.db/fetch-profile-data!)
+    (.. club.db/k-users
+        (getRecord (clj->js (-> @app-db :auth-data :kinto-id)))
+        (then #(set-auth-data!
+                 (merge {:access-token (-> @app-db :auth-data :access-token)
+                         :expires-at (-> @app-db :auth-data :expires-at)}
+                        (->> %
+                             js->clj
+                             keywordize-keys
+                             :data)))))
+    ; TODO useless use of set-auth-data! : these 4 already set
+    ;(swap! app-db assoc-in [:authenticated] true)
+    ;; from new-user-data
+    ;(swap! app-db assoc-in [:auth-data :auth0-id] auth0-id)
+    ;(swap! app-db assoc-in [:auth-data :access-token] access-token)
+    ;(swap! app-db assoc-in [:auth-data :expires-at] expires-at)
     ))
 
 (rf/reg-event-fx
@@ -74,7 +89,23 @@
 (rf/reg-fx
   :profile-save
   (fn [_]
-    (println "save")
+    (.. club.db/k-users
+        (updateRecord (clj->js
+                        {:id       (-> @app-db :auth-data :kinto-id)
+                         :auth0-id (-> @app-db :auth-data :auth0-id)
+                         :quality   (-> @app-db :profile-page :quality)
+                         :school    (-> @app-db :profile-page :school)
+                         :lastname  (-> @app-db :profile-page :lastname)
+                         :firstname (-> @app-db :profile-page :firstname)}))
+        (then #(rf/dispatch [:profile-save-ok]))
+    )))
+
+(rf/reg-event-db
+  :profile-save-ok
+  [check-spec-interceptor]
+  (fn [db [_ _]]
+    ; TODO: set a flag in the state to display «new profile saved»
+    db
     ))
 
 (rf/reg-event-db
