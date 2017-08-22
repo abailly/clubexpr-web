@@ -6,6 +6,7 @@
     [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
     [club.db]
+    [club.db :refer [set-auth-data!]]
     [club.utils :refer [parse-url get-url-all! get-url-root!]]
     [cljs.spec     :as s]
     [goog.crypt.base64 :refer [decodeString]]))
@@ -132,22 +133,6 @@
    :school "fake-id-no-school"
    :lastname ""
    :firstname ""})
-
-(defn set-auth-data!
-  [{:keys [auth0-id access-token expires-at         ; from new-user-data
-           id quality school lastname firstname]}]  ; from the new record
-  (swap! app-db assoc-in [:authenticated] true)
-  ; from new-user-data
-  (swap! app-db assoc-in [:auth-data :auth0-id] auth0-id)
-  (swap! app-db assoc-in [:auth-data :access-token] access-token)
-  (swap! app-db assoc-in [:auth-data :expires-at] expires-at)
-  ; from a record
-  (swap! app-db assoc-in [:auth-data :kinto-id] id)
-  (swap! app-db assoc-in [:profile-page] {:quality quality
-                                          :school school
-                                          :lastname lastname
-                                          :firstname firstname})
-  (check-and-throw :club.db/db @app-db))
 
 (defn process-user-check!
   [result new-user-data]
