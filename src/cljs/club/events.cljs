@@ -160,11 +160,11 @@
                                      first)]
     (if (nil? user-with-same-auth0-id)
       (.. club.db/k-users
-         (createRecord (clj->js (base-user-record new-auth0-id)))
-         (then #(set-auth-data! (merge new-user-data (->> %
-                                                          js->clj
-                                                          keywordize-keys
-                                                          :data)))))
+          (createRecord (clj->js (base-user-record new-auth0-id)))
+          (then #(set-auth-data! (merge new-user-data (->> %
+                                                           js->clj
+                                                           keywordize-keys
+                                                           :data)))))
       (set-auth-data! (merge new-user-data user-with-same-auth0-id)))))
 
 (rf/reg-fx

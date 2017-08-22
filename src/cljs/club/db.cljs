@@ -64,6 +64,7 @@
 (def k-users (.. k-client
                  (bucket "default")
                  (collection "users")))
+
 (defn fetch-profile-data!
   []
   (swap! app-db assoc-in [:profile-page]
