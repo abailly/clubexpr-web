@@ -53,7 +53,11 @@
               :authenticated false
               :auth-data {:access-token ""
                           :expires-at   ""
-                          :user-id      ""})))
+                          :user-id      ""}
+              :profile-page {:quality "scholar"
+                             :school "fake-id-no-school"
+                             :lastname ""
+                             :firstname ""})))
 
 (rf/reg-event-fx
   :profile-cancel
