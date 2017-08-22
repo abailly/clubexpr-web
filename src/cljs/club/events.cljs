@@ -171,7 +171,7 @@
   :auth
   (fn [{:keys [access_token expires_in id_token]}]  ; we left: token_type state
     ; Clean the URL
-    ; window.location.hash = '';
+    (set! (-> js/window .-location .-hash) "")
 
     (let [expires-in (js/parseInt expires_in)
           expires-at (str (+ (* expires-in 1000) (.getTime (new js/Date))))
