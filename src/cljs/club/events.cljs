@@ -46,18 +46,25 @@
   (fn [_]
     (.authorize webauth)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   :logout
-  (fn [db _]
-    (assoc db :current-page :landing
-              :authenticated false
-              :auth-data {:access-token ""
-                          :expires-at   ""
-                          :user-id      ""}
-              :profile-page {:quality "scholar"
-                             :school "fake-id-no-school"
-                             :lastname ""
-                             :firstname ""})))
+  (fn [{:keys [db]} _]
+    {:db (assoc db :current-page :landing
+                   :authenticated false
+                   :auth-data {:kinto-id ""
+                               :auth0-id ""
+                               :access-token ""
+                               :expires-at   ""}
+                   :profile-page {:quality "scholar"
+                                  :school "fake-id-no-school"
+                                  :lastname ""
+                                  :firstname ""})
+     :clean-url nil}))
+
+(rf/reg-fx
+  :clean-url
+  (fn []
+    (set! (-> js/window .-location .-hash) "")))
 
 (rf/reg-event-fx
   :profile-cancel
@@ -149,7 +156,7 @@
           new-db (if (empty? db) db (assoc db :current-page page))
           cofx (if (empty? query-params)
                  {:db new-db}
-                 {:db new-db :auth query-params})]
+                 {:db new-db :auth query-params :clean-url nil})]
        cofx)))
 
 (defn base-user-record
@@ -181,9 +188,6 @@
 (rf/reg-fx
   :auth
   (fn [{:keys [access_token expires_in id_token]}]  ; we left: token_type state
-    ; Clean the URL
-    (set! (-> js/window .-location .-hash) "")
-
     (let [expires-in (js/parseInt expires_in)
           expires-at (str (+ (* expires-in 1000) (.getTime (new js/Date))))
           decoded-json (-> id_token
