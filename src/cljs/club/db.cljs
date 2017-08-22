@@ -1,5 +1,6 @@
 (ns club.db
   (:require [cljs.spec :as s]
+            [clojure.walk :refer [keywordize-keys]]
             [webpack.bundle]
             [goog.object :refer [getValueByKeys]]
             [re-frame.core :as rf]
@@ -85,11 +86,15 @@
 
 (defn fetch-profile-data!
   []
-  (swap! app-db assoc-in [:profile-page]
-    {:quality "teacher"
-     :school "fake-id-0441993C"
-     :lastname "Gragnic"
-     :firstname "Christophe"}))
+  (.. club.db/k-users
+      (getRecord (clj->js (-> @app-db :auth-data :kinto-id)))
+      (then #(set-auth-data!
+               (merge {:access-token (-> @app-db :auth-data :access-token)
+                       :expires-at (-> @app-db :auth-data :expires-at)}
+                      (->> %
+                           js->clj
+                           keywordize-keys
+                           :data))))))
 
 (defn get-schools!
   []

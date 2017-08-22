@@ -68,15 +68,6 @@
   :profile-cancel
   (fn [_]
     (club.db/fetch-profile-data!)
-    (.. club.db/k-users
-        (getRecord (clj->js (-> @app-db :auth-data :kinto-id)))
-        (then #(set-auth-data!
-                 (merge {:access-token (-> @app-db :auth-data :access-token)
-                         :expires-at (-> @app-db :auth-data :expires-at)}
-                        (->> %
-                             js->clj
-                             keywordize-keys
-                             :data)))))
     ; TODO useless use of set-auth-data! : these 4 already set
     ;(swap! app-db assoc-in [:authenticated] true)
     ;; from new-user-data
