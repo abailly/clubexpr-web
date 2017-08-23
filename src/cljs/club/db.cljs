@@ -5,6 +5,7 @@
             [goog.object :refer [getValueByKeys]]
             [re-frame.core :as rf]
             [re-frame.db :refer [app-db]]
+            [club.utils :refer [data-from-js-obj]]
             [club.config :as config]))
 
 (s/def ::current-page keyword?)
@@ -99,10 +100,7 @@
       (then #(set-auth-data!
                (merge {:access-token (-> @app-db :auth-data :access-token)
                        :expires-at (-> @app-db :auth-data :expires-at)}
-                      (->> %
-                           js->clj
-                           keywordize-keys
-                           :data))))))
+                      (data-from-js-obj %))))))
 
 (defn get-schools!
   []

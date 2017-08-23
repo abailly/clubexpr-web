@@ -5,6 +5,12 @@
             [reagent.core :as r]
             [webpack.bundle]))
  
+(defn data-from-js-obj
+  [obj]
+  (-> obj js->clj
+          keywordize-keys
+          :data))
+
 (defn parse-url
   [url]
   (let [splitted-url (str/split url "#/")]
