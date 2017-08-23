@@ -63,8 +63,7 @@
     [:> (bs 'Navbar)
       [:div.container-fluid
         [:> (bs 'Navbar 'Header)
-          [:> (bs 'Navbar 'Brand)
-            [:a {:href "/"} (t ["Club des Expressions"])]]
+          [:> (bs 'Navbar 'Brand) (t ["Club des Expressions"])]
           [:> (bs 'Navbar 'Toggle)]]
         [:> (bs 'Navbar 'Collapse)
           [:> (bs 'Nav)
