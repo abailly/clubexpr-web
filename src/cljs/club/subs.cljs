@@ -1,6 +1,9 @@
 (ns club.subs
-  (:require-macros [reagent.ratom :refer [reaction]])
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as rf]
+            [reagent.ratom :refer [make-reaction]]
+            [clojure.walk :refer [keywordize-keys]]
+            [club.utils :refer [data-from-js-obj]]
+            [club.db :refer [get-users!]]))
 
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
@@ -31,6 +34,11 @@
  :profile-school
  (fn [db]
    (-> db :profile-page :school)))
+
+(rf/reg-sub
+ :profile-teacher
+ (fn [db]
+   (-> db :profile-page :teacher)))
 
 (rf/reg-sub
  :profile-lastname
@@ -65,3 +73,34 @@
            (filter #(= profile-school (:id %)))
            first
            :name))))
+
+(rf/reg-sub-raw
+ :profile-teachers-list
+  (fn [app-db _]
+    (let [school-id (get-in @app-db [:profile-page :school])
+          _ (get-users!
+              {:on-success
+                #(rf/dispatch
+                  [:write-teachers-list
+                    (->> % data-from-js-obj
+                           (filter (fn [x] (= "teacher" (:quality x))))
+                           (filter (fn [x] (= school-id (:school x))))
+                           (map (fn [x] {:id (:id x) :lastname (:lastname x)}))
+                           vec
+                                             )])})]
+      (make-reaction
+        (fn [] (get-in @app-db [:profile-page :teachers-list] []))
+        :on-dispose #(do)))))
+
+(rf/reg-sub
+ :profile-teacher-pretty
+  (fn [query-v _]
+    [(rf/subscribe [:profile-teacher])
+     (rf/subscribe [:profile-teachers-list])])
+  (fn [[profile-teacher profile-teachers-list] query-v _]
+    (case profile-teacher
+      "no-teacher" (t ["Pas de Professeur"])
+      (->> profile-teachers-list
+           (filter #(= profile-teacher (:id %)))
+           first
+           :lastname))))

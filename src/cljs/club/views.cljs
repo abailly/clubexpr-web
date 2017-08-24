@@ -270,6 +270,23 @@
                            {:eventKey (:id school)}
                            (:name school)])
 
+(defn teacher->menu-item
+  [{:keys [id lastname]}]
+  ^{:key id} [:> (bs 'MenuItem) {:eventKey id} lastname]
+  )
+
+(defn teachers-dropdown
+  []
+  (let [teachers-list @(rf/subscribe [:profile-teachers-list])]
+    [:> (bs 'DropdownButton)
+        {:title @(rf/subscribe [:profile-teacher-pretty])
+         :on-select #(rf/dispatch [:profile-teacher %])}
+       ^{:key "no-teacher"} [:> (bs 'MenuItem) {:eventKey "no-teacher"}
+                                               (t ["Pas de professeur"])]
+       (when (not (empty? teachers-list))
+         [[:> (bs 'MenuItem) {:divider true}]
+          (map teacher->menu-item teachers-list)])]))
+
 (defn page-profile
   []
   (let [lastname  [profile-input {:label (t ["Nom"])
@@ -311,6 +328,11 @@
               [:> (bs 'ToggleButton) {:value "teacher"} (t ["Professeur"])]]]]
         [:div {:style {:margin-bottom "1em"}}  ; TODO CSS
           school]
+        (if (= "scholar" @(rf/subscribe [:profile-quality]))
+          [:div {:style {:margin-bottom "1em"}}  ; TODO CSS
+            [:> (bs 'ControlLabel) (t ["Professeur : "])]
+            [teachers-dropdown @(rf/subscribe [:profile-school])]]
+          "")
         lastname
         (if (= "scholar" @(rf/subscribe [:profile-quality]))
           firstname

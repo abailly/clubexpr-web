@@ -13,9 +13,17 @@
 
 (s/def ::profile-page
   (s/and ;map?
-         (s/keys :req-un [::quality ::school ::lastname ::firstname])))
+         (s/keys :req-un [::quality
+                          ::school
+                          ::teachers-list  ; UI only, not stored in profile
+                          ::teacher
+                          ::lastname
+                          ::firstname])))
 (s/def ::quality string?)
 (s/def ::school string?)
+(s/def ::teachers-list #(instance? PersistentVector %))
+; TODO: empty or containing maps like {:id "val" :lastname "val"}
+(s/def ::teacher string?)
 (s/def ::lastname string?)
 (s/def ::firstname string?)
 
@@ -48,6 +56,8 @@
    :attempt-code "(Somme 1 (Produit 2 x))"
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"
+                  :teachers-list []
+                  :teacher "no-teacher"
                   :lastname ""
                   :firstname ""}})
 
@@ -72,12 +82,15 @@
   {:auth0-id auth0-id
    :quality "scholar"
    :school "fake-id-no-school"
+   :teacher "no-teacher"
    :lastname ""
    :firstname ""})
 
 (defn set-auth-data!
-  [{:keys [auth0-id access-token expires-at         ; from new-user-data
-           id quality school lastname firstname]}]  ; from the new record
+  [{:keys [; from new-user-data
+           auth0-id access-token expires-at
+           ; from the new record
+           id quality school teacher lastname firstname]}]
   (swap! app-db assoc-in [:authenticated] true)
   ; from new-user-data
   (swap! app-db assoc-in [:auth-data :auth0-id] auth0-id)
@@ -87,6 +100,8 @@
   (swap! app-db assoc-in [:auth-data :kinto-id] id)
   (swap! app-db assoc-in [:profile-page] {:quality quality
                                           :school school
+                                          :teacher teacher
+                                          :teachers-list []
                                           :lastname lastname
                                           :firstname firstname})
   ; TODO circular dep if require events:
@@ -763,3 +778,9 @@
     ;{:id "fake-id-0851647D" :code "0851647D" :name "Collège GEORGES CLEMENCEAU"}
     ;{:id "fake-id-0851655M" :code "0851655M" :name "Collège JACQUES LAURENT"}
   ])
+
+(defn get-users!
+  [{:keys [on-success] :or {on-success identity}}]
+  (.. club.db/k-users
+      (listRecords)
+      (then on-success)))

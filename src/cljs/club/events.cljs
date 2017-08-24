@@ -57,6 +57,8 @@
                                :expires-at   ""}
                    :profile-page {:quality "scholar"
                                   :school "fake-id-no-school"
+                                  :teacher "no-teacher"
+                                  :teachers-list ""
                                   :lastname ""
                                   :firstname ""})
      :clean-url nil}))
@@ -97,6 +99,7 @@
                          :auth0-id (-> @app-db :auth-data :auth0-id)
                          :quality   (-> @app-db :profile-page :quality)
                          :school    (-> @app-db :profile-page :school)
+                         :teacher   (-> @app-db :profile-page :teacher)
                          :lastname  (-> @app-db :profile-page :lastname)
                          :firstname (-> @app-db :profile-page :firstname)}))
         (then #(rf/dispatch [:profile-save-ok]))
@@ -127,6 +130,12 @@
   [check-spec-interceptor]
   (fn [db [_ new-value]]
     (assoc-in db [:profile-page :school] new-value)))
+
+(rf/reg-event-db
+  :profile-teacher
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:profile-page :teacher] new-value)))
 
 (rf/reg-event-db
   :profile-lastname
@@ -201,3 +210,9 @@
           ; TODO
       )
     )))
+
+(rf/reg-event-db
+  :write-teachers-list
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:profile-page :teachers-list] new-value)))
