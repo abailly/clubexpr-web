@@ -41,11 +41,13 @@
 
 (defn get-url-root!
   []
-  (let [hostname (-> js/window .-location .-hostname)
+  (let [protocol (-> js/window .-location .-protocol)
+        hostname (-> js/window .-location .-hostname)
+        protocol+hostname (str protocol "//" hostname)
         port (-> js/window .-location .-port)]
     (if (empty? port)
-      hostname
-      (str hostname ":" port "/"))))
+      protocol+hostname
+      (str protocol+hostname ":" port "/"))))
 
 ;(def FormControl (r/adapt-react-class (.-FormControl js/ReactBootstrap)))
 (def FormControl
