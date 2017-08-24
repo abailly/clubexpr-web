@@ -184,8 +184,8 @@
 (rf/reg-fx
   :auth
   (fn [{:keys [access_token expires_in id_token]}]  ; we left: token_type state
-    (let [expires-in (js/parseInt expires_in)
-          expires-at (str (+ (* expires-in 1000) (.getTime (new js/Date))))
+    (let [expires-in-num (js/parseInt expires_in)
+          expires-at (str (+ (* expires-in-num 1000) (.getTime (new js/Date))))
           decoded-json (-> id_token
                           (str/split ".")
                           second
