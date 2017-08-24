@@ -99,7 +99,7 @@
      (rf/subscribe [:profile-teachers-list])])
   (fn [[profile-teacher profile-teachers-list] query-v _]
     (case profile-teacher
-      "no-teacher" (t ["Pas de Professeur"])
+      "no-teacher" (t ["Pas de professeur"])
       (->> profile-teachers-list
            (filter #(= profile-teacher (:id %)))
            first
