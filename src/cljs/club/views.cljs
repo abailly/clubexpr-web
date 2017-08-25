@@ -296,8 +296,9 @@
        ^{:key "no-teacher"} [:> (bs 'MenuItem) {:eventKey "no-teacher"}
                                                (t ["Pas de professeur"])]
        (when (not (empty? teachers-list))
-         [[:> (bs 'MenuItem) {:divider true}]
-          (map teacher->menu-item teachers-list)])]))
+         [:> (bs 'MenuItem) {:divider true}])
+       (when (not (empty? teachers-list))
+         (map teacher->menu-item teachers-list))]))
 
 (defn page-profile
   []
