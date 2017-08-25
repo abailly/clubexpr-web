@@ -204,7 +204,8 @@
           ; check if the user already exists
           (.. club.db/k-users
               (listRecords)
-              (then #(process-user-check! % new-user-data))))
+              (then #(process-user-check! % new-user-data))
+              (catch #(js/alert %))))
 
           ; Store authentication time
           ; TODO

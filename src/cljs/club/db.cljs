@@ -783,4 +783,5 @@
   [{:keys [on-success] :or {on-success identity}}]
   (.. club.db/k-users
       (listRecords)
-      (then on-success)))
+      (then on-success)
+      (catch #(js/alert %))))
