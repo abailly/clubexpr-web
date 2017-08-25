@@ -6,7 +6,7 @@
     [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
     [club.db]
-    [club.db :refer [base-user-record set-auth-data!]]
+    [club.db :refer [base-user-record logout-db-fragment set-auth-data!]]
     [club.utils :refer [data-from-js-obj parse-url get-url-all! get-url-root!]]
     [cljs.spec     :as s]
     [goog.crypt.base64 :refer [decodeString]]))
@@ -49,18 +49,7 @@
 (rf/reg-event-fx
   :logout
   (fn [{:keys [db]} _]
-    {:db (assoc db :current-page :landing
-                   :authenticated false
-                   :auth-data {:kinto-id ""
-                               :auth0-id ""
-                               :access-token ""
-                               :expires-at   ""}
-                   :profile-page {:quality "scholar"
-                                  :school "fake-id-no-school"
-                                  :teacher "no-teacher"
-                                  :teachers-list ""
-                                  :lastname ""
-                                  :firstname ""})
+    {:db (merge db logout-db-fragment)
      :clean-url nil}))
 
 (rf/reg-fx

@@ -46,14 +46,13 @@
                              ::profile-page
                              ]))
 
-(def default-db
+(def logout-db-fragment
   {:current-page :landing
    :authenticated false
-   :auth-data {:auth0-id ""
-               :kinto-id ""
+   :auth-data {:kinto-id ""
+               :auth0-id ""
                :access-token ""
-               :expires-at ""}
-   :attempt-code "(Somme 1 (Produit 2 x))"
+               :expires-at   ""}
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"
                   :teachers-list []
@@ -61,6 +60,8 @@
                   :lastname ""
                   :firstname ""}})
 
+(def default-db
+   (merge logout-db-fragment {:attempt-code "(Somme 1 (Produit 2 x))"}))
 
 (def k-client
   (let [b64 (js/window.btoa "user:pass")
