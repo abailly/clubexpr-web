@@ -194,22 +194,16 @@
                           (catch js/Object e (println e)
                                              (println id_token)
                                              (println decoded-json)
-                                             js/Object))
+                                             js/Object)) ; default: empty obj
           auth0-id (getValueByKeys decoded-js "sub")
           new-user-data {:auth0-id auth0-id
                          :access-token access_token
                          :expires-at expires-at}]
       (if (not (nil? auth0-id))
-        (do
-          ; check if the user already exists
-          (.. club.db/k-users
-              (listRecords)
-              (then #(process-user-check! % new-user-data))
-              (catch #(js/alert %))))
-
-          ; Store authentication time
-          ; TODO
-      )
+        (.. club.db/k-users
+            (listRecords)
+            (then #(process-user-check! % new-user-data))
+            (catch #(js/alert %))))
     )))
 
 (rf/reg-event-db
