@@ -170,12 +170,21 @@
         [:a {:href "https://twitter"} "@ClubExpr"]]]
    ])
 
+(defn empty-profile
+  []
+  [:div
+    [:h2 (t ["Votre profil semble vide"])]
+    [:p (t ["Vous n’avez pas indiqué votre nom. Veuillez remplir votre profil et revenir sur cette page."])]])
+
 (defn page-help-scholar
   []
   [:div
     [:div.jumbotron
-      [:h2 (t ["Aide pour les élèves"])]
-      [:p (t ["Si vous n’êtes pas élève, modifiez votre profil."])]]
+      (if (empty? @(rf/subscribe [:profile-lastname]))
+        [empty-profile]
+        [:div
+          [:h2 (t ["Aide pour les élèves"])]
+          [:p (t ["Si vous n’êtes pas élève, modifiez votre profil. Vous pourrez y indiquer votre qualité de professeur.."])]])]
     [:> (bs 'Grid)
       [:> (bs 'Row)
         [:h1 (t ["Qu’est-ce que le Club des Expressions ?"])]
@@ -211,8 +220,11 @@
   []
   [:div
     [:div.jumbotron
-      [:h2 (t ["Aide pour les professeurs"])]
-      [:p (t ["Si vous n’êtes pas professeur, modifiez votre profil."])]]
+      (if (empty? @(rf/subscribe [:profile-lastname]))
+        [empty-profile]
+        [:div
+          [:h2 (t ["Aide pour les professeurs"])]
+          [:p (t ["Si vous n’êtes pas professeur, modifiez votre profil sinon votre professeur ne pourra pas vous retrouver."])]])]
     [:> (bs 'Grid)
       [:> (bs 'Row)
         [:h1 (t ["Qu’est-ce que le Club des Expressions ?"])]
