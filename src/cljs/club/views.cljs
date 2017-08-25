@@ -156,8 +156,8 @@
   []
   [:div
     [:div.jumbotron
-      [:h2 (t ["Aide pour les invités"])]]
-    [:h2 (t ["Commencez par vous connecter (bouton en haut à droite)."])]
+      [:h2 (t ["Nous ne pouvons pas encore vous donner de l’aide."])]]
+    [:h3 (t ["Commencez par vous connecter (bouton en haut à droite)."])]
     [:p (t ["Une aide vous sera proposée en fonction de votre profil."])]
     [:p (t ["En cas de problème pour vous connecter, veuillez nous contacter :"])]
     [:ul
