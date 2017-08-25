@@ -59,7 +59,8 @@
   []
   (let [page @(rf/subscribe [:current-page])
         active #(if (= %1 %2) "active" "")
-        authenticated @(rf/subscribe [:authenticated])]
+        authenticated @(rf/subscribe [:authenticated])
+        quality @(rf/subscribe [:profile-quality])]
     [:> (bs 'Navbar)
       [:div.container-fluid
         [:> (bs 'Navbar 'Header)
@@ -76,7 +77,11 @@
             (if authenticated
               [:> (bs 'NavItem) {:eventKey 2
                                  :href "#/profile"
-                                 :class (active page :profile)} (t ["Profil"])])]
+                                 :class (active page :profile)} (t ["Profil"])])
+            (if (= quality "teacher")
+              [:> (bs 'NavItem) {:eventKey 3
+                                 :href "#/groups"
+                                 :class (active page :groups)} (t ["Groupes"])])]
           [:> (bs 'Nav) {:pullRight true}
             (if authenticated
               [:> (bs 'NavItem)
@@ -362,6 +367,35 @@
       ]
     ]))
 
+(defn page-groups
+  []
+  [:div
+    [:div.jumbotron
+      [:h2 (t ["Groupes"])]
+      [:p (t ["Assignez chacun de vos élèves à un ou plusieurs groupes"])]]
+      [:p (t ["Un groupe peut correspondre : à des classes entières, à des demis-groupes d’une classe, à des élèves ayant des besoins spécifiques (remédiation ou approfondissement) au sein de l’Accompagnement Personnalisé ou non…"])]
+    [:> (bs 'Grid)
+      [:> (bs 'Row)
+        [:> (bs 'Col) {:xs 6 :md 6}
+          [:h2 (t ["Vos élèves"])]
+          [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+            [:li "Blabla"]
+            [:li "Blabla"]
+            [:li "Blabla"]
+            [:li "Blabla"]
+            [:li "Blabla"]]]
+        [:> (bs 'Col) {:xs 6 :md 6}
+          [:h2 (t ["Vos groupes"])]
+          [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+            [:li "Blabla"]
+            [:li "Blabla"]
+            [:li "Blabla"]
+            [:li "Blabla"]
+            [:li "Blabla"]]]
+       ]]
+
+  ])
+
 (defn page-forbidden
   []
   [:div.jumbotron
@@ -370,6 +404,7 @@
 (defn main-panel []
   (fn []
     (let [authenticated  @(rf/subscribe [:authenticated])
+          quality        @(rf/subscribe [:profile-quality])
           current-page   @(rf/subscribe [:current-page])]
       [:div
         [:div.container
@@ -381,7 +416,8 @@
             (case current-page
               :landing [page-landing]
               :help [page-help]
-              :profile [page-profile])
+              :profile [page-profile]
+              :groups [page-groups])
             [page-forbidden]
           )
           [footer]
