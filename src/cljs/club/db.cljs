@@ -12,7 +12,7 @@
 (s/def ::attempt-code string?)
 
 (s/def ::profile-page
-  (s/and ;map?
+  (s/and map?
          (s/keys :req-un [::quality
                           ::school
                           ::teachers-list  ; UI only, not stored in profile
@@ -29,7 +29,7 @@
 
 (s/def ::authenticated boolean?)
 (s/def ::auth-data
-  (s/and ;map?
+  (s/and map?
          (s/keys :req-un [::auth0-id
                           ::kinto-id
                           ::access-token
