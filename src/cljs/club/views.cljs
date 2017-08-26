@@ -441,9 +441,8 @@
           )
           [footer]
         ]
-        (when (and true config/debug?) [:pre {:style {:position "absolute"
-                                                      :bottom "0px"
-                                                      :width "100%"}}
-                                             (with-out-str (pprint @app-db))])
+        (when (and true config/debug?)
+          [:pre {:style {:position "absolute" :bottom "0px" :width "100%"}}
+            (with-out-str (pprint @app-db))])
       ]
     )))
