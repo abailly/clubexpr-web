@@ -45,6 +45,11 @@
       [:> (bs 'FormControl 'Feedback)]
       [:> (bs 'HelpBlock) help]]])
 
+(def tokeninput (getValueByKeys js/window "deps" "react-tokeninput"))
+(def tokeninput-combobox (getValueByKeys tokeninput "Combobox"))
+(def tokeninput-option (getValueByKeys tokeninput "Option"))
+; Combobox Option Token default
+
 (defn rendition
   [src]
   (let [react-mathjax (getValueByKeys js/window "deps" "react-mathjax")
@@ -367,6 +372,19 @@
       ]
     ]))
 
+(defn groups-tokeninput
+  [scholar-id]
+  [:> tokeninput-combobox
+     {:isLoading false
+      ; loadingComponent
+      ;:menuContent (map groups-option ["abc" "def" "ghi"])
+      ;:onChange #(rf/dispatch [:group-change %])
+      ;:onInput #(rf/dispatch [:group-input %])
+      ;:onSelect #(rf/dispatch [:group-select %])
+      ;:onRemove #(rf/dispatch [:group-remove %])
+      ;:selected @(rf/subscribe [:groups-selected scholar-id])
+      :placeholder (t ["Assigner à un groupe"])}])
+
 (defn page-groups
   []
   [:div
@@ -379,6 +397,7 @@
         [:> (bs 'Col) {:xs 6 :md 6}
           [:h2 (t ["Vos élèves"])]
           [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+            [:li "Blabla" (groups-tokeninput "scholar-id")]
             [:li "Blabla"]
             [:li "Blabla"]
             [:li "Blabla"]
