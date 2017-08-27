@@ -386,7 +386,7 @@
         :onChange #(rf/dispatch [:groups-change %])
         :onInput  #(rf/dispatch [:groups-input [scholar-id %]])
         :onSelect #(rf/dispatch [:groups-select [scholar-id %]])
-        :onRemove #(rf/dispatch [:groups-remove %])
+        :onRemove #(rf/dispatch [:groups-remove [scholar-id %]])
         ;:selected @(rf/subscribe [:groups-selected scholar-id])
         :placeholder (t ["Assigner à un groupe"])}]])
 

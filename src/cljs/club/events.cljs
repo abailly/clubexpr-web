@@ -207,7 +207,7 @@
   [check-spec-interceptor]
   (fn [db [_ [scholar-id value]]]
     (println (str "c:" value))
-    (assoc-in db [:groups-page scholar-id :selected] value)))
+    (assoc-in db [:groups-page scholar-id :groups] value)))
 
 (rf/reg-event-db
   :groups-input
@@ -226,10 +226,10 @@
   (fn [db [_ [scholar-id value]]]
     (println (str "s:" value))
 	; this.handleChange(selected); TODO
-    (let [old-selected (-> db :groups-page (get scholar-id) :selected set)
-          selected (into old-selected [value])]
+    (let [old-groups (-> db :groups-page (get scholar-id) :groups set)
+          groups (into old-groups [value])]
       (-> db
-        (assoc-in [:groups-page scholar-id :selected] selected)
+        (assoc-in [:groups-page scholar-id :groups] groups)
         (assoc-in [:groups-page scholar-id :options] [])))))
 
 (rf/reg-event-db
@@ -238,7 +238,7 @@
   (fn [db [_ [scholar-id value]]]
     (println (str "r:" value))
 	; this.handleChange(selected); TODO
-    (let [old-selected (-> db :groups-page (get scholar-id) :selected set)
-          selected (difference old-selected #{value})]
+    (let [old-groups (-> db :groups-page (get scholar-id) :groups set)
+          groups (difference old-groups #{value})]
       (-> db
-        (assoc-in [:groups-page scholar-id :selected] selected)))))
+        (assoc-in [:groups-page scholar-id :groups] groups)))))
