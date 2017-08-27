@@ -42,7 +42,8 @@
 (s/def ::groups-page
   (s/and map?
          ; TODO for each scholar id we have a map with
-         ; a map with :options a list of strings :groups a set of strings
+         ; :lastname (string) :firstname (string)
+         ; :options (list of strings) :groups (set of strings)
          ))
 
 (s/def ::db (s/keys :req-un [::current-page

@@ -50,6 +50,16 @@
  (fn [db]
    (-> db :profile-page :firstname)))
 
+(rf/reg-sub
+ :groups-options
+ (fn [db [scholar-id]]
+   (-> db :groups-page scholar-id :options)))
+
+(rf/reg-sub
+ :groups-groups
+ (fn [db [scholar-id]]
+   (-> db :groups-page scholar-id :groups)))
+
 ; Layer 2
 
 (rf/reg-sub
@@ -104,7 +114,24 @@
            first
            :lastname))))
 
-(rf/reg-sub
- :groups-selected
- (fn [db]
-   ["gr1" "gr2"]))
+(defn groups-reducer
+  [m x]
+  (into m {(:id x) {:lastname (:lastname x)
+                    :firstname (:firstname x)
+                    :options []
+                    :groups #{}}}))
+
+(rf/reg-sub-raw
+ :groups
+  (fn [app-db _]
+    (let [teacher-id (get-in @app-db [:auth-data :kinto-id])
+          _ (get-users!
+              {:on-success
+                #(rf/dispatch
+                  [:write-groups
+                    (->> % data-from-js-obj
+                           (filter (fn [x] (= teacher-id (:teacher x))))
+                           (reduce groups-reducer {}))])})]
+      (make-reaction
+        (fn [] (get-in @app-db [:groups-page] []))
+        :on-dispose #(do)))))

@@ -203,6 +203,12 @@
     (assoc-in db [:profile-page :teachers-list] new-value)))
 
 (rf/reg-event-db
+  :write-groups
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:groups-page] new-value)))
+
+(rf/reg-event-db
   :groups-change
   [check-spec-interceptor]
   (fn [db [_ [scholar-id value]]]

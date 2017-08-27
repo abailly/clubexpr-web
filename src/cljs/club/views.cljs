@@ -382,43 +382,57 @@
     [:> tokeninput-combobox
        {:isLoading false
         ; loadingComponent
-        :menuContent (map groups-option ["abc" "def" "ghi"])
-        :onChange #(rf/dispatch [:groups-change %])
-        :onInput  #(rf/dispatch [:groups-input [scholar-id %]])
+        :menuContent (map groups-option
+                          @(rf/subscribe [:groups-options scholar-id]))
+        :onChange #(rf/dispatch [:groups-change [scholar-id %]])
+        :onInput  #(rf/dispatch [:groups-input  [scholar-id %]])
         :onSelect #(rf/dispatch [:groups-select [scholar-id %]])
         :onRemove #(rf/dispatch [:groups-remove [scholar-id %]])
-        ;:selected @(rf/subscribe [:groups-selected scholar-id])
+        :selected @(rf/subscribe [:groups-groups scholar-id])
         :placeholder (t ["Assigner à un groupe"])}]])
+
+(defn scholar-li
+  [[kinto-id scholar]]
+  ^{:key kinto-id} [:li (:lastname scholar) " " (:firstname scholar)
+                         (groups-tokeninput kinto-id)])
+
+(defn scholar-comparator
+  [scholar1 scholar2]
+  (let [data1 (second scholar1)
+        data2 (second scholar2)
+        ln1 (:lastname data1)
+        ln2 (:lastname data2)
+        fn1 (:firstname data1)
+        fn2 (:firstname data2)]
+    (if (= ln1 ln2)
+      (compare fn1 fn2)
+      (compare ln1 ln2))))
 
 (defn page-groups
   []
-  [:div
-    [:div.jumbotron
-      [:h2 (t ["Groupes"])]
-      [:p (t ["Assignez chacun de vos élèves à un ou plusieurs groupes"])]]
-      [:p (t ["Un groupe peut correspondre : à des classes entières, à des demis-groupes d’une classe, à des élèves ayant des besoins spécifiques (remédiation ou approfondissement) au sein de l’Accompagnement Personnalisé ou non…"])]
-    [:> (bs 'Grid)
-      [:> (bs 'Row)
-        [:> (bs 'Col) {:xs 6 :md 6}
-          [:h2 (t ["Vos élèves"])]
-          [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-            [:li "Blabla" (groups-tokeninput "scholar-id")]
-            [:li "Blabla"]
-            [:li "Blabla"]
-            [:li "Blabla"]
-            [:li "Blabla"]
-            [:li "Blabla"]]]
-        [:> (bs 'Col) {:xs 6 :md 6}
-          [:h2 (t ["Vos groupes"])]
-          [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-            [:li "Blabla"]
-            [:li "Blabla"]
-            [:li "Blabla"]
-            [:li "Blabla"]
-            [:li "Blabla"]]]
-       ]]
+  (let [groups @(rf/subscribe [:groups])]
+    [:div
+      [:div.jumbotron
+        [:h2 (t ["Groupes"])]
+        [:p (t ["Assignez chacun de vos élèves à un ou plusieurs groupes"])]]
+        [:p (t ["Un groupe peut correspondre : à des classes entières, à des demis-groupes d’une classe, à des élèves ayant des besoins spécifiques (remédiation ou approfondissement) au sein de l’Accompagnement Personnalisé ou non…"])]
+      [:> (bs 'Grid)
+        [:> (bs 'Row)
+          [:> (bs 'Col) {:xs 6 :md 6}
+            [:h2 (t ["Vos élèves"])]
+            [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+              (doall (map scholar-li (sort scholar-comparator groups)))]]
+          [:> (bs 'Col) {:xs 6 :md 6}
+            [:h2 (t ["Vos groupes"])]
+            [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+              [:li "Blabla"]
+              [:li "Blabla"]
+              [:li "Blabla"]
+              [:li "Blabla"]
+              [:li "Blabla"]]]
+         ]]
 
-  ])
+    ]))
 
 (defn page-forbidden
   []
