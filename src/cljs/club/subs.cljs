@@ -86,8 +86,7 @@
                            (filter (fn [x] (= "teacher" (:quality x))))
                            (filter (fn [x] (= school-id (:school x))))
                            (map (fn [x] {:id (:id x) :lastname (:lastname x)}))
-                           vec
-                                             )])})]
+                           vec)])})]
       (make-reaction
         (fn [] (get-in @app-db [:profile-page :teachers-list] []))
         :on-dispose #(do)))))
@@ -104,3 +103,8 @@
            (filter #(= profile-teacher (:id %)))
            first
            :lastname))))
+
+(rf/reg-sub
+ :groups-selected
+ (fn [db]
+   ["gr1" "gr2"]))

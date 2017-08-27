@@ -1,6 +1,7 @@
 (ns club.events
   (:require
     [clojure.string :as str]
+    [clojure.set :refer [difference]]
     [clojure.walk :refer [keywordize-keys]]
     [re-frame.core :as rf]
     [re-frame.db :refer [app-db]]
@@ -200,3 +201,44 @@
   [check-spec-interceptor]
   (fn [db [_ new-value]]
     (assoc-in db [:profile-page :teachers-list] new-value)))
+
+(rf/reg-event-db
+  :groups-change
+  [check-spec-interceptor]
+  (fn [db [_ [scholar-id value]]]
+    (println (str "c:" value))
+    (assoc-in db [:groups-page scholar-id :selected] value)))
+
+(rf/reg-event-db
+  :groups-input
+  [check-spec-interceptor]
+  (fn [db [_ [scholar-id value]]]
+    (println (str "i:" value))
+    (let [groups ["2nde 1" "2nde 2" "1S1 gr1" "1S1 gr2"]
+          options (if (empty? value)
+                    []
+                    (vec (filter #(str/starts-with? % value) groups)))]
+      (assoc-in db [:groups-page scholar-id :options] options))))
+
+(rf/reg-event-db
+  :groups-select
+  [check-spec-interceptor]
+  (fn [db [_ [scholar-id value]]]
+    (println (str "s:" value))
+	; this.handleChange(selected); TODO
+    (let [old-selected (-> db :groups-page (get scholar-id) :selected set)
+          selected (into old-selected [value])]
+      (-> db
+        (assoc-in [:groups-page scholar-id :selected] selected)
+        (assoc-in [:groups-page scholar-id :options] [])))))
+
+(rf/reg-event-db
+  :groups-remove
+  [check-spec-interceptor]
+  (fn [db [_ [scholar-id value]]]
+    (println (str "r:" value))
+	; this.handleChange(selected); TODO
+    (let [old-selected (-> db :groups-page (get scholar-id) :selected set)
+          selected (difference old-selected #{value})]
+      (-> db
+        (assoc-in [:groups-page scholar-id :selected] selected)))))

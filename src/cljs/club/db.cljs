@@ -39,6 +39,12 @@
 (s/def ::access-token string?)
 (s/def ::expires-at   string?)
 
+(s/def ::groups-page
+  (s/and map?
+         ; TODO for each scholar id we have:
+         ; a map with :options a list of strings :selected a set of strings
+         ))
+
 (s/def ::db (s/keys :req-un [::current-page
                              ::authenticated
                              ::auth-data
@@ -53,6 +59,7 @@
                :auth0-id ""
                :access-token ""
                :expires-at   ""}
+   :groups-page {}
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"
                   :teachers-list []

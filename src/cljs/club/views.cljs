@@ -372,18 +372,23 @@
       ]
     ]))
 
+(defn groups-option
+  [option-str]
+  [:> tokeninput-option {:key option-str :value option-str} option-str])
+
 (defn groups-tokeninput
   [scholar-id]
-  [:> tokeninput-combobox
-     {:isLoading false
-      ; loadingComponent
-      ;:menuContent (map groups-option ["abc" "def" "ghi"])
-      ;:onChange #(rf/dispatch [:group-change %])
-      ;:onInput #(rf/dispatch [:group-input %])
-      ;:onSelect #(rf/dispatch [:group-select %])
-      ;:onRemove #(rf/dispatch [:group-remove %])
-      ;:selected @(rf/subscribe [:groups-selected scholar-id])
-      :placeholder (t ["Assigner à un groupe"])}])
+  [:span {:style {:margin-left "1em"}}  ; TODO CSS
+    [:> tokeninput-combobox
+       {:isLoading false
+        ; loadingComponent
+        :menuContent (map groups-option ["abc" "def" "ghi"])
+        :onChange #(rf/dispatch [:groups-change %])
+        :onInput  #(rf/dispatch [:groups-input [scholar-id %]])
+        :onSelect #(rf/dispatch [:groups-select [scholar-id %]])
+        :onRemove #(rf/dispatch [:groups-remove %])
+        ;:selected @(rf/subscribe [:groups-selected scholar-id])
+        :placeholder (t ["Assigner à un groupe"])}]])
 
 (defn page-groups
   []
