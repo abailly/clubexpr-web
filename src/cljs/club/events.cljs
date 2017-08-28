@@ -93,6 +93,34 @@
     db
     ))
 
+(rf/reg-event-fx
+  :groups-cancel
+  (fn []
+    {:groups-cancel nil}))
+
+(rf/reg-fx
+  :groups-cancel
+  (fn [_]
+    (club.db/fetch-groups-data!)))
+
+(rf/reg-event-fx
+  :groups-save
+  (fn []
+    {:groups-save nil}))
+
+(rf/reg-fx
+  :groups-save
+  (fn [_]
+    (club.db/save-groups-data!)))
+
+(rf/reg-event-db
+  :groups-save-ok
+  [check-spec-interceptor]
+  (fn [db [_ _]]
+    ; TODO: set a flag in the state to display «new groups saved»
+    db
+    ))
+
 (rf/reg-event-db
   :user-code-club-src-change
   [check-spec-interceptor]

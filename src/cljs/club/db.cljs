@@ -82,9 +82,15 @@
         kinto-instance (new kinto opts)]
     (.-api kinto-instance)))
 
+(def error-404 "Error: HTTP 404; Error: HTTP 404 Not Found: Invalid Token / id")
+
 (def k-users (.. k-client
                  (bucket "default")
                  (collection "users")))
+
+(def k-groups (.. k-client
+                  (bucket "default")
+                  (collection "groups")))
 
 (defn base-user-record
   [auth0-id]
@@ -138,7 +144,55 @@
                        :lastname  (-> @app-db :profile-page :lastname)
                        :firstname (-> @app-db :profile-page :firstname)}))
       (then #(rf/dispatch [:profile-save-ok]))
-      (catch (error "db/save-profile-data!"))))
+      (catch #(js/alert (str "db/save-profile-data!" %)))))
+      ;(catch (error "db/save-profile-data!"))))
+
+(defn groups-page-data-enhancer
+  [scholar]
+  (let [scholar-id (first scholar)
+        scholar-data (second scholar)]
+    [scholar-id {:lastname  (:lastname  scholar-data)
+                 :firstname (:firstname scholar-data)
+                 :options   []
+                 :groups    (set (:groups    scholar-data))}]))
+
+(defn groups-data->groups-page-data
+  [data]
+  (dissoc (into {} (map groups-page-data-enhancer data)) :id :last-modified))
+
+(defn fetch-groups-data!
+  []
+  (.. club.db/k-groups
+      (getRecord (clj->js (-> @app-db :auth-data :kinto-id)))
+      (then #(let [record (data-from-js-obj %)
+                   groups (groups-data->groups-page-data record)]
+               (swap! app-db assoc-in [:groups-page] groups)))
+      (catch #(if (= error-404 (str %))  ; no such id in the groups coll?
+                (swap! app-db assoc-in [:groups-page] {})
+                (js/alert (str "db/fetch-groups-data!" %))))))
+      ;(catch (error "db/fetch-groups-data!"))))
+
+(defn groups-page-data-trimmer
+  [scholar]
+  (let [scholar-id (first scholar)
+        scholar-data (second scholar)]
+    [scholar-id {:lastname  (:lastname  scholar-data)
+                 :firstname (:firstname scholar-data)
+                 :groups    (:groups    scholar-data)}]))
+
+(defn groups-page-data->groups-data
+  [data]
+  (into {} (map groups-page-data-trimmer data)))
+
+(defn save-groups-data!
+  []
+  (let [groups-data (groups-page-data->groups-data (-> @app-db :groups-page))
+        record (merge {:id (-> @app-db :auth-data :kinto-id)} groups-data)]
+    (.. club.db/k-groups
+        (updateRecord (clj->js record))
+        (then #(rf/dispatch [:groups-save-ok]))
+        ;(catch (error "db/save-groups-data!"))))
+        (catch #(js/alert (str "db/save-groups-data!" %))))))
 
 (defn get-schools!
   []

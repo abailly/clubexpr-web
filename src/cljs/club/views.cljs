@@ -431,8 +431,15 @@
               [:li "Blabla"]
               [:li "Blabla"]]]
          ]]
-
-    ]))
+      [:> (bs 'Button)
+        {:style {:margin "1em"}  ; TODO CSS
+         :on-click #(rf/dispatch [:groups-cancel])
+         :bsStyle "danger"}
+        "Annuler les modifications"]
+      [:> (bs 'Button)
+        {:style {:margin "1em"}  ; TODO CSS
+         :on-click #(rf/dispatch [:groups-save])
+         :bsStyle "success"} "Enregistrer les modifications"]]))
 
 (defn page-forbidden
   []
