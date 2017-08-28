@@ -391,22 +391,46 @@
         :selected @(rf/subscribe [:groups-groups scholar-id])
         :placeholder (t ["Assigner à un groupe"])}]])
 
-(defn scholar-li
+(defn scholar-li-group-input
   [[kinto-id scholar]]
   ^{:key kinto-id} [:li (:lastname scholar) " " (:firstname scholar)
                          (groups-tokeninput kinto-id)])
 
-(defn scholar-comparator
-  [scholar1 scholar2]
-  (let [data1 (second scholar1)
-        data2 (second scholar2)
-        ln1 (:lastname data1)
-        ln2 (:lastname data2)
-        fn1 (:firstname data1)
-        fn2 (:firstname data2)]
-    (if (= ln1 ln2)
-      (compare fn1 fn2)
-      (compare ln1 ln2))))
+(defn group-link
+  [group]
+  ^{:key group}
+  [:span
+    {:style {:margin "1em"}}  ; TODO CSS
+    group])
+
+(defn groups-list
+  [groups-map]
+  (let [groups (reduce #(into %1 (-> %2 second :groups)) #{} groups-map)]
+    (map group-link (sort (seq groups)))))
+
+(defn scholar-li
+  [scholar]
+  ^{:key (str (:lastname scholar) (:firstname scholar))}
+  [:li (:lastname scholar) " " (:firstname scholar)])
+
+(defn format-group
+  [[group scholars]]
+  ^{:key group} [:div
+                  [:h3 [:strong group]]
+                  [:ul.nav
+                    (map scholar-li (sort scholar-comparator scholars))]])
+
+(defn groups-list-of-lists
+  [groups-map]
+  (let [groups (reduce #(into %1 (-> %2 second :groups)) #{} groups-map)
+        sorted-groups (sort groups)
+        ; {"id1" {:k v} "id2" {:k v}} -> ({:k v} {:k v})
+        lifted-groups-map (map second groups-map)
+        scholars-in-groups
+         (map (fn [group]
+                [group (filter #(some #{group} (:groups %))
+                                         lifted-groups-map)]) sorted-groups)]
+    (map format-group scholars-in-groups)))
 
 (defn page-groups
   []
@@ -422,15 +446,14 @@
           [:> (bs 'Col) {:xs 6 :md 6}
             [:h2 (t ["Vos élèves"])]
             [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-              (doall (map scholar-li (sort scholar-comparator lifted-groups)))]]
-          [:> (bs 'Col) {:xs 6 :md 6}
-            [:h2 (t ["Vos groupes"])]
-            [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-              [:li "Blabla"]
-              [:li "Blabla"]
-              [:li "Blabla"]
               [:li "Blabla"]
               [:li "Blabla"]]]
+              ;(doall (map scholar-li-group-input (sort scholar-comparator lifted-groups)))]]
+          [:> (bs 'Col) {:xs 6 :md 6}
+            [:h2 (t ["Vos groupes"])]
+            [:div (groups-list groups)]
+            [:div {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+              (groups-list-of-lists groups)]]
          ]]
       [:> (bs 'Button)
         {:style {:margin "1em"}  ; TODO CSS
