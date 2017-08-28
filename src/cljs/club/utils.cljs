@@ -11,6 +11,16 @@
           keywordize-keys
           :data))
 
+(defn scholar-comparator
+  [scholar1 scholar2]
+  (let [ln1 (:lastname scholar1)
+        ln2 (:lastname scholar2)
+        fn1 (:firstname scholar1)
+        fn2 (:firstname scholar2)]
+    (if (= ln1 ln2)
+      (compare fn1 fn2)
+      (compare ln1 ln2))))
+
 (defn parse-url
   [url]
   (let [splitted-url (str/split url "#/")]

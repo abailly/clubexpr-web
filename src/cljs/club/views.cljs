@@ -3,7 +3,7 @@
             [re-frame.db :refer [app-db]]
             [goog.object :refer [getValueByKeys]]
             [webpack.bundle]
-            [club.utils :refer [FormControlFixed]]
+            [club.utils :refer [scholar-comparator FormControlFixed]]
             [club.config :as config]
             [club.db]
             [cljs.pprint :refer [pprint]]))
@@ -410,7 +410,8 @@
 
 (defn page-groups
   []
-  (let [groups @(rf/subscribe [:groups])]
+  (let [groups @(rf/subscribe [:groups])
+        lifted-groups (map second groups)]
     [:div
       [:div.jumbotron
         [:h2 (t ["Groupes"])]
@@ -421,7 +422,7 @@
           [:> (bs 'Col) {:xs 6 :md 6}
             [:h2 (t ["Vos élèves"])]
             [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-              (doall (map scholar-li (sort scholar-comparator groups)))]]
+              (doall (map scholar-li (sort scholar-comparator lifted-groups)))]]
           [:> (bs 'Col) {:xs 6 :md 6}
             [:h2 (t ["Vos groupes"])]
             [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
