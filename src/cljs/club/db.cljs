@@ -5,7 +5,7 @@
             [goog.object :refer [getValueByKeys]]
             [re-frame.core :as rf]
             [re-frame.db :refer [app-db]]
-            [club.utils :refer [data-from-js-obj]]
+            [club.utils :refer [error data-from-js-obj]]
             [club.config :as config]))
 
 (s/def ::current-page keyword?)
@@ -130,7 +130,8 @@
       (then #(set-auth-data!
                (merge {:access-token (-> @app-db :auth-data :access-token)
                        :expires-at (-> @app-db :auth-data :expires-at)}
-                      (data-from-js-obj %))))))
+                      (data-from-js-obj %))))
+      (catch (error "db/fetch-profile-data!"))))
 
 (defn save-profile-data!
   []
@@ -144,8 +145,7 @@
                        :lastname  (-> @app-db :profile-page :lastname)
                        :firstname (-> @app-db :profile-page :firstname)}))
       (then #(rf/dispatch [:profile-save-ok]))
-      (catch #(js/alert (str "db/save-profile-data!" %)))))
-      ;(catch (error "db/save-profile-data!"))))
+      (catch (error "db/save-profile-data!"))))
 
 (defn groups-page-data-enhancer
   [scholar]
@@ -169,8 +169,7 @@
                (swap! app-db assoc-in [:groups-page] groups)))
       (catch #(if (= error-404 (str %))  ; no such id in the groups coll?
                 (swap! app-db assoc-in [:groups-page] {})
-                (js/alert (str "db/fetch-groups-data!" %))))))
-      ;(catch (error "db/fetch-groups-data!"))))
+                (error "db/fetch-groups-data!")))))
 
 (defn groups-page-data-trimmer
   [scholar]
@@ -191,8 +190,7 @@
     (.. club.db/k-groups
         (updateRecord (clj->js record))
         (then #(rf/dispatch [:groups-save-ok]))
-        ;(catch (error "db/save-groups-data!"))))
-        (catch #(js/alert (str "db/save-groups-data!" %))))))
+        (catch (error "db/save-groups-data!")))))
 
 (defn get-schools!
   []
@@ -861,4 +859,4 @@
   (.. club.db/k-users
       (listRecords)
       (then on-success)
-      (catch #(js/alert %))))
+      (catch (error "db/get-users!"))))

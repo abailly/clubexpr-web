@@ -5,6 +5,10 @@
             [reagent.core :as r]
             [webpack.bundle]))
  
+(defn error
+  [where]
+  #(js/alert (str where ": " %)))
+
 (defn data-from-js-obj
   [obj]
   (-> obj js->clj

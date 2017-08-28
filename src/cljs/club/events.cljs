@@ -8,7 +8,7 @@
     [goog.object :refer [getValueByKeys]]
     [club.db]
     [club.db :refer [base-user-record logout-db-fragment set-auth-data!]]
-    [club.utils :refer [data-from-js-obj parse-url get-url-all! get-url-root!]]
+    [club.utils :refer [error data-from-js-obj parse-url get-url-all! get-url-root!]]
     [cljs.spec     :as s]
     [goog.crypt.base64 :refer [decodeString]]))
 
@@ -186,7 +186,8 @@
     (if (nil? user-with-same-auth0-id)
       (.. club.db/k-users
           (createRecord (clj->js (base-user-record new-auth0-id)))
-          (then #(set-auth-data! (merge new-user-data (data-from-js-obj %)))))
+          (then #(set-auth-data! (merge new-user-data (data-from-js-obj %))))
+          (catch (error "events/process-user-check!")))
       (set-auth-data! (merge new-user-data user-with-same-auth0-id)))))
 
 (rf/reg-fx
@@ -211,7 +212,7 @@
         (.. club.db/k-users
             (listRecords)
             (then #(process-user-check! % new-user-data))
-            (catch #(js/alert %))))
+            (catch (error "events/:auth"))))
     )))
 
 (rf/reg-event-db
