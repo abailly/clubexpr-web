@@ -416,7 +416,7 @@
 (defn format-group
   [[group scholars]]
   ^{:key group} [:div
-                  [:h3 [:strong group]]
+                  [:h3 group]
                   [:ul.nav
                     (map scholar-li (sort scholar-comparator scholars))]])
 
