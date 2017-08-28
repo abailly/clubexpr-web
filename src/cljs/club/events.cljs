@@ -83,17 +83,7 @@
 (rf/reg-fx
   :profile-save
   (fn [_]
-    (.. club.db/k-users
-        (updateRecord (clj->js
-                        {:id       (-> @app-db :auth-data :kinto-id)
-                         :auth0-id (-> @app-db :auth-data :auth0-id)
-                         :quality   (-> @app-db :profile-page :quality)
-                         :school    (-> @app-db :profile-page :school)
-                         :teacher   (-> @app-db :profile-page :teacher)
-                         :lastname  (-> @app-db :profile-page :lastname)
-                         :firstname (-> @app-db :profile-page :firstname)}))
-        (then #(rf/dispatch [:profile-save-ok]))
-    )))
+    (club.db/save-profile-data!)))
 
 (rf/reg-event-db
   :profile-save-ok

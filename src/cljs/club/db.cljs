@@ -126,6 +126,20 @@
                        :expires-at (-> @app-db :auth-data :expires-at)}
                       (data-from-js-obj %))))))
 
+(defn save-profile-data!
+  []
+  (.. club.db/k-users
+      (updateRecord (clj->js
+                      {:id       (-> @app-db :auth-data :kinto-id)
+                       :auth0-id (-> @app-db :auth-data :auth0-id)
+                       :quality   (-> @app-db :profile-page :quality)
+                       :school    (-> @app-db :profile-page :school)
+                       :teacher   (-> @app-db :profile-page :teacher)
+                       :lastname  (-> @app-db :profile-page :lastname)
+                       :firstname (-> @app-db :profile-page :firstname)}))
+      (then #(rf/dispatch [:profile-save-ok]))
+      (catch (error "db/save-profile-data!"))))
+
 (defn get-schools!
   []
   [
