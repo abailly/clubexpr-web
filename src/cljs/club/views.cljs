@@ -392,9 +392,9 @@
         :placeholder (t ["Assigner à un groupe"])}]])
 
 (defn scholar-li-group-input
-  [[kinto-id scholar]]
-  ^{:key kinto-id} [:li (:lastname scholar) " " (:firstname scholar)
-                         (groups-tokeninput kinto-id)])
+  [scholar]
+  ^{:key (:id scholar)} [:li (:lastname scholar) " " (:firstname scholar)
+                         (groups-tokeninput (:id scholar))])
 
 (defn group-link
   [group]
@@ -435,7 +435,7 @@
 (defn page-groups
   []
   (let [groups @(rf/subscribe [:groups])
-        lifted-groups (map second groups)]
+        lifted-groups (map #(merge {:id (first %)} (second %)) groups)]
     [:div
       [:div.jumbotron
         [:h2 (t ["Groupes"])]
@@ -446,9 +446,8 @@
           [:> (bs 'Col) {:xs 6 :md 6}
             [:h2 (t ["Vos élèves"])]
             [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-              [:li "Blabla"]
-              [:li "Blabla"]]]
-              ;(doall (map scholar-li-group-input (sort scholar-comparator lifted-groups)))]]
+              (doall (map scholar-li-group-input
+                          (sort scholar-comparator lifted-groups)))]]
           [:> (bs 'Col) {:xs 6 :md 6}
             [:h2 (t ["Vos groupes"])]
             [:div (groups-list groups)]
