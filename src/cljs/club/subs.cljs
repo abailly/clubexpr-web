@@ -52,13 +52,13 @@
 
 (rf/reg-sub
  :groups-options
- (fn [db [scholar-id]]
-   (-> db :groups-page scholar-id :options)))
+ (fn [db [_ scholar-id]]
+   (-> db :groups-page (get scholar-id) :options)))
 
 (rf/reg-sub
  :groups-groups
- (fn [db [scholar-id]]
-   (-> db :groups-page scholar-id :groups)))
+ (fn [db [_ scholar-id]]
+   (-> db :groups-page (get scholar-id) :groups)))
 
 ; Layer 2
 
