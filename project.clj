@@ -19,7 +19,7 @@
   {:dev
    {:dependencies [[binaryage/devtools "0.8.2"]]
 
-    :plugins      [[lein-figwheel "0.5.9"]]
+    :plugins      [[lein-figwheel "0.5.12"]]
     }}
 
   :cljsbuild
