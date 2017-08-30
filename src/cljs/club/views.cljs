@@ -383,7 +383,7 @@
        {:isLoading false
         ; loadingComponent
         :menuContent (map groups-option
-                          @(rf/subscribe [:groups-options scholar-id]))
+                          (sort @(rf/subscribe [:groups-options scholar-id])))
         :onChange #(rf/dispatch [:groups-change [scholar-id %]])
         :onInput  #(rf/dispatch [:groups-input  [scholar-id %]])
         :onSelect #(rf/dispatch [:groups-select [scholar-id %]])
