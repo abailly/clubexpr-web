@@ -250,7 +250,6 @@
   [check-spec-interceptor]
   (fn [db [_ [scholar-id value]]]
     (println (str "s:" value))
-	; this.handleChange(selected); TODO
     (let [old-groups (-> db :groups-page (get scholar-id) :groups set)
           groups (into old-groups [value])]
       (-> db
@@ -262,7 +261,6 @@
   [check-spec-interceptor]
   (fn [db [_ [scholar-id value]]]
     (println (str "r:" value))
-	; this.handleChange(selected); TODO
     (let [old-groups (-> db :groups-page (get scholar-id) :groups set)
           groups (difference old-groups #{value})]
       (-> db
