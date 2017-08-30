@@ -5,7 +5,7 @@ window.deps = {
     'auth0' : require('auth0-js'),
     'kinto' : require('kinto'),
     'react-mathjax' : require('react-mathjax'),
-    'react-tokeninput' : require('react-tokeninput'),
+    'react-select' : require('react-select'),
     'clubexpr' : require('clubexpr')
 };
 
