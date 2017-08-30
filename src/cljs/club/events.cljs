@@ -239,7 +239,7 @@
   [check-spec-interceptor]
   (fn [db [_ [scholar-id value]]]
     (println (str "i:" value))
-    (let [groups ["2nde 1" "2nde 2" "1S1 gr1" "1S1 gr2"]
+    (let [groups (reduce #(into %1 (-> %2 second :groups)) #{} (:groups-page db))
           options (if (empty? value)
                     []
                     (vec (filter #(str/starts-with? % value) groups)))]
