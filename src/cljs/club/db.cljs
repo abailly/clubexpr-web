@@ -154,7 +154,7 @@
     [scholar-id {:lastname  (:lastname  scholar-data)
                  :firstname (:firstname scholar-data)
                  :options   []
-                 :groups    (set (:groups    scholar-data))}]))
+                 :groups    (set (:groups scholar-data))}]))
 
 (defn groups-data->groups-page-data
   [data]
