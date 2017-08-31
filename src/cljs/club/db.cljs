@@ -158,7 +158,7 @@
 
 (defn groups-data->groups-page-data
   [data]
-  (dissoc (into {} (map groups-page-data-enhancer data)) :id :last-modified))
+  (dissoc (into {} (map groups-page-data-enhancer data)) :id :last_modified))
 
 (defn fetch-groups-data!
   []
