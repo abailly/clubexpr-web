@@ -3,7 +3,7 @@
             [re-frame.db :refer [app-db]]
             [goog.object :refer [getValueByKeys]]
             [webpack.bundle]
-            [club.utils :refer [scholar-comparator FormControlFixed]]
+            [club.utils :refer [groups-option scholar-comparator FormControlFixed]]
             [club.config :as config]
             [club.db]
             [cljs.pprint :refer [pprint]]))
@@ -370,17 +370,14 @@
 (def react-select (getValueByKeys js/window "deps" "react-select"))
 (def Creatable (getValueByKeys react-select "Creatable"))
 
-(defn groups-option
-  [option-str]
-  {:value option-str :label option-str})
-
 (defn groups-select
   [scholar-id]
-  [:span {:style {:margin-left "1em"}}  ; TODO CSS
-    [:> Creatable
-       {:options (map groups-option (sort @(rf/subscribe [:groups])))
-        :on-change #(rf/dispatch [:groups-change [scholar-id %]])
-        :value @(rf/subscribe [:groups-groups scholar-id])}]])
+  (let [value @(rf/subscribe [:groups-value scholar-id])]
+    [:span {:style {:margin-left "1em"}}  ; TODO CSS
+      [:> Creatable
+         {:options (map groups-option (sort @(rf/subscribe [:groups])))
+          :on-change #(rf/dispatch [:groups-change [scholar-id %]])
+          :value value}]]))
 
 (defn scholar-li-group-input
   [scholar]

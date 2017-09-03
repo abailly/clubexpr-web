@@ -2,7 +2,7 @@
   (:require [re-frame.core :as rf]
             [reagent.ratom :refer [make-reaction]]
             [clojure.walk :refer [keywordize-keys]]
-            [club.utils :refer [data-from-js-obj]]
+            [club.utils :refer [groups-option data-from-js-obj]]
             [club.db :refer [get-users!]]))
 
 ; Placeholder for future translation mechanism
@@ -136,3 +136,10 @@
      (rf/subscribe [:groups-page]))
   (fn [groups-page query-v _]
     (reduce #(into %1 (-> %2 second :groups)) #{} groups-page)))
+
+(rf/reg-sub
+  :groups-value
+  (fn [[_ scholar-id] _]
+     (rf/subscribe [:groups-groups scholar-id]))
+  (fn [groups query-v _]
+    (vec (map groups-option (sort groups)))))

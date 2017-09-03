@@ -25,6 +25,10 @@
       (compare fn1 fn2)
       (compare ln1 ln2))))
 
+(defn groups-option
+  [option-str]
+  {:value option-str :label option-str})
+
 (defn parse-url
   [url]
   (let [splitted-url (str/split url "#/")]
