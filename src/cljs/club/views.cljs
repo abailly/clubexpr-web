@@ -45,11 +45,6 @@
       [:> (bs 'FormControl 'Feedback)]
       [:> (bs 'HelpBlock) help]]])
 
-(def tokeninput (getValueByKeys js/window "deps" "react-tokeninput"))
-(def tokeninput-combobox (getValueByKeys tokeninput "Combobox"))
-(def tokeninput-option (getValueByKeys tokeninput "Option"))
-; Combobox Option Token default
-
 (defn rendition
   [src]
   (let [react-mathjax (getValueByKeys js/window "deps" "react-mathjax")
@@ -372,29 +367,25 @@
       ]
     ]))
 
+(def react-select (getValueByKeys js/window "deps" "react-select"))
+(def Creatable (getValueByKeys react-select "Creatable"))
+
 (defn groups-option
   [option-str]
-  [:> tokeninput-option {:key option-str :value option-str} option-str])
+  {:value option-str :label option-str})
 
-(defn groups-tokeninput
+(defn groups-select
   [scholar-id]
   [:span {:style {:margin-left "1em"}}  ; TODO CSS
-    [:> tokeninput-combobox
-       {:isLoading false
-        ; loadingComponent
-        :menuContent (map groups-option
-                          (sort @(rf/subscribe [:groups-options scholar-id])))
-        :onChange #(rf/dispatch [:groups-change [scholar-id %]])
-        :onInput  #(rf/dispatch [:groups-input  [scholar-id %]])
-        :onSelect #(rf/dispatch [:groups-select [scholar-id %]])
-        :onRemove #(rf/dispatch [:groups-remove [scholar-id %]])
-        :selected @(rf/subscribe [:groups-groups scholar-id])
-        :placeholder (t ["Assigner à un groupe"])}]])
+    [:> Creatable
+       {:options (map groups-option (sort @(rf/subscribe [:groups])))
+        :on-change #(rf/dispatch [:groups-change [scholar-id %]])
+        :value @(rf/subscribe [:groups-groups scholar-id])}]])
 
 (defn scholar-li-group-input
   [scholar]
   ^{:key (:id scholar)} [:li (:lastname scholar) " " (:firstname scholar)
-                         (groups-tokeninput (:id scholar))])
+                         (groups-select (:id scholar))])
 
 (defn group-link
   [group]
@@ -404,9 +395,8 @@
     group])
 
 (defn groups-list
-  [groups-map]
-  (let [groups (reduce #(into %1 (-> %2 second :groups)) #{} groups-map)]
-    (map group-link (sort (seq groups)))))
+  [groups-map groups]
+    (map group-link (sort (seq groups))))
 
 (defn scholar-li
   [scholar]
@@ -421,9 +411,8 @@
                     (map scholar-li (sort scholar-comparator scholars))]])
 
 (defn groups-list-of-lists
-  [groups-map]
-  (let [groups (reduce #(into %1 (-> %2 second :groups)) #{} groups-map)
-        sorted-groups (sort groups)
+  [groups-map groups]
+  (let [sorted-groups (sort groups)
         ; {"id1" {:k v} "id2" {:k v}} -> ({:k v} {:k v})
         lifted-groups-map (map second groups-map)
         scholars-in-groups
@@ -434,8 +423,9 @@
 
 (defn page-groups
   []
-  (let [groups @(rf/subscribe [:groups])
-        lifted-groups (map #(merge {:id (first %)} (second %)) groups)]
+  (let [groups-data @(rf/subscribe [:groups-page])
+        groups @(rf/subscribe [:groups])
+        lifted-groups (map #(merge {:id (first %)} (second %)) groups-data)]
     [:div
       [:div.jumbotron
         [:h2 (t ["Groupes"])]
@@ -450,9 +440,9 @@
                           (sort scholar-comparator lifted-groups)))]]
           [:> (bs 'Col) {:xs 6 :md 6}
             [:h2 (t ["Vos groupes"])]
-            [:div (groups-list groups)]
+            [:div (groups-list groups-data groups)]
             [:div {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-              (groups-list-of-lists groups)]]
+              (groups-list-of-lists groups-data groups)]]
          ]]
       [:> (bs 'Button)
         {:style {:margin "1em"}  ; TODO CSS

@@ -231,37 +231,10 @@
   :groups-change
   [check-spec-interceptor]
   (fn [db [_ [scholar-id value]]]
-    (println (str "c:" value))
-    (assoc-in db [:groups-page scholar-id :groups] value)))
-
-(rf/reg-event-db
-  :groups-input
-  [check-spec-interceptor]
-  (fn [db [_ [scholar-id value]]]
-    (println (str "i:" value))
-    (let [groups (reduce #(into %1 (-> %2 second :groups)) #{} (:groups-page db))
-          options (if (empty? value)
-                    []
-                    (vec (filter #(str/starts-with? % value) groups)))]
-      (assoc-in db [:groups-page scholar-id :options] options))))
-
-(rf/reg-event-db
-  :groups-select
-  [check-spec-interceptor]
-  (fn [db [_ [scholar-id value]]]
-    (println (str "s:" value))
-    (let [old-groups (-> db :groups-page (get scholar-id) :groups set)
-          groups (into old-groups [value])]
-      (-> db
-        (assoc-in [:groups-page scholar-id :groups] groups)
-        (assoc-in [:groups-page scholar-id :options] [])))))
-
-(rf/reg-event-db
-  :groups-remove
-  [check-spec-interceptor]
-  (fn [db [_ [scholar-id value]]]
-    (println (str "r:" value))
-    (let [old-groups (-> db :groups-page (get scholar-id) :groups set)
-          groups (difference old-groups #{value})]
-      (-> db
-        (assoc-in [:groups-page scholar-id :groups] groups)))))
+    (let [clj-val (-> value js->clj keywordize-keys)
+          groups (get-in db [:groups-page scholar-id :groups])
+          group (:value clj-val)]
+      (if (nil? group) (println ":groups-change group is nil"))
+      (if group
+        (assoc-in db [:groups-page scholar-id :groups] (into groups [group]))
+        db))))

@@ -51,11 +51,6 @@
    (-> db :profile-page :firstname)))
 
 (rf/reg-sub
- :groups-options
- (fn [db [_ scholar-id]]
-   (-> db :groups-page (get scholar-id) :options)))
-
-(rf/reg-sub
  :groups-groups
  (fn [db [_ scholar-id]]
    (-> db :groups-page (get scholar-id) :groups)))
@@ -118,11 +113,10 @@
   [m x]
   (into m {(:id x) {:lastname (:lastname x)
                     :firstname (:firstname x)
-                    :options []
                     :groups #{}}}))
 
 (rf/reg-sub-raw
- :groups
+ :groups-page
   (fn [app-db _]
     (let [teacher-id (get-in @app-db [:auth-data :kinto-id])
           _ (get-users!
@@ -135,3 +129,10 @@
       (make-reaction
         (fn [] (get-in @app-db [:groups-page] []))
         :on-dispose #(do)))))
+
+(rf/reg-sub
+  :groups
+  (fn [query-v _]
+     (rf/subscribe [:groups-page]))
+  (fn [groups-page query-v _]
+    (reduce #(into %1 (-> %2 second :groups)) #{} groups-page)))

@@ -43,7 +43,7 @@
   (s/and map?
          ; TODO for each scholar id we have a map with
          ; :lastname (string) :firstname (string)
-         ; :options (list of strings) :groups (set of strings)
+         ; :groups (set of strings)
          ))
 
 (s/def ::db (s/keys :req-un [::current-page
@@ -153,7 +153,6 @@
         scholar-data (second scholar)]
     [scholar-id {:lastname  (:lastname  scholar-data)
                  :firstname (:firstname scholar-data)
-                 :options   []
                  :groups    (set (:groups scholar-data))}]))
 
 (defn groups-data->groups-page-data
