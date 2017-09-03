@@ -375,7 +375,7 @@
   (let [value @(rf/subscribe [:groups-value scholar-id])]
     [:span {:style {:margin-left "1em"}}  ; TODO CSS
       [:> Creatable
-         {:options (map groups-option (sort @(rf/subscribe [:groups])))
+         {:options (map groups-option @(rf/subscribe [:groups]))
           :on-change #(rf/dispatch [:groups-change [scholar-id %]])
           :value value}]]))
 
@@ -391,10 +391,6 @@
     {:style {:margin "1em"}}  ; TODO CSS
     group])
 
-(defn groups-list
-  [groups-map groups]
-    (map group-link (sort (seq groups))))
-
 (defn scholar-li
   [scholar]
   ^{:key (str (:lastname scholar) (:firstname scholar))}
@@ -409,13 +405,12 @@
 
 (defn groups-list-of-lists
   [groups-map groups]
-  (let [sorted-groups (sort groups)
-        ; {"id1" {:k v} "id2" {:k v}} -> ({:k v} {:k v})
+  (let [; {"id1" {:k v} "id2" {:k v}} -> ({:k v} {:k v})
         lifted-groups-map (map second groups-map)
         scholars-in-groups
          (map (fn [group]
                 [group (filter #(some #{group} (:groups %))
-                                         lifted-groups-map)]) sorted-groups)]
+                                         lifted-groups-map)]) groups)]
     (map format-group scholars-in-groups)))
 
 (defn page-groups
@@ -437,7 +432,7 @@
                           (sort scholar-comparator lifted-groups)))]]
           [:> (bs 'Col) {:xs 6 :md 6}
             [:h2 (t ["Vos groupes"])]
-            [:div (groups-list groups-data groups)]
+            [:div (map group-link groups)]
             [:div {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
               (groups-list-of-lists groups-data groups)]]
          ]]

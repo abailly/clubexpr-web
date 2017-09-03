@@ -135,7 +135,7 @@
   (fn [query-v _]
      (rf/subscribe [:groups-page]))
   (fn [groups-page query-v _]
-    (reduce #(into %1 (-> %2 second :groups)) #{} groups-page)))
+    (sort (reduce #(into %1 (-> %2 second :groups)) #{} groups-page))))
 
 (rf/reg-sub
   :groups-value
