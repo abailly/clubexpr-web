@@ -378,6 +378,7 @@
          {:multi true
           :options (map groups-option @(rf/subscribe [:groups]))
           :on-change #(rf/dispatch [:groups-change [scholar-id %]])
+          :placeholder (t ["Assigner à un groupe…"])
           :value value}]]))
 
 (defn scholar-li-group-input
