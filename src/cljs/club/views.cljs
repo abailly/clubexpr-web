@@ -375,7 +375,8 @@
   (let [value @(rf/subscribe [:groups-value scholar-id])]
     [:span {:style {:margin-left "1em"}}  ; TODO CSS
       [:> Creatable
-         {:options (map groups-option @(rf/subscribe [:groups]))
+         {:multi true
+          :options (map groups-option @(rf/subscribe [:groups]))
           :on-change #(rf/dispatch [:groups-change [scholar-id %]])
           :value value}]]))
 

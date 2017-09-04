@@ -232,9 +232,5 @@
   [check-spec-interceptor]
   (fn [db [_ [scholar-id value]]]
     (let [clj-val (-> value js->clj keywordize-keys)
-          groups (get-in db [:groups-page scholar-id :groups])
-          group (:value clj-val)]
-      (if (nil? group) (println ":groups-change group is nil"))
-      (if group
-        (assoc-in db [:groups-page scholar-id :groups] (into groups [group]))
-        db))))
+          groups (set (map :value clj-val))]
+      (assoc-in db [:groups-page scholar-id :groups] groups))))
