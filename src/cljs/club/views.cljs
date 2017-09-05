@@ -424,20 +424,25 @@
       [:div.jumbotron
         [:h2 (t ["Groupes"])]
         [:p (t ["Assignez chacun de vos élèves à un ou plusieurs groupes"])]]
-        [:p (t ["Un groupe peut correspondre : à des classes entières, à des demis-groupes d’une classe, à des élèves ayant des besoins spécifiques (remédiation ou approfondissement) au sein de l’Accompagnement Personnalisé ou non…"])]
       [:> (bs 'Grid)
-        [:> (bs 'Row)
-          [:> (bs 'Col) {:xs 6 :md 6}
-            [:h2 (t ["Vos élèves"])]
-            [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-              (doall (map scholar-li-group-input
-                          (sort scholar-comparator lifted-groups)))]]
-          [:> (bs 'Col) {:xs 6 :md 6}
-            [:h2 (t ["Vos groupes"])]
-            [:div (map group-link groups)]
-            [:div {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-              (groups-list-of-lists groups-data groups)]]
-         ]]
+        (if (empty? groups-data)
+          [:div
+            [:h2 (t ["Aucun élève ne vous a encore déclaré comme professeur."])]
+            [:p (t ["En attendant que ce soit le cas, vous pouvez tester cette fonctionnalité en vous connectant avec un autre compte et en vous faisant passer pour un élève vous ayant comme professeur."])]]
+          [:div
+            [:p (t ["Un groupe peut correspondre : à des classes entières, à des demis-groupes d’une classe, à des élèves ayant des besoins spécifiques (remédiation ou approfondissement) au sein de l’Accompagnement Personnalisé ou non…"])]
+            [:> (bs 'Row)
+              [:> (bs 'Col) {:xs 6 :md 6}
+                [:h2 (t ["Vos élèves"])]
+                [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+                  (doall (map scholar-li-group-input
+                              (sort scholar-comparator lifted-groups)))]]
+              [:> (bs 'Col) {:xs 6 :md 6}
+                [:h2 (t ["Vos groupes"])]
+                [:div (map group-link groups)]
+                [:div {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+                  (groups-list-of-lists groups-data groups)]]
+            ]])]
       [:> (bs 'Button)
         {:style {:margin "1em"}  ; TODO CSS
          :on-click #(rf/dispatch [:groups-cancel])
