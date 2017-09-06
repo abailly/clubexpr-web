@@ -381,6 +381,7 @@
          {:multi true
           :options (map groups-option @(rf/subscribe [:groups]))
           :on-change #(rf/dispatch [:groups-change [scholar-id %]])
+          :noResultsText "Un nom pour votre 1er groupe (ex: 2nde1)"
           :placeholder (t ["Assigner à un groupe…"])
           :value value}]]))
 
