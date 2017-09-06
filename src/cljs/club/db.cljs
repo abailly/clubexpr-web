@@ -54,6 +54,7 @@
                        ::auth-data
                        ::attempt-code
                        ::profile-page
+                       ::groups-page
                        ])))
 
 (def logout-db-fragment
