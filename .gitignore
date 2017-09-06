@@ -4,3 +4,4 @@
 /resources/public/js/compiled
 out
 /node_modules
+/src/cljs/club/version.cljs

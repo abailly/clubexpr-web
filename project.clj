@@ -5,7 +5,8 @@
                                                 cljsjs/react-dom]]
                  [re-frame "0.9.4"]]
 
-  :plugins [[lein-cljsbuild "1.1.4"]]
+  :plugins [[lein-cljsbuild "1.1.4"]
+            [org.clojars.cvillecsteele/lein-git-version "1.2.5"]]
 
   :min-lein-version "2.5.3"
 
@@ -14,6 +15,10 @@
   :figwheel {:css-dirs ["resources/public/css"]
              :server-port 3451
              :repl true}
+
+  :git-version {:root-ns "club"
+                :path "src/cljs/club"
+                :filename "version.cljs"}
 
   :profiles
   {:dev

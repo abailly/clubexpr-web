@@ -6,6 +6,7 @@
             [club.utils :refer [groups-option scholar-comparator FormControlFixed]]
             [club.config :as config]
             [club.db]
+            [club.version]
             [cljs.pprint :refer [pprint]]))
 
 ; Placeholder for future translation mechanism
@@ -114,6 +115,7 @@
         [:> (bs 'Col) {:xs 4 :md 4}
           [:h2 (t ["Statut"])]
           [:p "Le Club des Expressions est en constante évolution. N’hésitez pas à signaler des bugs ou nous faire part de suggestions."]
+          [:p "Version : " club.version/gitref]
         ]
         [:> (bs 'Col) {:xs 4 :md 4}
           [:h2 (t ["Remerciements"])]
