@@ -46,12 +46,15 @@
          ; :groups (set of strings)
          ))
 
-(s/def ::db (s/keys :req-un [::current-page
-                             ::authenticated
-                             ::auth-data
-                             ::attempt-code
-                             ::profile-page
-                             ]))
+(s/def ::db
+  (s/or :empty empty?
+        :keys (s/keys :req-un
+                      [::current-page
+                       ::authenticated
+                       ::auth-data
+                       ::attempt-code
+                       ::profile-page
+                       ])))
 
 (def logout-db-fragment
   {:current-page :landing
