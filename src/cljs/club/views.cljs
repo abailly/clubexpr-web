@@ -113,7 +113,8 @@
                   "ClubExpressions/clubexpr"]]]]
         [:> (bs 'Col) {:xs 4 :md 4}
           [:h2 (t ["Statut"])]
-          [:p "Le Club des Expressions est en constante évolution. N’hésitez pas à signaler des bugs ou nous faire part de suggestions."]]
+          [:p "Le Club des Expressions est en constante évolution. N’hésitez pas à signaler des bugs ou nous faire part de suggestions."]
+        ]
         [:> (bs 'Col) {:xs 4 :md 4}
           [:h2 (t ["Remerciements"])]
           [:p (t ["Réalisé avec l’aide, aimable autant que redoutable, de :"])]
