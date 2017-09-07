@@ -3,7 +3,7 @@
             [reagent.ratom :refer [make-reaction]]
             [clojure.walk :refer [keywordize-keys]]
             [club.utils :refer [groups-option data-from-js-obj]]
-            [club.db :refer [get-users! fetch-groups-data!]]))
+            [club.db :refer [get-users! fetch-teachers-list! fetch-groups-data!]]))
 
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
@@ -83,15 +83,7 @@
  :profile-teachers-list
   (fn [app-db _]
     (let [school-id (get-in @app-db [:profile-page :school])
-          _ (get-users!
-              {:on-success
-                #(rf/dispatch
-                  [:write-teachers-list
-                    (->> % data-from-js-obj
-                           (filter (fn [x] (= "teacher" (:quality x))))
-                           (filter (fn [x] (= school-id (:school x))))
-                           (map (fn [x] {:id (:id x) :lastname (:lastname x)}))
-                           vec)])})]
+          _ (fetch-teachers-list! school-id)]
       (make-reaction
         (fn [] (get-in @app-db [:profile-page :teachers-list] []))
         :on-dispose #(do)))))
@@ -131,7 +123,7 @@
                     (->> % data-from-js-obj
                            (filter (fn [x] (= teacher-id (:teacher x))))
                            (reduce groups-reducer groups-page))])})
-         ; _ (fetch-groups-data!)
+          _ (fetch-groups-data!)
           ]
       (make-reaction
         (fn [] (get-in @app-db [:groups-page] []))

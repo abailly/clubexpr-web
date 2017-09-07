@@ -7,7 +7,7 @@
     [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
     [club.db]
-    [club.db :refer [base-user-record logout-db-fragment set-auth-data!]]
+    [club.db :refer [base-user-record logout-db-fragment set-auth-data! fetch-teachers-list!]]
     [club.utils :refer [error data-from-js-obj parse-url get-url-all! get-url-root!]]
     [cljs.spec     :as s]
     [goog.crypt.base64 :refer [decodeString]]))
@@ -133,11 +133,17 @@
   (fn [db [_ new-value]]
     (assoc-in db [:profile-page :quality] new-value)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   :profile-school
   [check-spec-interceptor]
-  (fn [db [_ new-value]]
-    (assoc-in db [:profile-page :school] new-value)))
+  (fn [{:keys [db]} [_ new-value]]
+    {:db (assoc-in db [:profile-page :school] new-value)
+     :profile-load-teachers-list new-value}))
+
+(rf/reg-fx
+  :profile-load-teachers-list
+  (fn [school-id]
+    (fetch-teachers-list! school-id)))
 
 (rf/reg-event-db
   :profile-teacher

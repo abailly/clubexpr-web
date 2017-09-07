@@ -865,3 +865,15 @@
       (listRecords)
       (then on-success)
       (catch (error "db/get-users!"))))
+
+(defn fetch-teachers-list!
+  [school-id]
+  (get-users!
+    {:on-success
+      #(rf/dispatch
+        [:write-teachers-list
+          (->> % data-from-js-obj
+                 (filter (fn [x] (= "teacher" (:quality x))))
+                 (filter (fn [x] (= school-id (:school x))))
+                 (map (fn [x] {:id (:id x) :lastname (:lastname x)}))
+                 vec)])}))
