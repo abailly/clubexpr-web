@@ -168,8 +168,10 @@
   (.. club.db/k-groups
       (getRecord (clj->js (-> @app-db :auth-data :kinto-id)))
       (then #(let [record (data-from-js-obj %)
-                   groups (groups-data->groups-page-data record)]
-               (swap! app-db assoc-in [:groups-page] groups)))
+                   groups (groups-data->groups-page-data record)
+                   old-groups (:groups-page @app-db)
+                   new-groups (merge old-groups groups)]
+               (swap! app-db assoc-in [:groups-page] new-groups)))
       (catch #(if (= error-404 (str %))  ; no such id in the groups coll?
                 (swap! app-db assoc-in [:groups-page] {})
                 (error "db/fetch-groups-data!")))))
