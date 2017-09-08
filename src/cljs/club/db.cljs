@@ -151,6 +151,13 @@
       (then #(rf/dispatch [:profile-save-ok]))
       (catch (error "db/save-profile-data!"))))
 
+(defn get-users!
+  [{:keys [on-success] :or {on-success identity}}]
+  (.. club.db/k-users
+      (listRecords)
+      (then on-success)
+      (catch (error "db/get-users!"))))
+
 (defn groups-page-data-enhancer
   [scholar]
   (let [scholar-id (first scholar)
@@ -163,15 +170,33 @@
   [data]
   (dissoc (into {} (map groups-page-data-enhancer data)) :id :last_modified))
 
+(defn groups-reducer
+  [m x]
+  (into m
+    (let [id (keyword (:id x))]
+      {id {:lastname (:lastname x)
+           :firstname (:firstname x)
+           :groups #{}}})))
+
+(defn init-groups-data!
+  []
+  (let [teacher-id (-> @app-db :auth-data :kinto-id)]
+    (get-users! {:on-success
+                  #(rf/dispatch
+                    [:init-groups
+                      (->> % data-from-js-obj
+                             (filter (fn [x] (= teacher-id (:teacher x))))
+                             (reduce groups-reducer {}))])})))
+
 (defn fetch-groups-data!
   []
   (.. club.db/k-groups
       (getRecord (clj->js (-> @app-db :auth-data :kinto-id)))
-      (then #(let [record (data-from-js-obj %)
-                   groups (groups-data->groups-page-data record)
-                   old-groups (:groups-page @app-db)
-                   new-groups (merge old-groups groups)]
-               (swap! app-db assoc-in [:groups-page] new-groups)))
+      (then
+        #(rf/dispatch
+          [:write-groups
+            (-> % data-from-js-obj
+                  groups-data->groups-page-data)]))
       (catch #(if (= error-404 (str %))  ; no such id in the groups coll?
                 (swap! app-db assoc-in [:groups-page] {})
                 (error "db/fetch-groups-data!")))))
@@ -858,13 +883,6 @@
     ;{:id "fake-id-0851647D" :code "0851647D" :name "Collège GEORGES CLEMENCEAU"}
     ;{:id "fake-id-0851655M" :code "0851655M" :name "Collège JACQUES LAURENT"}
   ])
-
-(defn get-users!
-  [{:keys [on-success] :or {on-success identity}}]
-  (.. club.db/k-users
-      (listRecords)
-      (then on-success)
-      (catch (error "db/get-users!"))))
 
 (defn fetch-teachers-list!
   [school-id]

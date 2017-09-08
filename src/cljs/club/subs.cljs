@@ -3,7 +3,10 @@
             [reagent.ratom :refer [make-reaction]]
             [clojure.walk :refer [keywordize-keys]]
             [club.utils :refer [groups-option data-from-js-obj]]
-            [club.db :refer [get-users! fetch-teachers-list! fetch-groups-data!]]))
+            [club.db :refer [get-users!
+                             fetch-teachers-list!
+                             init-groups-data!
+                             fetch-groups-data!]]))
 
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
@@ -101,28 +104,12 @@
            first
            :lastname))))
 
-(defn groups-reducer
-  [m x]
-  (into m
-    (let [id (keyword (:id x))]
-      (if (id m)
-        {}  ; do not overwrite if the scholar exists
-        {id {:lastname (:lastname x)
-             :firstname (:firstname x)
-             :groups #{}}}))))
-
 (rf/reg-sub-raw
  :groups-page
   (fn [app-db _]
     (let [teacher-id (get-in @app-db [:auth-data :kinto-id])
           groups-page (:groups-page @app-db)
-          _ (get-users!
-              {:on-success
-                #(rf/dispatch
-                  [:write-groups
-                    (->> % data-from-js-obj
-                           (filter (fn [x] (= teacher-id (:teacher x))))
-                           (reduce groups-reducer groups-page))])})
+          _ (init-groups-data!)
           _ (fetch-groups-data!)
           ]
       (make-reaction
