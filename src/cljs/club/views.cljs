@@ -192,7 +192,7 @@
         [empty-profile]
         [:div
           [:h2 (t ["Aide pour les élèves"])]
-          [:p (t ["Si vous n’êtes pas élève, modifiez votre profil. Vous pourrez y indiquer votre qualité de professeur.."])]])]
+          [:p (t ["Si vous n’êtes pas élève, modifiez votre profil. Vous pourrez y indiquer votre qualité de professeur."])]])]
     [:> (bs 'Grid)
       [:> (bs 'Row)
         [:h1 (t ["Qu’est-ce que le Club des Expressions ?"])]
