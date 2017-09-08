@@ -67,7 +67,7 @@
   (fn [profile-quality query-v _]
     (case profile-quality
       "scholar" (t ["pour que votre professeur puisse vous retrouver"])
-      "teacher" (t ["pour que les élèves puissent vous retrouver"])
+      "teacher" (t ["pour que les élèves puissent vous retrouver (indiquer aussi ici le prénom pour les homonymes)"])
       (t ["pour que l’on puisse vous retrouver"]))))
 
 (rf/reg-sub
