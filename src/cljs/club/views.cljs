@@ -123,7 +123,7 @@
           [:ul
             [:li "Jean-Philippe Rouquès (aide pédagogique)"]
             [:li "Damien Lecan (aide technique)"]
-            [:li "tous les collègues et élèves sympathisants (aide moral)"]
+            [:li "tous les collègues et élèves sympathisants (aide moral et premiers tests)"]
             [:li "tous les logiciels sur lesquels est bâti le Club (épaules de géants)"]]]
        ]]])
 
