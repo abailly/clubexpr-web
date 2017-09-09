@@ -63,6 +63,11 @@
  (fn [db]
    (-> db :series-page)))
 
+(rf/reg-sub
+ :current-series
+ (fn [db]
+   (-> db :current-series)))
+
 ; Layer 2
 
 (rf/reg-sub

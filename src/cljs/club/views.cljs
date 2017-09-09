@@ -457,7 +457,8 @@
 
 (defn page-series
   []
-  (let [series-data @(rf/subscribe [:series-page])]
+  (let [series-data @(rf/subscribe [:series-page])
+        current-series @(rf/subscribe [:current-series])]
     [:div
       [:div.jumbotron
         [:h2 (t ["Séries"])]
@@ -476,19 +477,22 @@
                       [:li "yo"]
                       [:li "tavu"]]])]
               [:> (bs 'Col) {:xs 6 :md 6}
-                [:h2 (t ["Série étudiée"])]
-                [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-                  [:li "yo"]
-                  [:li "tavu"]]]
+                (if (not (empty? current-series))
+                  [:div
+                    [:h2 (t ["Série étudiée"])]
+                    [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+                      [:li "yo"]
+                      [:li "tavu"]]])]
             ]]]
       [:> (bs 'Button)
         {:style {:margin "1em"}  ; TODO CSS
-         :on-click #(rf/dispatch [:series-cancel])
-         :bsStyle "danger"} "Supprimer cette série"]
-      [:> (bs 'Button)
-        {:style {:margin "1em"}  ; TODO CSS
          :on-click #(rf/dispatch [:series-save])
-         :bsStyle "success"} "Nouvelle série"]]))
+         :bsStyle "success"} "Nouvelle série"]
+      (if (not (empty? current-series))
+        [:> (bs 'Button)
+          {:style {:margin "1em"}  ; TODO CSS
+           :on-click #(rf/dispatch [:series-cancel])
+           :bsStyle "danger"} "Supprimer cette série"])]))
 
 (defn page-forbidden
   []
