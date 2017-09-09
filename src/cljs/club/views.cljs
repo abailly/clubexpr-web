@@ -311,18 +311,24 @@
 
 (defn page-profile
   []
-  (let [lastname  [profile-input {:label (t ["Nom"])
+  (let [profile-quality @(rf/subscribe [:profile-quality])
+        help-text-find-you
+          (case profile-quality
+            "scholar" (t ["pour que votre professeur puisse vous retrouver"])
+            "teacher" (t ["pour que les élèves puissent vous retrouver (indiquer aussi ici le prénom pour les homonymes)"])
+            (t ["pour que l’on puisse vous retrouver"]))
+        lastname  [profile-input {:label (t ["Nom"])
                                   :placeholder (t ["Klougliblouk"])
                                   :help (str (t ["Votre nom de famille"])
                                              " "
-                                             @(rf/subscribe [:help-text-find-you]))
+                                             help-text-find-you)
                                   :value-id :profile-lastname
                                   :event-id :profile-lastname}]
         firstname [profile-input {:label (t ["Prénom"])
                                   :placeholder (t ["Georgette"])
                                   :help (str (t ["Votre prénom"])
                                              " "
-                                             @(rf/subscribe [:help-text-find-you]))
+                                             help-text-find-you)
                                   :value-id :profile-firstname
                                   :event-id :profile-firstname}]
         school [:> (bs 'DropdownButton)

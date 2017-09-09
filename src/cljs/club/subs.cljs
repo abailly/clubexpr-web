@@ -68,17 +68,12 @@
  (fn [db]
    (-> db :current-series)))
 
-; Layer 2
-
 (rf/reg-sub
-  :help-text-find-you
-  (fn [query-v _]
-     (rf/subscribe [:profile-quality]))
-  (fn [profile-quality query-v _]
-    (case profile-quality
-      "scholar" (t ["pour que votre professeur puisse vous retrouver"])
-      "teacher" (t ["pour que les élèves puissent vous retrouver (indiquer aussi ici le prénom pour les homonymes)"])
-      (t ["pour que l’on puisse vous retrouver"]))))
+ :editing-series
+ (fn [db]
+   (-> db :editing-series)))
+
+; Layer 2
 
 (rf/reg-sub
  :profile-school-pretty
