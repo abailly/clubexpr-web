@@ -69,26 +69,22 @@
           [:> (bs 'Navbar 'Toggle)]]
         [:> (bs 'Navbar 'Collapse)
           [:> (bs 'Nav)
-            [:> (bs 'NavItem) {:eventKey 1
-                               :href "#/"
+            [:> (bs 'NavItem) {:href "#/"
                                :class (active page :landing)} (t ["Accueil"])]
-            [:> (bs 'NavItem) {:eventKey 1
-                               :href "#/help"
+            [:> (bs 'NavItem) {:href "#/help"
                                :class (active page :help)} (t ["Aide"])]
             (if authenticated
-              [:> (bs 'NavItem) {:eventKey 2
-                                 :href "#/profile"
+              [:> (bs 'NavItem) {:href "#/profile"
                                  :class (active page :profile)} (t ["Profil"])])
             (if (= quality "teacher")
-              [:> (bs 'NavItem) {:eventKey 3
-                                 :href "#/groups"
+              [:> (bs 'NavItem) {:href "#/groups"
                                  :class (active page :groups)} (t ["Groupes"])])]
           [:> (bs 'Nav) {:pullRight true}
             (if authenticated
               [:> (bs 'NavItem)
-                  {:eventKey 1 :on-click #(rf/dispatch [:logout])} (t ["Déconnexion"])]
+                  {:on-click #(rf/dispatch [:logout])} (t ["Déconnexion"])]
               [:> (bs 'NavItem)
-                  {:eventKey 1 :on-click #(rf/dispatch [:login])}  (t ["Connexion"])])
+                  {:on-click #(rf/dispatch [:login])}  (t ["Connexion"])])
           ]]]]
      ))
 
