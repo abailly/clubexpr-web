@@ -357,8 +357,7 @@
         [:> (bs 'Button)
           {:style {:margin "1em"}  ; TODO CSS
            :on-click #(rf/dispatch [:profile-cancel])
-           :bsStyle "danger"}
-          "Annuler les modifications"]
+           :bsStyle "danger"} "Annuler les modifications"]
         [:> (bs 'Button)
           {:style {:margin "1em"}  ; TODO CSS
            :on-click #(rf/dispatch [:profile-save])
