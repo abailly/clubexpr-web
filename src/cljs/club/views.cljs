@@ -73,13 +73,13 @@
                                :class (active page :landing)} (t ["Accueil"])]
             [:> (bs 'NavItem) {:href "#/help"
                                :class (active page :help)} (t ["Aide"])]
-            (if authenticated
-              [:> (bs 'NavItem) {:href "#/profile"
-                                 :class (active page :profile)} (t ["Profil"])])
             (if (= quality "teacher")
               [:> (bs 'NavItem) {:href "#/groups"
                                  :class (active page :groups)} (t ["Groupes"])])]
           [:> (bs 'Nav) {:pullRight true}
+            (if authenticated
+              [:> (bs 'NavItem) {:href "#/profile"
+                                 :class (active page :profile)} (t ["Profil"])])
             (if authenticated
               [:> (bs 'NavItem)
                   {:on-click #(rf/dispatch [:logout])} (t ["Déconnexion"])]
