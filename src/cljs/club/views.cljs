@@ -75,7 +75,10 @@
                                :class (active page :help)} (t ["Aide"])]
             (if (= quality "teacher")
               [:> (bs 'NavItem) {:href "#/groups"
-                                 :class (active page :groups)} (t ["Groupes"])])]
+                                 :class (active page :groups)} (t ["Groupes"])])
+            (if (= quality "teacher")
+              [:> (bs 'NavItem) {:href "#/series"
+                                 :class (active page :series)} (t ["Séries"])])]
           [:> (bs 'Nav) {:pullRight true}
             (if authenticated
               [:> (bs 'NavItem) {:href "#/profile"
@@ -452,6 +455,41 @@
          :on-click #(rf/dispatch [:groups-save])
          :bsStyle "success"} "Enregistrer les modifications"]]))
 
+(defn page-series
+  []
+  (let [series-data @(rf/subscribe [:series-page])]
+    [:div
+      [:div.jumbotron
+        [:h2 (t ["Séries"])]
+        [:p (t ["Construisez des séries d’expressions à faire reconstituer aux élèves"])]]
+      [:> (bs 'Grid)
+          [:div
+            [:> (bs 'Row)
+              [:> (bs 'Col) {:xs 6 :md 6}
+                (if (empty? series-data)
+                  [:div
+                    [:h2 (t ["Vous n’avez pas encore créé de série."])]
+                    [:p (t ["Pour créer une série, appuyer sur le bouton « Nouvelle série »."])]]
+                  [:div
+                    [:h2 (t ["Vos séries"])]
+                    [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+                      [:li "yo"]
+                      [:li "tavu"]]])]
+              [:> (bs 'Col) {:xs 6 :md 6}
+                [:h2 (t ["Série étudiée"])]
+                [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+                  [:li "yo"]
+                  [:li "tavu"]]]
+            ]]]
+      [:> (bs 'Button)
+        {:style {:margin "1em"}  ; TODO CSS
+         :on-click #(rf/dispatch [:series-cancel])
+         :bsStyle "danger"} "Supprimer cette série"]
+      [:> (bs 'Button)
+        {:style {:margin "1em"}  ; TODO CSS
+         :on-click #(rf/dispatch [:series-save])
+         :bsStyle "success"} "Nouvelle série"]]))
+
 (defn page-forbidden
   []
   [:div.jumbotron
@@ -473,7 +511,8 @@
               :landing [page-landing]
               :help [page-help]
               :profile [page-profile]
-              :groups [page-groups])
+              :groups [page-groups]
+              :series [page-series])
             [page-forbidden]
           )
           [footer]

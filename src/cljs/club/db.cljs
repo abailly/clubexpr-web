@@ -46,6 +46,20 @@
          ; :groups (set of strings)
          ))
 
+(s/def ::series
+  (s/and map?
+         (s/keys :req-un [::title  ; TODO: specify those 3
+                          ::desc
+                          ::exprs])))
+(s/def ::current-series
+  (s/and map?
+         (s/or :empty empty?
+               :series ::series)))
+(s/def ::series-page
+  (s/and map?
+         ; TODO for each series id we have a ::series
+         ))
+
 (s/def ::db
   (s/and map?
          (s/or :empty empty?
@@ -56,6 +70,8 @@
                               ::attempt-code
                               ::profile-page
                               ::groups-page
+                              ::series-page
+                              ::current-series
                               ]))))
 
 (def logout-db-fragment
@@ -66,6 +82,8 @@
                :access-token ""
                :expires-at   ""}
    :groups-page {}
+   :series-page {}
+   :current-series {}
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"
                   :teachers-list []

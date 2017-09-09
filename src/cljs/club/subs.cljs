@@ -58,6 +58,11 @@
  (fn [db [_ scholar-id]]
    (-> db :groups-page (get scholar-id) :groups)))
 
+(rf/reg-sub
+ :series-page
+ (fn [db]
+   (-> db :series-page)))
+
 ; Layer 2
 
 (rf/reg-sub
