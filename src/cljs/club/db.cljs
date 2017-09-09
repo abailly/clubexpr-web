@@ -47,15 +47,16 @@
          ))
 
 (s/def ::db
-  (s/or :empty empty?
-        :keys (s/keys :req-un
-                      [::current-page
-                       ::authenticated
-                       ::auth-data
-                       ::attempt-code
-                       ::profile-page
-                       ::groups-page
-                       ])))
+  (s/and map?
+         (s/or :empty empty?
+               :keys (s/keys :req-un
+                             [::current-page
+                              ::authenticated
+                              ::auth-data
+                              ::attempt-code
+                              ::profile-page
+                              ::groups-page
+                              ]))))
 
 (def logout-db-fragment
   {:current-page :landing
