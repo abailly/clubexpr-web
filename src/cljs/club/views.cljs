@@ -12,6 +12,8 @@
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
 
+(def clubexpr (getValueByKeys js/window "deps" "clubexpr"))
+
 (defn bs
   ([component]
    (getValueByKeys js/window "deps" "react-bootstrap" (str component)))
@@ -50,7 +52,6 @@
   (let [react-mathjax (getValueByKeys js/window "deps" "react-mathjax")
         ctx (getValueByKeys react-mathjax "Context")
         node (getValueByKeys react-mathjax "Node")
-        clubexpr (getValueByKeys js/window "deps" "clubexpr")
         renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
     [:div {:style {:min-height "2em"}}
       [:> ctx [:> node (renderLispAsLaTeX src)]]]))
