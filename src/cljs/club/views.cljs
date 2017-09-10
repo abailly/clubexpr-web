@@ -18,8 +18,7 @@
   ([c subc]
    (getValueByKeys js/window "deps" "react-bootstrap" (str c) (str subc))))
 
-; Profile components
-(defn profile-input [{:keys [label placeholder help value-id event-id]}]
+(defn text-input [{:keys [label placeholder help value-id event-id]}]
   [:> (bs 'FormGroup) {:controlId "formBasicText"
                        :validationState nil}
     [:> (bs 'ControlLabel) label]
@@ -317,20 +316,20 @@
             "scholar" (t ["pour que votre professeur puisse vous retrouver"])
             "teacher" (t ["pour que les élèves puissent vous retrouver (indiquer aussi ici le prénom pour les homonymes)"])
             (t ["pour que l’on puisse vous retrouver"]))
-        lastname  [profile-input {:label (t ["Nom"])
-                                  :placeholder (t ["Klougliblouk"])
-                                  :help (str (t ["Votre nom de famille"])
-                                             " "
-                                             help-text-find-you)
-                                  :value-id :profile-lastname
-                                  :event-id :profile-lastname}]
-        firstname [profile-input {:label (t ["Prénom"])
-                                  :placeholder (t ["Georgette"])
-                                  :help (str (t ["Votre prénom"])
-                                             " "
-                                             help-text-find-you)
-                                  :value-id :profile-firstname
-                                  :event-id :profile-firstname}]
+        lastname  [text-input {:label (t ["Nom"])
+                               :placeholder (t ["Klougliblouk"])
+                               :help (str (t ["Votre nom de famille"])
+                                          " "
+                                          help-text-find-you)
+                               :value-id :profile-lastname
+                               :event-id :profile-lastname}]
+        firstname [text-input {:label (t ["Prénom"])
+                               :placeholder (t ["Georgette"])
+                               :help (str (t ["Votre prénom"])
+                                          " "
+                                          help-text-find-you)
+                               :value-id :profile-firstname
+                               :event-id :profile-firstname}]
         school [:> (bs 'DropdownButton)
                    {:title @(rf/subscribe [:profile-school-pretty])
                     :on-select #(rf/dispatch [:profile-school %])}
