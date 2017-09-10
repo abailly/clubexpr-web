@@ -55,6 +55,7 @@
   (s/and map?
          (s/or :empty empty?
                :series ::series)))
+(s/def ::editing-series boolean?)
 (s/def ::series-page
   (s/and map?
          ; TODO for each series id we have a ::series
@@ -72,6 +73,7 @@
                               ::groups-page
                               ::series-page
                               ::current-series
+                              ::editing-series
                               ]))))
 
 (def logout-db-fragment
@@ -84,6 +86,7 @@
    :groups-page {}
    :series-page {}
    :current-series {}
+   :editing-series false
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"
                   :teachers-list []

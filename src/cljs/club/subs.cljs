@@ -73,6 +73,16 @@
  (fn [db]
    (-> db :editing-series)))
 
+(rf/reg-sub
+ :series-title
+ (fn [db]
+   (-> db :current-series :title)))
+
+(rf/reg-sub
+ :series-desc
+ (fn [db]
+   (-> db :current-series :desc)))
+
 ; Layer 2
 
 (rf/reg-sub

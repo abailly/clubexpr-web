@@ -7,6 +7,7 @@
             [club.config :as config]
             [club.db]
             [club.version]
+            [clojure.walk :refer [keywordize-keys]]
             [cljs.pprint :refer [pprint]]))
 
 ; Placeholder for future translation mechanism
@@ -462,44 +463,111 @@
          :on-click #(rf/dispatch [:groups-save])
          :bsStyle "success"} "Enregistrer les modifications"]]))
 
+(defn show-expr-as-li
+  [expr]
+  (let [nom (-> expr
+                js->clj
+                keywordize-keys
+                :nom)]
+  ^{:key nom} [:li nom]))
+
+(defn series-filter
+  []
+  [:div
+    [:ul (map show-expr-as-li (.-expressions clubexpr))]
+  ])
+
+(defn no-series
+  []
+  [:div
+    [:h2 (t ["Vous n’avez pas encore créé de série."])]
+    [:p (t ["Pour créer une série, appuyer sur le bouton « Nouvelle série »."])]])
+
+(defn series-list
+  []
+  [:div
+    [:h2 (t ["Vos séries"])]
+    [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+      [:li "yo"]
+      [:li "tavu"]]])
+
+(defn show-series
+  []
+  (let [series  @(rf/subscribe [:current-series])]
+    [:div
+      [:h2 (t ["Aperçu de la série"])]
+      [:h3 @(rf/subscribe [:series-title])]
+      [:h3 @(rf/subscribe [:series-desc])]
+      [:ul
+        [:li "yo"]
+        [:li "tavu"]]
+      [:> (bs 'Button)
+        {:class "pull-right"
+         :on-click #(rf/dispatch [:series-delete])
+         :bsStyle "danger"} "Supprimer cette série"]
+     ]))
+
+(defn edit-series
+  []
+  (let [series  @(rf/subscribe [:current-series])]
+    [:div
+      [:h2 (t ["Série en cours de modification"])]
+      [text-input {:label (t ["Titre"])
+                   :placeholder (t ["Découverte du Club"])
+                   :help (t ["Titre de la série, vu par les élèves"])
+                   :value-id :series-title
+                   :event-id :series-title}]
+      [text-input {:label (t ["Description"])
+                   :placeholder (t ["Expressions triviales pour apprendre à utiliser le Club"])
+                   :help (t ["Description de la série, vue seulement par les autres enseignants, mais pas les élèves"])
+                   :value-id :series-desc
+                   :event-id :series-desc}]
+      [:ul
+        [:li (rendition "yo")]
+        [:li "tavu"]]
+      [:> (bs 'Button)
+        {:on-click #(rf/dispatch [:series-cancel])
+         :bsStyle "danger"} "Annuler"]
+      [:> (bs 'Button)
+        {:style {:margin "1em"}  ; TODO CSS
+         :on-click #(rf/dispatch [:series-save])
+         :bsStyle "success"} "Enregistrer"]
+      [:> (bs 'Button)
+        {:style {:margin "1em"}  ; TODO CSS
+         :class "pull-right"
+         :on-click #(rf/dispatch [:series-delete])
+         :bsStyle "danger"} "Supprimer cette série"]
+     ]))
+
 (defn page-series
   []
   (let [series-data @(rf/subscribe [:series-page])
+        editing-series @(rf/subscribe [:editing-series])
         current-series @(rf/subscribe [:current-series])]
     [:div
       [:div.jumbotron
         [:h2 (t ["Séries"])]
         [:p (t ["Construisez des séries d’expressions à faire reconstituer aux élèves"])]]
       [:> (bs 'Grid)
-          [:div
-            [:> (bs 'Row)
-              [:> (bs 'Col) {:xs 6 :md 6}
+        [:> (bs 'Row)
+          [:> (bs 'Col) {:xs 6 :md 6}
+            (if editing-series
+                (series-filter)
+              [:div
                 (if (empty? series-data)
-                  [:div
-                    [:h2 (t ["Vous n’avez pas encore créé de série."])]
-                    [:p (t ["Pour créer une série, appuyer sur le bouton « Nouvelle série »."])]]
-                  [:div
-                    [:h2 (t ["Vos séries"])]
-                    [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-                      [:li "yo"]
-                      [:li "tavu"]]])]
-              [:> (bs 'Col) {:xs 6 :md 6}
-                (if (not (empty? current-series))
-                  [:div
-                    [:h2 (t ["Série étudiée"])]
-                    [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-                      [:li "yo"]
-                      [:li "tavu"]]])]
-            ]]]
-      [:> (bs 'Button)
-        {:style {:margin "1em"}  ; TODO CSS
-         :on-click #(rf/dispatch [:series-save])
-         :bsStyle "success"} "Nouvelle série"]
-      (if (not (empty? current-series))
-        [:> (bs 'Button)
-          {:style {:margin "1em"}  ; TODO CSS
-           :on-click #(rf/dispatch [:series-cancel])
-           :bsStyle "danger"} "Supprimer cette série"])]))
+                  (no-series)
+                  (series-list))
+                [:> (bs 'Button)
+                  {:style {:margin "1em"}  ; TODO CSS
+                   :on-click #(rf/dispatch [:new-series])
+                   :bsStyle "success"} "Nouvelle série"]])]
+          [:> (bs 'Col) {:xs 6 :md 6}
+            (if (empty? current-series)
+              ""
+              (if editing-series
+                  (edit-series)
+                  (show-series)))]
+        ]]]))
 
 (defn page-forbidden
   []

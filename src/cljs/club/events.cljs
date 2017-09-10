@@ -254,3 +254,57 @@
     (let [clj-val (-> value js->clj keywordize-keys)
           groups (set (map :value clj-val))]
       (assoc-in db [:groups-page scholar-id :groups] groups))))
+
+(rf/reg-event-db
+  :new-series
+  [check-spec-interceptor]
+  (fn [db]
+    (-> db
+        (assoc-in [:editing-series] true)
+        (assoc-in [:current-series] {:title ""
+                                     :desc ""
+                                     :exprs []}))))
+
+(rf/reg-event-db
+  :series-cancel
+  [check-spec-interceptor]
+  (fn [db]
+    (-> db
+        (assoc-in [:editing-series] false)
+        (assoc-in [:current-series] {}))))
+
+(rf/reg-event-fx
+  :series-save
+  [check-spec-interceptor]
+  (fn [{:keys [db]}]
+    {:series-save nil}))
+
+(rf/reg-fx
+  :series-save
+  (fn []
+    (js/alert "save series") ; TODO
+  ))
+
+(rf/reg-event-fx
+  :series-delete
+  [check-spec-interceptor]
+  (fn [{:keys [db]}]
+    {:series-delete nil}))
+
+(rf/reg-fx
+  :series-delete
+  (fn []
+    (js/alert "delete series") ; TODO
+  ))
+
+(rf/reg-event-db
+  :series-title
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:current-series :title] new-value)))
+
+(rf/reg-event-db
+  :series-desc
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:current-series :desc] new-value)))
