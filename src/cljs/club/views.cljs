@@ -21,8 +21,8 @@
   ([c subc]
    (getValueByKeys js/window "deps" "react-bootstrap" (str c) (str subc))))
 
-(def react-select (getValueByKeys js/window "deps" "react-select"))
-(def Creatable (getValueByKeys react-select "Creatable"))
+(def Select (getValueByKeys js/window "deps" "react-select"))
+(def Creatable (getValueByKeys Select "Creatable"))
 
 (defn text-input [{:keys [label placeholder help value-id event-id]}]
   [:> (bs 'FormGroup) {:controlId "formBasicText"
