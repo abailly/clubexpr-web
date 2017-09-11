@@ -6,6 +6,9 @@ window.deps = {
     'kinto' : require('kinto'),
     'react-mathjax' : require('react-mathjax'),
     'react-select' : require('react-select'),
+    'rc-slider' : require('rc-slider'),
+    'react-checkbox-group' : require('react-checkbox-group'),
+    'react-sortable' : require('react-sortable'),
     'clubexpr' : require('clubexpr')
 };
 
