@@ -608,7 +608,7 @@
         [:> (bs 'Row)
           [:> (bs 'Col) {:xs 6 :md 6}
             (if editing-series
-                (series-filter)
+              (series-filter)
               [:div
                 (if (empty? series-data)
                   (no-series)
