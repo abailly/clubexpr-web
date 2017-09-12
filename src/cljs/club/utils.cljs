@@ -24,6 +24,10 @@
   [a-map]
   (into {} (map #(identity [(first %) (-> (second %) js->clj keywordize-keys)]) a-map)))
 
+(defn get-prop
+  [expr prop]
+  (-> expr :properties (get prop) js->clj))
+
 (defn scholar-comparator
   [scholar1 scholar2]
   (let [ln1 (:lastname scholar1)

@@ -8,7 +8,12 @@
     [goog.object :refer [getValueByKeys]]
     [club.db]
     [club.db :refer [base-user-record logout-db-fragment set-auth-data! fetch-teachers-list!]]
-    [club.utils :refer [error data-from-js-obj parse-url get-url-all! get-url-root!]]
+    [club.utils :refer [error
+                        get-prop
+                        data-from-js-obj
+                        parse-url
+                        get-url-all!
+                        get-url-root!]]
     [cljs.spec     :as s]
     [goog.crypt.base64 :refer [decodeString]]))
 
@@ -261,7 +266,7 @@
   (fn [db [_ new-value]]
     (let [nature (-> new-value js->clj keywordize-keys :value)
           new-db (assoc-in db [:series-filtering :nature] nature)
-          new-filter (fn [expr] (= (-> expr :properties (get "nature")) nature))]
+          new-filter (fn [expr] (= (get-prop expr "nature") nature))]
       (if (= "All" nature)
         (update-in new-db [:series-filtering :filters] dissoc :nature)
         (assoc-in new-db [:series-filtering :filters :nature] new-filter)))))
