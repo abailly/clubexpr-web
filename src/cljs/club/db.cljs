@@ -60,6 +60,20 @@
   (s/and map?
          ; TODO for each series id we have a ::series
          ))
+(s/def ::expressions #(instance? PersistentVector %))
+(s/def ::filters map?)
+(s/def ::nature string?)
+(s/def ::depthRange #(instance? PersistentVector %))
+(s/def ::nbOpsRange #(instance? PersistentVector %))
+(s/def ::preventedOps #(instance? PersistentVector %))
+(s/def ::series-filtering
+  (s/and map?
+         (s/keys :req-un [::expressions
+                          ::filters
+                          ::nature
+                          ::depthRange
+                          ::nbOpsRange
+                          ::preventedOps])))
 
 (s/def ::db
   (s/and map?
@@ -74,6 +88,7 @@
                               ::series-page
                               ::current-series
                               ::editing-series
+                              ::series-filtering
                               ]))))
 
 (def logout-db-fragment
@@ -87,6 +102,13 @@
    :series-page {}
    :current-series {}
    :editing-series false
+   :series-filtering
+     {:expressions []
+      :filters {:identity identity}
+      :nature "All"
+      :depthRange []
+      :nbOpsRange []
+      :preventedOps []}
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"
                   :teachers-list []

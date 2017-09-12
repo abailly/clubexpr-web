@@ -15,6 +15,15 @@
           keywordize-keys
           :data))
 
+; https://stackoverflow.com/questions/32467299/clojurescript-convert-arbitrary-javascript-object-to-clojure-script-map
+(defn jsx->clj
+  [x]
+  (into {} (for [k (.keys js/Object x)] [k (getValueByKeys x k)])))
+
+(defn js->clj-vals
+  [a-map]
+  (into {} (map #(identity [(first %) (-> (second %) js->clj keywordize-keys)]) a-map)))
+
 (defn scholar-comparator
   [scholar1 scholar2]
   (let [ln1 (:lastname scholar1)

@@ -256,6 +256,17 @@
       (assoc-in db [:groups-page scholar-id :groups] groups))))
 
 (rf/reg-event-db
+  :series-filtering-nature
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (let [nature (-> new-value js->clj keywordize-keys :value)
+          new-db (assoc-in db [:series-filtering :nature] nature)
+          new-filter (fn [expr] (= (-> expr :properties (get "nature")) nature))]
+      (if (= "All" nature)
+        (update-in new-db [:series-filtering :filters] dissoc :nature)
+        (assoc-in new-db [:series-filtering :filters :nature] new-filter)))))
+
+(rf/reg-event-db
   :new-series
   [check-spec-interceptor]
   (fn [db]

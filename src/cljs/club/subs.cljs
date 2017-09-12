@@ -83,6 +83,16 @@
  (fn [db]
    (-> db :current-series :desc)))
 
+(rf/reg-sub
+ :series-filtering-filters
+ (fn [db]
+   (-> db :series-filtering :filters)))
+
+(rf/reg-sub
+ :series-filtering-nature
+ (fn [db]
+   (-> db :series-filtering :nature)))
+
 ; Layer 2
 
 (rf/reg-sub

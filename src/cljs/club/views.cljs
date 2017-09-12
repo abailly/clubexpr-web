@@ -3,7 +3,11 @@
             [re-frame.db :refer [app-db]]
             [goog.object :refer [getValueByKeys]]
             [webpack.bundle]
-            [club.utils :refer [groups-option scholar-comparator FormControlFixed]]
+            [club.utils :refer [jsx->clj
+                                js->clj-vals
+                                groups-option
+                                scholar-comparator
+                                FormControlFixed]]
             [club.config :as config]
             [club.db]
             [club.version]
@@ -14,6 +18,19 @@
 (defn t [[txt]] txt)
 
 (def clubexpr (getValueByKeys js/window "deps" "clubexpr"))
+(defn populate-properties
+  [expr-obj]
+  (let [properties (.-properties clubexpr)
+        expr-obj-clj (-> expr-obj js->clj keywordize-keys)
+        expr-properties (-> expr-obj
+                            (getValueByKeys "expr")
+                            properties
+                            jsx->clj
+                            js->clj-vals
+                            )]
+    (assoc expr-obj-clj :properties expr-properties)))
+(def reified-expressions
+  (map populate-properties (.-expressions clubexpr)))
 
 (defn bs
   ([component]
@@ -23,6 +40,11 @@
 
 (def Select (getValueByKeys js/window "deps" "react-select"))
 (def Creatable (getValueByKeys Select "Creatable"))
+(def Slider (getValueByKeys js/window "deps" "rc-slider" "default"))
+(def CBG (getValueByKeys js/window "deps" "react-checkbox-group"))
+(def Checkbox (getValueByKeys CBG "Checkbox"))
+(def CheckboxGroup (getValueByKeys CBG "CheckboxGroup"))
+(def Sortable (getValueByKeys js/window "deps" "react-sortable"))
 
 (defn text-input [{:keys [label placeholder help value-id event-id]}]
   [:> (bs 'FormGroup) {:controlId "formBasicText"
@@ -471,10 +493,44 @@
                 :nom)]
   ^{:key nom} [:li nom]))
 
+(defn ops-cb-label
+  [name]
+  ^{:key name}
+  [:label
+    {:style {:margin-right "1em"}}  ; TODO CSS
+    [:> Checkbox {:value name
+                  :style {:margin-right "0.3em"}}]
+    name])
+
 (defn series-filter
   []
   [:div
-    [:ul (map show-expr-as-li (.-expressions clubexpr))]
+    [:h2 (t ["Banque d’expressions"])]
+    [:> Select
+      {:options [{:value "All"       :label "Toutes les natures"}
+                 {:value "Somme"     :label "Sommes"}
+                 {:value "Diff"      :label "Différences"}
+                 {:value "Opposé"    :label "Opposés"}
+                 {:value "Produit"   :label "Produits"}
+                 {:value "Quotient"  :label "Quotients"}
+                 {:value "Inverse"   :label "Inverses"}
+                 {:value "Carré"     :label "Carrés"}
+                 {:value "Racine"    :label "Racines"}
+                 {:value "Puissance" :label "Puissances"}]
+       :clearable false
+       :noResultsText "Pas de nature correspondant à cette recherche"
+       :value @(rf/subscribe [:series-filtering-nature])
+       :onChange #(rf/dispatch [:series-filtering-nature %])
+       }]
+    "Profondeur"
+    [:> Slider {:min 1 :max 7 :range true}]
+    "Nb d’opérations"
+    [:> Slider {:min 1 :max 7 :range true}]
+    "Opérations à ne pas faire apparaître"
+    [:> CheckboxGroup {} (map ops-cb-label (.-operations clubexpr))]
+    [:ul
+      (let [f (apply every-pred (vals @(rf/subscribe [:series-filtering-filters])))]
+        (map show-expr-as-li (filter f reified-expressions)))]
   ])
 
 (defn no-series
