@@ -63,17 +63,17 @@
 (s/def ::expressions #(instance? PersistentVector %))
 (s/def ::filters map?)
 (s/def ::nature string?)
-(s/def ::depthRange #(instance? PersistentVector %))
-(s/def ::nbOpsRange #(instance? PersistentVector %))
-(s/def ::preventedOps #(instance? PersistentVector %))
+(s/def ::depth  #(instance? PersistentVector %))
+(s/def ::nb-ops #(instance? PersistentVector %))
+(s/def ::prevented-ops #(instance? PersistentVector %))
 (s/def ::series-filtering
   (s/and map?
          (s/keys :req-un [::expressions
                           ::filters
                           ::nature
-                          ::depthRange
-                          ::nbOpsRange
-                          ::preventedOps])))
+                          ::depth
+                          ::nb-ops
+                          ::prevented-ops])))
 
 (s/def ::db
   (s/and map?
@@ -106,9 +106,9 @@
      {:expressions []
       :filters {:identity identity}
       :nature "All"
-      :depthRange []
-      :nbOpsRange []
-      :preventedOps []}
+      :depth  [1 7]
+      :nb-ops [1 7]
+      :prevented-ops []}
    :profile-page {:quality "scholar"
                   :school "fake-id-no-school"
                   :teachers-list []
