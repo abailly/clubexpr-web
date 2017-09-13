@@ -94,6 +94,16 @@
    (-> db :series-filtering :nature)))
 
 (rf/reg-sub
+ :series-filtering-depth
+ (fn [db]
+   (-> db :series-filtering :depth)))
+
+(rf/reg-sub
+ :series-filtering-nb-ops
+ (fn [db]
+   (-> db :series-filtering :nb-ops)))
+
+(rf/reg-sub
  :series-filtering-prevented-ops
  (fn [db]
    (-> db :series-filtering :prevented-ops)))

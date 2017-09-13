@@ -272,6 +272,26 @@
         (assoc-in new-db [:series-filtering :filters :nature] new-filter)))))
 
 (rf/reg-event-db
+  :series-filtering-depth
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (let [depth-range (js->clj new-value)
+          [m M] depth-range
+          new-db (assoc-in db [:series-filtering :depth] depth-range)
+          new-filter (fn [expr] (<= m (get-prop expr "depth") M))]
+      (assoc-in new-db [:series-filtering :filters :depth] new-filter))))
+
+(rf/reg-event-db
+  :series-filtering-nb-ops
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (let [nb-ops-range (js->clj new-value)
+          [m M] nb-ops-range
+          new-db (assoc-in db [:series-filtering :nb-ops] nb-ops-range)
+          new-filter (fn [expr] (<= m (get-prop expr "nbOps") M))]
+      (assoc-in new-db [:series-filtering :filters :nb-ops] new-filter))))
+
+(rf/reg-event-db
   :series-filtering-prevented-ops
   [check-spec-interceptor]
   (fn [db [_ new-value]]
