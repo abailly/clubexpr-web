@@ -24,7 +24,7 @@
 
 (def Select (getValueByKeys js/window "deps" "react-select"))
 (def Creatable (getValueByKeys Select "Creatable"))
-(def Slider (getValueByKeys js/window "deps" "rc-slider" "default"))
+(def Slider (getValueByKeys js/window "deps" "rc-slider" "Range"))
 (def CBG (getValueByKeys js/window "deps" "react-checkbox-group"))
 (def Checkbox (getValueByKeys CBG "Checkbox"))
 (def CheckboxGroup (getValueByKeys CBG "CheckboxGroup"))
