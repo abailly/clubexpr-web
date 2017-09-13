@@ -481,10 +481,21 @@
   [name]
   ^{:key name}
   [:label
-    {:style {:margin-right "1em"}}  ; TODO CSS
+    {:style {:margin-right "1em" :font-weight "normal"}}  ; TODO CSS
     [:> Checkbox {:value name
                   :style {:margin-right "0.3em"}}]
     name])
+
+(def slider-defaults
+  {:style {:margin-bottom "1.5em"}  ; TODO CSS
+   :min 1 :max 7 :range true
+   :marks {"1" "1", "2" "2", "3" "3", "4" "4", "5" "5", "6" "6", "7" "7"}
+   })
+
+(def filtering-title-style
+  {:style {:font-weight "bold"
+           :margin-top "1.2em"
+           :margin-bottom "0.2em"}})  ; TODO CSS
 
 (defn series-filter
   []
@@ -506,15 +517,20 @@
        :value @(rf/subscribe [:series-filtering-nature])
        :onChange #(rf/dispatch [:series-filtering-nature %])
        }]
-    "Profondeur"
-    [:> Slider {:min 1 :max 7 :range true}]
-    "Nb d’opérations"
-    [:> Slider {:min 1 :max 7 :range true}]
-    "Opérations à ne pas faire apparaître"
+    [:div filtering-title-style "Profondeur"]
+    [:> Slider
+      (merge slider-defaults
+             {})]
+    [:div filtering-title-style "Nb d’opérations"]
+    [:> Slider
+      (merge slider-defaults
+             {})]
+    [:div filtering-title-style "Opérations à ne pas faire apparaître"]
     [:> CheckboxGroup
       {:value @(rf/subscribe [:series-filtering-prevented-ops])
        :onChange #(rf/dispatch [:series-filtering-prevented-ops %])}
       (map ops-cb-label (.-operations clubexpr))]
+    [:div filtering-title-style "Expressions correspondantes"]
     [:ul
       (let [f (apply every-pred (vals @(rf/subscribe [:series-filtering-filters])))]
         (map show-expr-as-li (filter f reified-expressions)))]
