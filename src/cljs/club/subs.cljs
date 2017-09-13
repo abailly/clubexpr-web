@@ -93,6 +93,11 @@
  (fn [db]
    (-> db :series-filtering :nature)))
 
+(rf/reg-sub
+ :series-filtering-prevented-ops
+ (fn [db]
+   (-> db :series-filtering :prevented-ops)))
+
 ; Layer 2
 
 (rf/reg-sub

@@ -511,7 +511,10 @@
     "Nb d’opérations"
     [:> Slider {:min 1 :max 7 :range true}]
     "Opérations à ne pas faire apparaître"
-    [:> CheckboxGroup {} (map ops-cb-label (.-operations clubexpr))]
+    [:> CheckboxGroup
+      {:value @(rf/subscribe [:series-filtering-prevented-ops])
+       :onChange #(rf/dispatch [:series-filtering-prevented-ops %])}
+      (map ops-cb-label (.-operations clubexpr))]
     [:ul
       (let [f (apply every-pred (vals @(rf/subscribe [:series-filtering-filters])))]
         (map show-expr-as-li (filter f reified-expressions)))]

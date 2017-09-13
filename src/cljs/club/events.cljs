@@ -272,6 +272,20 @@
         (assoc-in new-db [:series-filtering :filters :nature] new-filter)))))
 
 (rf/reg-event-db
+  :series-filtering-prevented-ops
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (let [p-ops (js->clj new-value)
+          new-db (assoc-in db [:series-filtering :prevented-ops] p-ops)
+          new-filter
+            (apply every-pred
+              (map #(fn [expr] (not (some #{%} (get-prop expr "uniqueOps"))))
+                   p-ops))]
+      (if (empty? p-ops)
+        (update-in new-db [:series-filtering :filters] dissoc :prevented-ops)
+        (assoc-in new-db [:series-filtering :filters :prevented-ops] new-filter)))))
+
+(rf/reg-event-db
   :new-series
   [check-spec-interceptor]
   (fn [db]
