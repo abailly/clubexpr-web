@@ -8,7 +8,7 @@ window.deps = {
     'react-select' : require('react-select'),
     'rc-slider' : require('rc-slider'),
     'react-checkbox-group' : require('react-checkbox-group'),
-    'react-sortable' : require('react-sortable'),
+    'react-drag-sortable' : require('react-drag-sortable'),
     'clubexpr' : require('clubexpr')
 };
 

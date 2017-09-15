@@ -17,7 +17,7 @@
     "react-select": "1.0.0-rc.5",
     "rc-slider": "8.3.1",
     "react-checkbox-group": "3.3.1",
-    "react-sortable": "1.2.0",
+    "react-drag-sortable": "1.0.5",
     "clubexpr": "0.2.0"
   }
 }
