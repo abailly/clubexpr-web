@@ -475,7 +475,8 @@
   (let [nom (:nom expr)
         renderExprAsLisp (.-renderExprAsLisp clubexpr)
         lisp (renderExprAsLisp (-> expr :expr clj->js))]
-  ^{:key nom} [:li (rendition lisp)]))
+    ^{:key nom}
+    [:li (rendition lisp)]))
 
 (defn ops-cb-label
   [name]
