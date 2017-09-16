@@ -8,6 +8,7 @@
     [goog.object :refer [getValueByKeys]]
     [club.db]
     [club.db :refer [base-user-record
+                     new-series
                      logout-db-fragment
                      set-auth-data!
                      fetch-teachers-list!]]
@@ -314,9 +315,7 @@
   (fn [db]
     (-> db
         (assoc-in [:editing-series] true)
-        (assoc-in [:current-series] {:title ""
-                                     :desc ""
-                                     :exprs []}))))
+        (assoc-in [:current-series] new-series))))
 
 (rf/reg-event-db
   :series-cancel

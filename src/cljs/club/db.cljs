@@ -91,6 +91,11 @@
                               ::series-filtering
                               ]))))
 
+(def new-series
+  {:title ""
+   :desc ""
+   :exprs []})
+
 (def logout-db-fragment
   {:current-page :landing
    :authenticated false
@@ -100,7 +105,7 @@
                :expires-at   ""}
    :groups-page {}
    :series-page {}
-   :current-series {}
+   :current-series new-series
    :editing-series false
    :series-filtering
      {:expressions []
