@@ -476,7 +476,9 @@
         renderExprAsLisp (.-renderExprAsLisp clubexpr)
         lisp (renderExprAsLisp (-> expr :expr clj->js))]
     ^{:key nom}
-    [:li (rendition lisp)]))
+    [:li
+      {:on-double-click #(rf/dispatch [:series-exprs-add lisp])}
+      (rendition lisp)]))
 
 (defn ops-cb-label
   [name]

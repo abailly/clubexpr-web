@@ -368,3 +368,11 @@
     (let [val-clj (js->clj new-value)
           exprs (vec (map #(get % "content") val-clj))]
     (assoc-in db [:current-series :exprs] exprs))))
+
+(rf/reg-event-db
+  :series-exprs-add
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (let [val-clj (js->clj new-value)
+          _ (println (js-keys val-clj))]
+    (update-in db [:current-series :exprs] conj val-clj))))
