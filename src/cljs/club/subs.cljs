@@ -85,6 +85,11 @@
    (-> db :current-series :desc)))
 
 (rf/reg-sub
+ :series-exprs
+ (fn [db]
+   (-> db :current-series :exprs)))
+
+(rf/reg-sub
  :series-filtering-filters
  (fn [db]
    (-> db :series-filtering :filters)))
@@ -170,6 +175,13 @@
      (rf/subscribe [:groups-groups scholar-id]))
   (fn [groups query-v _]
     (vec (map groups-option (sort groups)))))
+
+(rf/reg-sub
+ :series-exprs-with-content-key
+  (fn [query-v _]
+     (rf/subscribe [:series-exprs]))
+  (fn [exprs query-v _]
+    (map #(identity {:content %}) exprs)))
 
 (rf/reg-sub
  :series-filtered-exprs

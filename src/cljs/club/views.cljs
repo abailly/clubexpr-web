@@ -28,7 +28,7 @@
 (def CBG (getValueByKeys js/window "deps" "react-checkbox-group"))
 (def Checkbox (getValueByKeys CBG "Checkbox"))
 (def CheckboxGroup (getValueByKeys CBG "CheckboxGroup"))
-(def Sortable (getValueByKeys js/window "deps" "react-sortable"))
+(def Sortable (getValueByKeys js/window "deps" "react-drag-sortable" "default"))
 
 (defn text-input [{:keys [label placeholder help value-id event-id]}]
   [:> (bs 'FormGroup) {:controlId "formBasicText"
@@ -572,7 +572,7 @@
 
 (defn edit-series
   []
-  (let [series  @(rf/subscribe [:current-series])]
+  (let [exprs @(rf/subscribe [:series-exprs-with-content-key])]
     [:div
       [:h2 (t ["Série en cours de modification"])]
       [text-input {:label (t ["Titre"])
@@ -585,9 +585,12 @@
                    :help (t ["Description de la série, vue seulement par les autres enseignants, mais pas les élèves"])
                    :value-id :series-desc
                    :event-id :series-desc}]
-      [:ul
-        [:li (rendition "yo")]
-        [:li "tavu"]]
+      [:> Sortable
+        {:items exprs  ; TODO: rendition
+         :moveTransitionDuration 0.3
+         :dropBackTransitionDuration 0.3
+         :placeholder "< ici >"
+         :onSort #(rf/dispatch [:series-exprs-sort %])}]
       [:> (bs 'Button)
         {:on-click #(rf/dispatch [:series-cancel])
          :bsStyle "danger"} "Annuler"]

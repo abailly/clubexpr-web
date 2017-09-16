@@ -360,3 +360,11 @@
   [check-spec-interceptor]
   (fn [db [_ new-value]]
     (assoc-in db [:current-series :desc] new-value)))
+
+(rf/reg-event-db
+  :series-exprs-sort
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (let [val-clj (js->clj new-value)
+          exprs (map #(get % "content") val-clj)]
+    (assoc-in db [:current-series :exprs] exprs))))
