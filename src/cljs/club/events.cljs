@@ -7,7 +7,10 @@
     [re-frame.db :refer [app-db]]
     [goog.object :refer [getValueByKeys]]
     [club.db]
-    [club.db :refer [base-user-record logout-db-fragment set-auth-data! fetch-teachers-list!]]
+    [club.db :refer [base-user-record
+                     logout-db-fragment
+                     set-auth-data!
+                     fetch-teachers-list!]]
     [club.utils :refer [error
                         get-prop
                         data-from-js-obj
