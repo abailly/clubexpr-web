@@ -536,7 +536,7 @@
     (let [exprs (map show-expr-as-li @(rf/subscribe [:series-filtered-exprs]))]
       (if (empty? exprs)
         [:p (t ["Aucune expression ne correspond à ce filtrage"])]
-        [:ul exprs]))
+        [:ul.nav exprs]))
   ])
 
 (defn no-series
