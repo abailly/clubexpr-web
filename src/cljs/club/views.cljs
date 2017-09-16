@@ -534,9 +534,10 @@
        :onChange #(rf/dispatch [:series-filtering-prevented-ops %])}
       (map ops-cb-label (.-operations clubexpr))]
     [:div filtering-title-style "Expressions correspondantes"]
-    [:ul
-      (let [f (apply every-pred (vals @(rf/subscribe [:series-filtering-filters])))]
-        (map show-expr-as-li (filter f reified-expressions)))]
+    (let [exprs (map show-expr-as-li @(rf/subscribe [:series-filtered-exprs]))]
+      (if (empty? exprs)
+        [:p (t ["Aucune expression ne correspond à ce filtrage"])]
+        [:ul exprs]))
   ])
 
 (defn no-series

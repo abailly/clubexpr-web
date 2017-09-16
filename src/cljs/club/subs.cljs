@@ -3,6 +3,7 @@
             [reagent.ratom :refer [make-reaction]]
             [clojure.walk :refer [keywordize-keys]]
             [club.utils :refer [groups-option data-from-js-obj]]
+            [club.expr :refer [reified-expressions]]
             [club.db :refer [get-users!
                              fetch-teachers-list!
                              init-groups-data!
@@ -169,3 +170,11 @@
      (rf/subscribe [:groups-groups scholar-id]))
   (fn [groups query-v _]
     (vec (map groups-option (sort groups)))))
+
+(rf/reg-sub
+ :series-filtered-exprs
+  (fn [query-v _]
+     (rf/subscribe [:series-filtering-filters]))
+  (fn [filters query-v _]
+    (let [f (apply every-pred (vals filters))]
+      (filter f reified-expressions))))
