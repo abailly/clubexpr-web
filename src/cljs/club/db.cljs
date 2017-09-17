@@ -5,7 +5,7 @@
             [goog.object :refer [getValueByKeys]]
             [re-frame.core :as rf]
             [re-frame.db :refer [app-db]]
-            [club.utils :refer [error data-from-js-obj]]
+            [club.utils :refer [error data-from-js-obj ->sha1]]
             [club.config :as config]))
 
 (s/def ::current-page keyword?)
@@ -145,6 +145,10 @@
                   (bucket "default")
                   (collection "groups")))
 
+(def k-series (.. k-client
+                  (bucket "default")
+                  (collection "series")))
+
 (defn base-user-record
   [auth0-id]
   {:auth0-id auth0-id
@@ -270,6 +274,18 @@
         (updateRecord (clj->js record))
         (then #(rf/dispatch [:groups-save-ok]))
         (catch (error "db/save-groups-data!")))))
+
+(defn save-series-data!
+  []
+  (let [series (-> @app-db :current-series)
+        sha1 (->sha1 series)]
+    (.. club.db/k-series
+        (updateRecord (clj->js
+                        {:id sha1
+                         :author-id (-> @app-db :auth-data :kinto-id)
+                         :series series}))
+        (then #(rf/dispatch [:series-save-ok]))
+        (catch (error "db/save-series-data!")))))
 
 (defn get-schools!
   []

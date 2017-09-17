@@ -333,9 +333,8 @@
 
 (rf/reg-fx
   :series-save
-  (fn []
-    (js/alert "save series") ; TODO
-  ))
+  (fn [_]
+    (club.db/save-series-data!)))
 
 (rf/reg-event-fx
   :series-delete
@@ -374,3 +373,11 @@
   [check-spec-interceptor]
   (fn [db [_ new-value]]
     (update-in db [:current-series :exprs] conj new-value)))
+
+(rf/reg-event-db
+  :series-save-ok
+  [check-spec-interceptor]
+  (fn [db [_ _]]
+    ; TODO: set a flag in the state to display «new series saved»
+    db
+    ))
