@@ -154,10 +154,8 @@
  :groups-page
   (fn [app-db _]
     (let [teacher-id (get-in @app-db [:auth-data :kinto-id])
-          groups-page (:groups-page @app-db)
           _ (init-groups-data!)
-          _ (fetch-groups-data!)
-          ]
+          _ (fetch-groups-data!)]
       (make-reaction
         (fn [] (get-in @app-db [:groups-page] []))
         :on-dispose #(do)))))
