@@ -244,7 +244,7 @@
   (fn [db [_ new-value]]
     (let [old-groups (:groups-page @app-db)
           new-groups (merge new-value old-groups)]
-    (assoc-in db [:groups-page] new-groups))))
+      (assoc-in db [:groups-page] new-groups))))
 
 ; :write-groups is a merge of old and new data, like :init-groups,
 ; but existing scholar ids are replaced (merge old new)
@@ -254,7 +254,7 @@
   (fn [db [_ new-value]]
     (let [old-groups (:groups-page @app-db)
           new-groups (merge old-groups new-value)]
-    (assoc-in db [:groups-page] new-groups))))
+      (assoc-in db [:groups-page] new-groups))))
 
 (rf/reg-event-db
   :groups-change
