@@ -587,12 +587,15 @@
                    :help (t ["Description de la série, vue seulement par les autres enseignants, mais pas les élèves"])
                    :value-id :series-desc
                    :event-id :series-desc}]
-      [:> Sortable
-        {:items exprs  ; TODO: rendition
-         :moveTransitionDuration 0.3
-         :dropBackTransitionDuration 0.3
-         :placeholder "< ici >"
-         :onSort #(rf/dispatch [:series-exprs-sort %])}]
+      [:p [:strong (t ["Expressions"])]]
+      (if (empty? exprs)
+        [:p (t ["Série vide. En double-cliquant sur une expression sur la gauche, vous pouvez l’ajouter à votre série. Pour la supprimer de la série, double-cliquer à nouveau mais dans la liste de droite."])]
+        [:> Sortable
+          {:items exprs  ; TODO: rendition
+           :moveTransitionDuration 0.3
+           :dropBackTransitionDuration 0.3
+           :placeholder "< ici >"
+           :onSort #(rf/dispatch [:series-exprs-sort %])}])
       [:> (bs 'Button)
         {:on-click #(rf/dispatch [:series-cancel])
          :bsStyle "danger"} "Annuler"]
