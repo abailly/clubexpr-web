@@ -589,7 +589,10 @@
                    :event-id :series-desc}]
       [:p [:strong (t ["Expressions"])]]
       (if (empty? exprs)
-        [:p (t ["Série vide. En double-cliquant sur une expression sur la gauche, vous pouvez l’ajouter à votre série. Pour la supprimer de la série, double-cliquer à nouveau mais dans la liste de droite."])]
+        [:p
+          [:strong (t ["La série est vide."])]
+          " "
+          (t ["En double-cliquant sur une expression sur la gauche, vous pouvez l’ajouter à votre série. Pour la supprimer de la série, double-cliquer à nouveau mais dans la liste de droite."])]
         [:> Sortable
           {:items exprs  ; TODO: rendition
            :moveTransitionDuration 0.3
