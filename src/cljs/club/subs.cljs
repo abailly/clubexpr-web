@@ -153,8 +153,7 @@
 (rf/reg-sub-raw
  :groups-page
   (fn [app-db _]
-    (let [teacher-id (get-in @app-db [:auth-data :kinto-id])
-          _ (init-groups-data!)
+    (let [_ (init-groups-data!)
           _ (fetch-groups-data!)]
       (make-reaction
         (fn [] (get-in @app-db [:groups-page] []))
