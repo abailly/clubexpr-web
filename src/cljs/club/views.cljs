@@ -470,7 +470,7 @@
          :on-click #(rf/dispatch [:groups-save])
          :bsStyle "success"} "Enregistrer les modifications"]]))
 
-(defn show-expr-as-li
+(defn show-expr-as-li-click
   [expr]
   (let [nom (:nom expr)
         renderExprAsLisp (.-renderExprAsLisp clubexpr)
@@ -536,10 +536,11 @@
        :onChange #(rf/dispatch [:series-filtering-prevented-ops %])}
       (map ops-cb-label (.-operations clubexpr))]
     [:div filtering-title-style "Expressions correspondantes"]
-    (let [exprs (map show-expr-as-li @(rf/subscribe [:series-filtered-exprs]))]
-      (if (empty? exprs)
+    (let [filtered-exprs @(rf/subscribe [:series-filtered-exprs])
+          exprs-as-li (map show-expr-as-li-click filtered-exprs)]
+      (if (empty? exprs-as-li)
         [:p (t ["Aucune expression ne correspond à ce filtrage"])]
-        [:ul.nav exprs]))
+        [:ul.nav exprs-as-li]))
   ])
 
 (defn no-series
