@@ -549,28 +549,54 @@
     [:h2 (t ["Vous n’avez pas encore créé de série."])]
     [:p (t ["Pour créer une série, appuyer sur le bouton « Nouvelle série »."])]])
 
+(defn series-li
+  [series-obj]
+  (let [current-series-id @(rf/subscribe [:current-series-id])
+        id (:id series-obj)
+        series (:series series-obj)
+        title? (-> series :title)
+        title (if (empty? title?) (t ["Sans titre"]) title?)
+        attrs-base {:on-click #(rf/dispatch [:current-series-id id])}
+        attrs (if (= current-series-id id)
+                (merge attrs-base {:style {:background "#ddd"}})
+                attrs-base)]
+    ^{:key id}
+    [:> (bs 'NavItem) attrs title]))
+
 (defn series-list
   []
-  [:div
-    [:h2 (t ["Vos séries"])]
-    [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
-      [:li "yo"]
-      [:li "tavu"]]])
+  (let [series-data @(rf/subscribe [:series-page])]
+    [:div
+      [:h2 (t ["Vos séries"])]
+      [:ul.nav {:max-height "30em" :overflow-y "scroll"}  ; TODO CSS
+        (doall (map series-li series-data))]]))
+
+(defn show-expr-as-li
+  [lisp]
+  ^{:key lisp} [:li (rendition lisp)])
 
 (defn show-series
   []
-  (let [series  @(rf/subscribe [:current-series])]
+  (let [series-id  @(rf/subscribe [:current-series-id])
+        title @(rf/subscribe [:series-title])
+        desc @(rf/subscribe [:series-desc])]
     [:div
       [:h2 (t ["Aperçu de la série"])]
-      [:h3 @(rf/subscribe [:series-title])]
-      [:h3 @(rf/subscribe [:series-desc])]
-      [:ul
-        [:li "yo"]
-        [:li "tavu"]]
-      [:> (bs 'Button)
-        {:class "pull-right"
-         :on-click #(rf/dispatch [:series-delete])
-         :bsStyle "danger"} "Supprimer cette série"]
+      (if (empty? series-id)
+        [:p (t ["Veuillez sélectionner une série sur la gauche."])]
+        [:div
+          [:div
+            [:> (bs 'Button)
+              {:style {:margin-right "1em"}
+               :on-click #(rf/dispatch [:series-edit])
+               :bsStyle "warning"} (t ["Modifier cette série"])]
+            [:> (bs 'Button)
+              {:on-click #(rf/dispatch [:series-delete])
+               :bsStyle "danger"} (t ["Supprimer cette série"])]]
+          [:h3 (if (empty? title) (t ["Sans titre"]) title)]
+          [:h3 (if (empty? desc) (t ["Pas de description"]) desc)]
+          [:ul.nav
+            (map show-expr-as-li @(rf/subscribe [:series-exprs]))]])
      ]))
 
 (defn edit-series

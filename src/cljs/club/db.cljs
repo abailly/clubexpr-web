@@ -278,6 +278,32 @@
         (then #(rf/dispatch [:groups-save-ok]))
         (catch (error "db/save-groups-data!")))))
 
+(defn series-page-data-enhancer
+  [series]
+  (let [series-id (first series)
+        series-data (second series)]
+    [series-id series-data]))
+
+(defn series-data->series-page-data
+  [data]
+  (dissoc (into {} (map series-page-data-enhancer data)) :owner-id :last_modified))
+
+(defn fetch-series-data!
+  []
+  (let [kinto-id (-> @app-db :auth-data :kinto-id)]
+    (.. club.db/k-series
+        (listRecords)
+        (then
+          #(rf/dispatch
+            [:write-series
+              (->> % data-from-js-obj
+                     (filter (fn [x] (= kinto-id (:owner-id x))))
+                     (map series-data->series-page-data)
+                     vec)]))
+        (catch #(if (= error-404 (str %))  ; no such id in the series coll?
+                  (swap! app-db assoc-in [:series-page] {})
+                  (error "db/fetch-series-data!"))))))
+
 (defn save-series-data!
   []
   (let [current-series-id (-> @app-db :current-series-id)

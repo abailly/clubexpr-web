@@ -265,6 +265,23 @@
       (assoc-in db [:groups-page scholar-id :groups] groups))))
 
 (rf/reg-event-db
+  :current-series-id
+  [check-spec-interceptor]
+  (fn [db [_ new-series-id]]
+    (let [current-series (->> db :series-page
+                                 (filter #(= new-series-id (:id %)))
+                                 first
+                                 :series)]
+      (-> db (assoc-in [:current-series-id] new-series-id)
+             (assoc-in [:current-series] current-series)))))
+
+(rf/reg-event-db
+  :write-series
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (assoc-in db [:series-page] new-value)))
+
+(rf/reg-event-db
   :series-filtering-nature
   [check-spec-interceptor]
   (fn [db [_ new-value]]
@@ -337,6 +354,12 @@
   :series-save
   (fn [_]
     (club.db/save-series-data!)))
+
+(rf/reg-event-db
+  :series-edit
+  [check-spec-interceptor]
+  (fn [db]
+    (assoc db :editing-series true)))
 
 (rf/reg-event-fx
   :series-delete

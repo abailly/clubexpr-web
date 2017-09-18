@@ -7,7 +7,8 @@
             [club.db :refer [get-users!
                              fetch-teachers-list!
                              init-groups-data!
-                             fetch-groups-data!]]))
+                             fetch-groups-data!
+                             fetch-series-data!]]))
 
 ; Placeholder for future translation mechanism
 (defn t [[txt]] txt)
@@ -60,9 +61,9 @@
    (-> db :groups-page (get scholar-id) :groups)))
 
 (rf/reg-sub
- :series-page
+ :current-series-id
  (fn [db]
-   (-> db :series-page)))
+   (-> db :current-series-id)))
 
 (rf/reg-sub
  :current-series
@@ -172,6 +173,14 @@
      (rf/subscribe [:groups-groups scholar-id]))
   (fn [groups query-v _]
     (vec (map groups-option (sort groups)))))
+
+(rf/reg-sub-raw
+ :series-page
+  (fn [app-db _]
+    (let [_ (fetch-series-data!)]
+      (make-reaction
+        (fn [] (:series-page @app-db ))
+        :on-dispose #(do)))))
 
 (rf/reg-sub
  :series-exprs-with-content-key
