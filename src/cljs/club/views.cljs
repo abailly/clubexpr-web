@@ -585,7 +585,7 @@
       (if (empty? series-id)
         [:p (t ["Veuillez sélectionner une série sur la gauche."])]
         [:div
-          [:div
+          [:div.pull-right
             [:> (bs 'Button)
               {:style {:margin-right "1em"}
                :on-click #(rf/dispatch [:series-edit])
@@ -594,7 +594,9 @@
               {:on-click #(rf/dispatch [:series-delete])
                :bsStyle "danger"} (t ["Supprimer cette série"])]]
           [:h3 (if (empty? title) (t ["Sans titre"]) title)]
-          [:h3 (if (empty? desc) (t ["Pas de description"]) desc)]
+          (if (empty? desc)
+            [:p (t ["Pas de description"])]
+            [:p (t ["Description : "]) desc])
           [:ul.nav
             (map show-expr-as-li @(rf/subscribe [:series-exprs]))]])
      ]))
@@ -663,11 +665,9 @@
                    :on-click #(rf/dispatch [:new-series])
                    :bsStyle "success"} "Nouvelle série"]])]
           [:> (bs 'Col) {:xs 6 :md 6}
-            (if (empty? current-series)
-              ""
-              (if editing-series
-                  (edit-series)
-                  (show-series)))]
+            (if editing-series
+                (edit-series)
+                (show-series))]
         ]]]))
 
 (defn page-forbidden

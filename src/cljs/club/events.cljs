@@ -339,10 +339,7 @@
   :series-cancel
   [check-spec-interceptor]
   (fn [db]
-    (-> db
-        (assoc-in [:editing-series] false)
-        (assoc-in [:current-series-id] "")
-        (assoc-in [:current-series] {}))))
+    (assoc db :editing-series false)))
 
 (rf/reg-event-fx
   :series-save
