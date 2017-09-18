@@ -315,6 +315,7 @@
   (fn [db]
     (-> db
         (assoc-in [:editing-series] true)
+        (assoc-in [:current-series-id] "")
         (assoc-in [:current-series] new-series))))
 
 (rf/reg-event-db
@@ -323,6 +324,7 @@
   (fn [db]
     (-> db
         (assoc-in [:editing-series] false)
+        (assoc-in [:current-series-id] "")
         (assoc-in [:current-series] {}))))
 
 (rf/reg-event-fx
@@ -377,7 +379,7 @@
 (rf/reg-event-db
   :series-save-ok
   [check-spec-interceptor]
-  (fn [db [_ _]]
+  (fn [db [_ record]]
     ; TODO: set a flag in the state to display «new series saved»
-    db
-    ))
+    (-> db
+        (assoc-in [:current-series-id] (-> record data-from-js-obj :id)))))

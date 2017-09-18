@@ -5,7 +5,7 @@
             [goog.object :refer [getValueByKeys]]
             [re-frame.core :as rf]
             [re-frame.db :refer [app-db]]
-            [club.utils :refer [error data-from-js-obj ->sha1]]
+            [club.utils :refer [error data-from-js-obj]]
             [club.config :as config]))
 
 (s/def ::current-page keyword?)
@@ -51,14 +51,15 @@
          (s/keys :req-un [::title  ; TODO: specify those 3
                           ::desc
                           ::exprs])))
+(s/def ::current-series-id string?)
 (s/def ::current-series
   (s/and map?
          (s/or :empty empty?
                :series ::series)))
 (s/def ::editing-series boolean?)
 (s/def ::series-page
-  (s/and map?
-         ; TODO for each series id we have a ::series
+  (s/and #(instance? PersistentVector %)
+         ; TODO each elt is a map {:id string? :series ::series}
          ))
 (s/def ::expressions #(instance? PersistentVector %))
 (s/def ::filters map?)
@@ -86,6 +87,7 @@
                               ::profile-page
                               ::groups-page
                               ::series-page
+                              ::current-series-id
                               ::current-series
                               ::editing-series
                               ::series-filtering
@@ -104,7 +106,8 @@
                :access-token ""
                :expires-at   ""}
    :groups-page {}
-   :series-page {}
+   :series-page []
+   :current-series-id ""
    :current-series new-series
    :editing-series false
    :series-filtering
@@ -277,14 +280,16 @@
 
 (defn save-series-data!
   []
-  (let [series (-> @app-db :current-series)
-        sha1 (->sha1 series)]
+  (let [current-series-id (-> @app-db :current-series-id)
+        current-series (-> @app-db :current-series)
+        record-fragment {:owner-id (-> @app-db :auth-data :kinto-id)
+                         :series current-series}
+        record (if (empty? current-series-id)
+                 record-fragment
+                 (merge record-fragment {:id current-series-id}))]
     (.. club.db/k-series
-        (updateRecord (clj->js
-                        {:id sha1
-                         :author-id (-> @app-db :auth-data :kinto-id)
-                         :series series}))
-        (then #(rf/dispatch [:series-save-ok]))
+        (createRecord (clj->js record))
+        (then #(rf/dispatch [:series-save-ok %]))
         (catch (error "db/save-series-data!")))))
 
 (defn get-schools!

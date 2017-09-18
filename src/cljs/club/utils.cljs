@@ -3,8 +3,7 @@
             [clojure.walk :refer [keywordize-keys]]
             [goog.object :refer [getValueByKeys]]
             [reagent.core :as r]
-            [webpack.bundle]
-            [goog.crypt.Sha1]))
+            [webpack.bundle]))
  
 (defn error
   [where]
@@ -24,21 +23,6 @@
 (defn js->clj-vals
   [a-map]
   (into {} (map #(identity [(first %) (-> (second %) js->clj keywordize-keys)]) a-map)))
-
-(defn dec->hexa
-  [number]
-  (let [hexa (.toString number 16)]
-    (if (< number 16)
-      (str "0" hexa)
-      hexa)))
-
-(defn ->sha1
-  [obj]
-  (let [txt (str obj)
-        sha1 (new goog.crypt.Sha1)
-        _ (.update sha1 txt)
-        digest (.digest sha1)]
-    (reduce #(str %1 (dec->hexa %2)) "" digest)))
 
 (defn get-prop
   [expr prop]
