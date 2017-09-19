@@ -670,6 +670,11 @@
                 (show-series))]
         ]]]))
 
+(defn page-teacher-only
+  []
+  [:div.jumbotron
+    [:h2 (t ["Désolé, il faut être professeur pour accéder à cette page."])]])
+
 (defn page-forbidden
   []
   [:div.jumbotron
@@ -685,14 +690,18 @@
           [nav-bar]
           (if (or authenticated
                   (some #{current-page} [:landing :help]))
-            ; TODO: try to replace the case below with this:
-            ; (array (symbol (str "page-" (subs (str current-page) 1))))
-            (case current-page
-              :landing [page-landing]
-              :help [page-help]
-              :profile [page-profile]
-              :groups [page-groups]
-              :series [page-series])
+            (if (= "teacher" quality)
+              (case current-page
+                :landing [page-landing]
+                :help [page-help]
+                :profile [page-profile]
+                :groups [page-groups]
+                :series [page-series])
+              (case current-page
+                :landing [page-landing]
+                :help [page-help]
+                :profile [page-profile]
+                [page-teacher-only]))
             [page-forbidden]
           )
           [footer]
