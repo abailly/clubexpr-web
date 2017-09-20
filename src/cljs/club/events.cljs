@@ -11,7 +11,8 @@
                      new-series
                      logout-db-fragment
                      set-auth-data!
-                     fetch-teachers-list!]]
+                     fetch-teachers-list!
+                     delete-series!]]
     [club.utils :refer [error
                         get-prop
                         data-from-js-obj
@@ -367,8 +368,7 @@
 (rf/reg-fx
   :series-delete
   (fn []
-    (js/alert "delete series") ; TODO
-  ))
+    (delete-series!)))
 
 (rf/reg-event-db
   :series-title
@@ -410,3 +410,12 @@
     ; TODO: set a flag in the state to display «new series saved»
     (-> db
         (assoc-in [:current-series-id] (-> record data-from-js-obj :id)))))
+
+(rf/reg-event-db
+  :series-delete-ok
+  [check-spec-interceptor]
+  (fn [db [_ record]]
+    ; TODO: set a flag in the state to display «new series saved»
+    (-> db
+        (assoc-in [:current-series-id] "")
+        (assoc-in [:current-series] new-series))))

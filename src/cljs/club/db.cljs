@@ -318,6 +318,14 @@
         (then #(rf/dispatch [:series-save-ok %]))
         (catch (error "db/save-series-data!")))))
 
+(defn delete-series!
+  []
+  (let [current-series-id (-> @app-db :current-series-id)]
+    (.. club.db/k-series
+        (deleteRecord current-series-id)
+        (then #(rf/dispatch [:series-delete-ok %]))
+        (catch (error "db/delete-series!")))))
+
 (defn get-schools!
   []
   [
