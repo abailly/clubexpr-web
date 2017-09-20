@@ -8,7 +8,10 @@
                                 FormControlFixed]]
             [club.config :as config]
             [club.db]
-            [club.expr :refer [clubexpr rendition reified-expressions]]
+            [club.expr :refer [clubexpr
+                               rendition-block
+                               rendition
+                               reified-expressions]]
             [club.version]
             [clojure.walk :refer [keywordize-keys]]
             [cljs.pprint :refer [pprint]]))
@@ -145,7 +148,7 @@
                    [:code "Racine"] "."]]
         [src-input {:label label :help help}])
       [:br]
-      [rendition @(rf/subscribe [:attempt-code])]]
+      [rendition-block @(rf/subscribe [:attempt-code])]]
     [:> (bs 'Grid)
       [:> (bs 'Row)
         [:h1 (t ["Qu’est-ce que le Club des Expressions ?"])]
@@ -469,7 +472,8 @@
         lisp (renderExprAsLisp (-> expr :expr clj->js))]
     ^{:key nom}
     [:li
-      {:on-double-click #(rf/dispatch [:series-exprs-add lisp])}
+      {:style {:margin "0.5em"}  ; TODO CSS
+       :on-double-click #(rf/dispatch [:series-exprs-add lisp])}
       (rendition lisp)]))
 
 (defn ops-cb-label
@@ -565,7 +569,9 @@
 
 (defn show-expr-as-li
   [lisp]
-  ^{:key lisp} [:li (rendition lisp)])
+  ^{:key lisp}
+  [:li {:style {:margin "0.3em"}}  ; TODO CSS
+       (rendition lisp)])
 
 (defn show-series
   []

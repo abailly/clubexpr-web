@@ -24,10 +24,18 @@
 (def reified-expressions
   (map populate-properties (.-expressions clubexpr)))
 
-(defn rendition
+(defn rendition-block
   [src]
   (let [react-mathjax (getValueByKeys js/window "deps" "react-mathjax")
         ctx (getValueByKeys react-mathjax "Context")
         node (getValueByKeys react-mathjax "Node")
         renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
     [:> ctx [:> node (renderLispAsLaTeX src)]]))
+
+(defn rendition
+  [src]
+  (let [react-mathjax (getValueByKeys js/window "deps" "react-mathjax")
+        ctx (getValueByKeys react-mathjax "Context")
+        node (getValueByKeys react-mathjax "Node")
+        renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
+    [:> ctx [:> node {:inline true} (renderLispAsLaTeX src)]]))
