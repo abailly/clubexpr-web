@@ -609,17 +609,6 @@
                    :value-id :series-desc
                    :event-id :series-desc}]
       [:p [:strong (t ["Expressions"])]]
-      (if (empty? exprs)
-        [:p
-          [:strong (t ["La série est vide."])]
-          " "
-          (t ["En double-cliquant sur une expression sur la gauche, vous pouvez l’ajouter à votre série. Pour la supprimer de la série (liste de droite), double-cliquer à nouveau mais dans la liste de droite."])]
-        [:> Sortable
-          {:items exprs  ; TODO: rendition
-           :moveTransitionDuration 0.3
-           :dropBackTransitionDuration 0.3
-           :placeholder "< ici >"
-           :onSort #(rf/dispatch [:series-exprs-sort %])}])
       [:> (bs 'Button)
         {:on-click #(rf/dispatch [:series-cancel])
          :bsStyle "danger"} "Annuler"]
@@ -632,6 +621,17 @@
          :class "pull-right"
          :on-click #(rf/dispatch [:series-delete])
          :bsStyle "danger"} "Supprimer cette série"]
+      (if (empty? exprs)
+        [:p
+          [:strong (t ["La série est vide."])]
+          " "
+          (t ["En double-cliquant sur une expression sur la gauche, vous pouvez l’ajouter à votre série. Pour la supprimer de la série (liste de droite), double-cliquer à nouveau mais dans la liste de droite."])]
+        [:> Sortable
+          {:items exprs  ; TODO: rendition
+           :moveTransitionDuration 0.3
+           :dropBackTransitionDuration 0.3
+           :placeholder "< ici >"
+           :onSort #(rf/dispatch [:series-exprs-sort %])}])
      ]))
 
 (defn page-series
