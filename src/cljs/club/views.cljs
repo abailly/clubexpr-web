@@ -569,29 +569,31 @@
 
 (defn show-series
   []
-  (let [series-id  @(rf/subscribe [:current-series-id])
+  (let [series-data @(rf/subscribe [:series-page])
+        series-id  @(rf/subscribe [:current-series-id])
         title @(rf/subscribe [:series-title])
         desc @(rf/subscribe [:series-desc])]
-    [:div
-      [:h2 (t ["Aperçu de la série"])]
-      (if (empty? series-id)
-        [:p (t ["Veuillez sélectionner une série sur la gauche."])]
+    (if (empty? series-id)
+      (if (not (empty? series-data))
         [:div
-          [:div.pull-right
-            [:> (bs 'Button)
-              {:style {:margin-right "1em"}
-               :on-click #(rf/dispatch [:series-edit])
-               :bsStyle "warning"} (t ["Modifier cette série"])]
-            [:> (bs 'Button)
-              {:on-click #(rf/dispatch [:series-delete])
-               :bsStyle "danger"} (t ["Supprimer cette série"])]]
-          [:h3 (if (empty? title) (t ["Sans titre"]) title)]
-          (if (empty? desc)
-            [:p (t ["Pas de description"])]
-            [:p (t ["Description : "]) desc])
-          [:ul.nav
-            (map show-expr-as-li @(rf/subscribe [:series-exprs]))]])
-     ]))
+          [:h2 (t ["Aperçu de la série"])]
+          [:p (t ["Veuillez sélectionner une série sur la gauche."])]])
+      [:div
+        [:div.pull-right
+          [:> (bs 'Button)
+            {:style {:margin-right "1em"}
+             :on-click #(rf/dispatch [:series-edit])
+             :bsStyle "warning"} (t ["Modifier cette série"])]
+          [:> (bs 'Button)
+            {:on-click #(rf/dispatch [:series-delete])
+             :bsStyle "danger"} (t ["Supprimer cette série"])]]
+        [:h3 (if (empty? title) (t ["Sans titre"]) title)]
+        (if (empty? desc)
+          [:p (t ["Pas de description"])]
+          [:p (t ["Description : "]) desc])
+        [:ul.nav
+          (map show-expr-as-li @(rf/subscribe [:series-exprs]))]])
+     ))
 
 (defn edit-series
   []
