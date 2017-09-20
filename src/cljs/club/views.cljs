@@ -600,17 +600,6 @@
   (let [exprs @(rf/subscribe [:series-exprs-with-content-key])]
     [:div
       [:h2 (t ["Série en cours de modification"])]
-      [text-input {:label (t ["Titre"])
-                   :placeholder (t ["Découverte du Club"])
-                   :help (t ["Titre de la série, vu par les élèves"])
-                   :value-id :series-title
-                   :event-id :series-title}]
-      [text-input {:label (t ["Description"])
-                   :placeholder (t ["Expressions triviales pour apprendre à utiliser le Club"])
-                   :help (t ["Description de la série, vue seulement par les autres enseignants, mais pas les élèves"])
-                   :value-id :series-desc
-                   :event-id :series-desc}]
-      [:p [:strong (t ["Expressions"])]]
       [:> (bs 'Button)
         {:on-click #(rf/dispatch [:series-cancel])
          :bsStyle "danger"} "Annuler"]
@@ -623,6 +612,17 @@
          :class "pull-right"
          :on-click #(rf/dispatch [:series-delete])
          :bsStyle "danger"} "Supprimer cette série"]
+      [text-input {:label (t ["Titre"])
+                   :placeholder (t ["Découverte du Club"])
+                   :help (t ["Titre de la série, vu par les élèves"])
+                   :value-id :series-title
+                   :event-id :series-title}]
+      [text-input {:label (t ["Description"])
+                   :placeholder (t ["Expressions triviales pour apprendre à utiliser le Club"])
+                   :help (t ["Description de la série, vue seulement par les autres enseignants, mais pas les élèves"])
+                   :value-id :series-desc
+                   :event-id :series-desc}]
+      [:p [:strong (t ["Expressions"])]]
       (if (empty? exprs)
         [:p
           [:strong (t ["La série est vide."])]
