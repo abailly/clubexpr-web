@@ -8,7 +8,7 @@
                                 FormControlFixed]]
             [club.config :as config]
             [club.db]
-            [club.expr :refer [clubexpr reified-expressions]]
+            [club.expr :refer [clubexpr rendition reified-expressions]]
             [club.version]
             [clojure.walk :refer [keywordize-keys]]
             [cljs.pprint :refer [pprint]]))
@@ -56,14 +56,6 @@
                                         (-> % .-target .-value)])}]
       [:> (bs 'FormControl 'Feedback)]
       [:> (bs 'HelpBlock) help]]])
-
-(defn rendition
-  [src]
-  (let [react-mathjax (getValueByKeys js/window "deps" "react-mathjax")
-        ctx (getValueByKeys react-mathjax "Context")
-        node (getValueByKeys react-mathjax "Node")
-        renderLispAsLaTeX (.-renderLispAsLaTeX clubexpr)]
-    [:> ctx [:> node (renderLispAsLaTeX src)]]))
 
 (defn nav-bar
   []
