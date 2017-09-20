@@ -1,9 +1,10 @@
 (ns club.subs
   (:require [re-frame.core :as rf]
+            [reagent.core :refer [as-element]]
             [reagent.ratom :refer [make-reaction]]
             [clojure.walk :refer [keywordize-keys]]
             [club.utils :refer [groups-option data-from-js-obj]]
-            [club.expr :refer [reified-expressions]]
+            [club.expr :refer [rendition reified-expressions]]
             [club.db :refer [get-users!
                              fetch-teachers-list!
                              init-groups-data!
@@ -182,12 +183,19 @@
         (fn [] (:series-page @app-db ))
         :on-dispose #(do)))))
 
+(defn wrap-expr
+  [lisp]
+  {:content (as-element
+              [:span
+                {:on-double-click #(rf/dispatch [:series-exprs-delete lisp])}
+                (rendition lisp)])})
+
 (rf/reg-sub
  :series-exprs-with-content-key
   (fn [query-v _]
      (rf/subscribe [:series-exprs]))
   (fn [exprs query-v _]
-    (map #(identity {:content %}) exprs)))
+    (map wrap-expr exprs)))
 
 (rf/reg-sub
  :series-filtered-exprs

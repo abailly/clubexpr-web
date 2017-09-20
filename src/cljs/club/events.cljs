@@ -397,6 +397,13 @@
     (update-in db [:current-series :exprs] conj new-value)))
 
 (rf/reg-event-db
+  :series-exprs-delete
+  [check-spec-interceptor]
+  (fn [db [_ new-value]]
+    (js/alert new-value)
+    db))
+
+(rf/reg-event-db
   :series-save-ok
   [check-spec-interceptor]
   (fn [db [_ record]]

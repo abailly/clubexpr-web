@@ -627,7 +627,7 @@
           " "
           (t ["En double-cliquant sur une expression sur la gauche, vous pouvez l’ajouter à votre série. Pour la supprimer de la série (liste de droite), double-cliquer à nouveau mais dans la liste de droite."])]
         [:> Sortable
-          {:items exprs  ; TODO: rendition
+          {:items exprs
            :moveTransitionDuration 0.3
            :dropBackTransitionDuration 0.3
            :placeholder "< ici >"
