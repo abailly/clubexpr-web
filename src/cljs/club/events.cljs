@@ -389,19 +389,25 @@
   (fn [db [_ new-value]]
     (assoc-in db [:current-series :desc] new-value)))
 
+(defn sorted-expr->db-expr
+  [expr-data]
+  (let [lisp (-> expr-data (getValueByKeys "content" "props" "src"))
+        rank (-> expr-data (getValueByKeys "rank"))]
+    {:content lisp :rank rank}))
+
 (rf/reg-event-db
   :series-exprs-sort
   [check-spec-interceptor]
   (fn [db [_ new-value]]
-    (let [val-clj (js->clj new-value)
-          exprs (vec (map #(get % "content") val-clj))]
-    (assoc-in db [:current-series :exprs] exprs))))
+    (let [exprs (vec (map sorted-expr->db-expr new-value))]
+      (assoc-in db [:current-series :exprs] exprs))))
 
 (rf/reg-event-db
   :series-exprs-add
   [check-spec-interceptor]
   (fn [db [_ new-value]]
-    (update-in db [:current-series :exprs] conj new-value)))
+    (let [rank (count (-> db :current-series :exprs))]
+      (update-in db [:current-series :exprs] conj {:content new-value :rank rank}))))
 
 (rf/reg-event-db
   :series-exprs-delete

@@ -568,10 +568,11 @@
         (doall (map series-li series-data))]]))
 
 (defn show-expr-as-li
-  [lisp]
-  ^{:key lisp}
-  [:li {:style {:margin "0.3em"}}  ; TODO CSS
-       (rendition lisp)])
+  [expr]
+  (let [lisp (:content expr)]
+    ^{:key lisp}
+    [:li {:style {:margin "0.3em"}}  ; TODO CSS
+         (rendition lisp)]))
 
 (defn show-series
   []
