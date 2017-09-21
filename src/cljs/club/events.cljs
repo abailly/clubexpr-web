@@ -340,7 +340,14 @@
   :series-cancel
   [check-spec-interceptor]
   (fn [db]
-    (assoc db :editing-series false)))
+    (if (empty? (:current-series-id db))
+      ; abort creating a new series
+      (-> db
+          (assoc-in [:editing-series] false)
+          (assoc-in [:current-series-id] "")
+          (assoc-in [:current-series] new-series))
+      ; abort editing an existing series
+      (assoc db :editing-series false))))
 
 (rf/reg-event-fx
   :series-save
