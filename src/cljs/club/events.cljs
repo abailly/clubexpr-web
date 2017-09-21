@@ -412,9 +412,17 @@
 (rf/reg-event-db
   :series-exprs-delete
   [check-spec-interceptor]
-  (fn [db [_ new-value]]
-    (js/alert new-value)
-    db))
+  (fn [db [_ deleted-rank]]
+    (let [remove-elt #(vec (concat (subvec % 0 deleted-rank )
+                                   (subvec % (+ deleted-rank 1))))
+          fix-ranks #(vec (map (fn [{:keys [content rank]}]
+                                 {:content content
+                                  :rank (if (> rank deleted-rank)
+                                          (- rank 1)
+                                          rank)})
+                               %))]
+      (-> db (update-in [:current-series :exprs] remove-elt)
+             (update-in [:current-series :exprs] fix-ranks)))))
 
 (rf/reg-event-db
   :series-save-ok

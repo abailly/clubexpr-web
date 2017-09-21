@@ -185,13 +185,14 @@
 
 (defn wrap-expr
   [sorted-expr]
-  (let [lisp (:content sorted-expr)]
+  (let [lisp (:content sorted-expr)
+        rank (:rank sorted-expr)]
     {:content (as-element
                 [:span
                   ; src is needed for the lisp src to be fetched back by the
                   ; :series-exprs-sort event handler
                   {:src lisp
-                   :on-double-click #(rf/dispatch [:series-exprs-delete lisp])}
+                   :on-double-click #(rf/dispatch [:series-exprs-delete rank])}
                   (rendition lisp)])}))
 
 (rf/reg-sub
