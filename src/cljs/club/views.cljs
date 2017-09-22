@@ -82,7 +82,13 @@
                                  :class (active page :groups)} (t ["Groupes"])])
             (if (= quality "teacher")
               [:> (bs 'NavItem) {:href "#/series"
-                                 :class (active page :series)} (t ["Séries"])])]
+                                 :class (active page :series)} (t ["Séries"])])
+            (if (and authenticated (= quality "teacher"))
+              [:> (bs 'NavItem) {:href "#/work"
+                                 :class (active page :work)} (t ["Travaux"])])
+            (if (and authenticated (= quality "scholar"))
+              [:> (bs 'NavItem) {:href "#/work"
+                                 :class (active page :work)} (t ["Travail"])])]
           [:> (bs 'Nav) {:pullRight true}
             (if authenticated
               [:> (bs 'NavItem) {:href "#/profile"
@@ -671,6 +677,24 @@
                 (show-series))]
         ]]]))
 
+(defn page-work-teacher
+  []
+  (let [work-data @(rf/subscribe [:work-data-teacher])]
+    [:div
+      [:div.jumbotron
+        [:h2 (t ["Travaux"])]
+        [:p (t ["Attribuez vos séries d’expressions à des groupes d’élèves"])]]
+    ]))
+
+(defn page-work-scholar
+  []
+  (let [work-data @(rf/subscribe [:work-data-scholar])]
+    [:div
+      [:div.jumbotron
+        [:h2 (t ["Travail à faire"])]
+        [:p (t ["Séries d’expressions données par votre professeur"])]]
+    ]))
+
 (defn page-teacher-only
   []
   [:div.jumbotron
@@ -697,11 +721,13 @@
                 :help [page-help]
                 :profile [page-profile]
                 :groups [page-groups]
-                :series [page-series])
+                :series [page-series]
+                :work [page-work-teacher])
               (case current-page
                 :landing [page-landing]
                 :help [page-help]
                 :profile [page-profile]
+                :work [page-work-scholar]
                 [page-teacher-only]))
             [page-forbidden]
           )

@@ -116,6 +116,16 @@
  (fn [db]
    (-> db :series-filtering :prevented-ops)))
 
+(rf/reg-sub
+ :work-data-teacher
+ (fn [db]
+   db))
+
+(rf/reg-sub
+ :work-data-scholar
+ (fn [db]
+   db))
+
 ; Layer 2
 
 (rf/reg-sub
