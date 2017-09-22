@@ -77,10 +77,10 @@
                                :class (active page :landing)} (t ["Accueil"])]
             [:> (bs 'NavItem) {:href "#/help"
                                :class (active page :help)} (t ["Aide"])]
-            (if (= quality "teacher")
+            (if (and authenticated (= quality "teacher"))
               [:> (bs 'NavItem) {:href "#/groups"
                                  :class (active page :groups)} (t ["Groupes"])])
-            (if (= quality "teacher")
+            (if (and authenticated (= quality "teacher"))
               [:> (bs 'NavItem) {:href "#/series"
                                  :class (active page :series)} (t ["Séries"])])
             (if (and authenticated (= quality "teacher"))
