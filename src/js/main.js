@@ -9,6 +9,8 @@ window.deps = {
     'rc-slider' : require('rc-slider'),
     'react-checkbox-group' : require('react-checkbox-group'),
     'react-drag-sortable' : require('react-drag-sortable'),
+    'moment' : require('moment'),
+    'react-datetime' : require('react-datetime'),
     'clubexpr' : require('clubexpr')
 };
 
