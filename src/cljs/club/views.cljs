@@ -111,6 +111,10 @@
     [:> (bs 'Grid)
       [:> (bs 'Row)
         [:> (bs 'Col) {:xs 4 :md 4}
+          [:h2 (t ["Statut"])]
+          [:p "Le Club des Expressions est en constante évolution. N’hésitez pas à signaler des bugs ou nous faire part de suggestions."]
+          [:p "Version : " club.version/gitref]]
+        [:> (bs 'Col) {:xs 4 :md 4}
           [:h2 (t ["Contact"])]
           [:ul
             [:li "Twitter : "
@@ -122,18 +126,17 @@
               [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
                   "ClubExpressions/clubexpr"]]]]
         [:> (bs 'Col) {:xs 4 :md 4}
-          [:h2 (t ["Statut"])]
-          [:p "Le Club des Expressions est en constante évolution. N’hésitez pas à signaler des bugs ou nous faire part de suggestions."]
-          [:p "Version : " club.version/gitref]
-        ]
-        [:> (bs 'Col) {:xs 4 :md 4}
           [:h2 (t ["Remerciements"])]
           [:p (t ["Réalisé avec l’aide, aimable autant que redoutable, de :"])]
           [:ul
             [:li "Jean-Philippe Rouquès (aide pédagogique)"]
             [:li "Damien Lecan (aide technique)"]
-            [:li "tous les collègues et élèves sympathisants (aide moral et premiers tests)"]
-            [:li "tous les logiciels sur lesquels est bâti le Club (épaules de géants)"]]]
+            [:li "tous les collègues et élèves sympathisants"
+                 [:br]
+                 "(aide moral et premiers tests)"]
+            [:li "tous les logiciels sur lesquels est bâti le Club"
+                 [:br]
+                 "(épaules de géants)"]]]
        ]]])
 
 (defn page-landing
