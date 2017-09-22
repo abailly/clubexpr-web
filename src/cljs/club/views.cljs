@@ -121,7 +121,7 @@
               [:a {:href "https://twitter"} "@ClubExpr"]
               " (" (t ["Publication d’une expression intéressante par semaine !"]) ")"]
             [:li "Email : "
-              [:a {:href "mailto:profgraorg.org@gmail.com"} "profgra@gmail.com"]]
+              [:a {:href "mailto:profgraorg.org@gmail.com"} "profgra.org@gmail.com"]]
             [:li "Github : "
               [:a {:href "https://github.com/ClubExpressions/clubexpr-web/"}
                   "ClubExpressions/clubexpr"]]]]
