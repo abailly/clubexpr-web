@@ -321,6 +321,7 @@
           new-db (assoc-in db [:series-filtering :prevented-ops] p-ops)
           new-filter
             (apply every-pred
+              ; list of prevented ops -> list of filters
               (map #(fn [expr] (not (some #{%} (get-prop expr "uniqueOps"))))
                    p-ops))]
       (if (empty? p-ops)
