@@ -3,9 +3,18 @@
             [re-frame.db :refer [app-db]]
             [goog.object :refer [getValueByKeys]]
             [webpack.bundle]
+            [reagent.core :as reagent]
+            [cljs-time.core :refer [today]]
             [club.utils :refer [groups-option
                                 scholar-comparator
-                                FormControlFixed]]
+                                FormControlFixed
+                                pretty-date
+                                today-str
+                                moment->str
+                                str->cljs-time
+                                moment->cljs-time
+                                before?=
+                                after?=]]
             [club.config :as config]
             [club.db]
             [club.expr :refer [clubexpr
@@ -32,6 +41,7 @@
 (def Checkbox (getValueByKeys CBG "Checkbox"))
 (def CheckboxGroup (getValueByKeys CBG "CheckboxGroup"))
 (def Sortable (getValueByKeys js/window "deps" "react-drag-sortable" "default"))
+(def DateTime (getValueByKeys js/window "deps" "react-datetime"))
 
 (defn text-input [{:keys [label placeholder help value-id event-id]}]
   [:> (bs 'FormGroup) {:controlId "formBasicText"
@@ -680,13 +690,157 @@
                 (show-series))]
         ]]]))
 
+(defn work-input
+  ([]
+    (work-input {:editing true
+                 :id ""
+                 :to (today-str)
+                 :from (today-str)
+                 :series ""
+                 :group ""}))
+  ([{:keys [editing id to from series group] :as init-state}]
+    (let [old-state (reagent/atom init-state)
+          new-state (reagent/atom init-state)
+          datetime-common {:dateFormat "DD/MM/YYYY"
+                           :timeFormat false
+                           :closeOnSelect true
+                           :locale "fr-fr"}
+          buttons-common {:style {:width "100%"}}  ; TODO CSS
+          labels-common {:style {:text-align "center"  ; TODO CSS
+                                 :margin "0.5em"}}]
+      (fn [to from series group]
+        [:> (bs 'Row)
+          (if (:editing @new-state)
+            [:> (bs 'Col) {:xs 1 :md 1}
+              (if (empty? (:id @old-state))
+                [:div labels-common(t ["Nouveau :"])]
+                [:div labels-common(t ["Modif."])])]
+            [:> (bs 'Col) {:xs 1 :md 1}
+              [:div labels-common(t ["Avancement"])]])
+          [:> (bs 'Col) {:xs 2 :md 2}
+            (if (:editing @new-state)
+              [:> DateTime
+                  (merge datetime-common
+                         {:value (:to @new-state)
+                          :onChange
+                            #(swap! new-state assoc :to (moment->str %))
+                          :isValidDate
+                            #(and
+                               (after?= (moment->cljs-time %)
+                                        (today))
+                               (after?= (moment->cljs-time %)
+                                        (str->cljs-time (:from @new-state))))})]
+              [:div labels-common (pretty-date (:to @new-state))])]
+          [:> (bs 'Col) {:xs 2 :md 2}
+            (if (:editing @new-state)
+              [:> DateTime
+                  (merge datetime-common
+                         {:value (:from @new-state)
+                          :onChange #(swap! new-state assoc :from (moment->str %))
+                          :isValidDate
+                            #(and
+                               (after?= (moment->cljs-time %)
+                                        (today))
+                               (before?= (moment->cljs-time %)
+                                         (str->cljs-time (:to @new-state))))})]
+              [:div labels-common (pretty-date (:from @new-state))])]
+          [:> (bs 'Col) {:xs 2 :md 2}
+            (if (:editing @new-state)
+              [:> Select
+                {:options [{:value ""       :label ""}
+                           {:value "patate" :label "Série patate"}
+                           {:value "pouet"  :label "Série pouet"}
+                           {:value "id3"    :label "Pour démarrer à fond les ballons"}]
+                 :placeholder (t ["Choisir la série…"])
+                 :noResultsText (t ["Pas de série correspondant à cette recherche"])
+                 :value (:series @new-state)
+                 :onChange #(swap! new-state assoc :series
+                                   (-> % js->clj keywordize-keys :value))}]
+              [:div labels-common (:series @new-state)])]
+          [:> (bs 'Col) {:xs 2 :md 2}
+            (if (:editing @new-state)
+              [:> Select
+                {:options [{:value ""          :label ""}
+                           {:value "seconde 1" :label "seconde 1"}
+                           {:value "2.1 gr1"   :label "2.1 gr1"}]
+                 :placeholder (t ["Choisir le groupe…"])
+                 :noResultsText (t ["Pas de groupe correspondant à cette recherche"])
+                 :value (:group @new-state)
+                 :onChange #(swap! new-state assoc :group
+                                   (-> % js->clj keywordize-keys :value))}]
+              [:div labels-common (:group @new-state)])]
+          (if (:editing @new-state)
+            [:> (bs 'Col) {:xs 1 :md 1}
+              [:> (bs 'Button)
+                (merge buttons-common
+                       {:on-click
+                         #(do (swap! new-state assoc :editing false)
+                              (reset! old-state @new-state))
+                        :bsStyle "success"})
+                (t ["Enreg."])]])
+          (if (:editing @new-state)
+            [:> (bs 'Col) {:xs 1 :md 1}
+              [:> (bs 'Button)
+                (merge buttons-common
+                       {:on-click #(reset! new-state @old-state)
+                        :bsStyle "warning"})
+                (t ["Annuler"])]])
+          (if (:editing @new-state)
+            [:> (bs 'Col) {:xs 1 :md 1}
+              [:> (bs 'Button)
+                (merge buttons-common
+                       {:on-click #(js/alert "Delete!")
+                        :bsStyle "danger"})
+                (t ["Suppr."])]])
+          (if (not (:editing @new-state))
+            [:> (bs 'Col) {:xs 3 :md 3}
+              [:> (bs 'Button)
+                (merge buttons-common
+                       {:on-click #(swap! new-state assoc :editing true)})
+                (t ["Modifier"])]])
+         ]))))
+
 (defn page-work-teacher
   []
-  (let [work-data @(rf/subscribe [:work-data-teacher])]
+  (let [labels-common {:style {:text-align "center"  ; TODO CSS
+                               :margin-top "0.5em"}}]
     [:div
       [:div.jumbotron
         [:h2 (t ["Travaux"])]
         [:p (t ["Attribuez vos séries d’expressions à des groupes d’élèves"])]]
+      [:> (bs 'Grid)
+        [:> (bs 'Row)
+          [:> (bs 'Col) {:xs 1 :md 1}
+            [:div " "]]
+          [:> (bs 'Col) {:xs 2 :md 2}
+            [:div.lead labels-common(t ["Pour le"])]]
+          [:> (bs 'Col) {:xs 2 :md 2}
+            [:div.lead labels-common(t ["Depuis le"])]]
+          [:> (bs 'Col) {:xs 2 :md 2}
+            [:div.lead labels-common(t ["Série"])]]
+          [:> (bs 'Col) {:xs 2 :md 2}
+            [:div.lead labels-common(t ["Groupe"])]]
+          [:> (bs 'Col) {:xs 3 :md 3}
+            [:div.lead labels-common(t ["Édition"])]]]
+        [work-input]
+        [:hr]
+        [work-input {:editing false :id "random-kindo-id"
+                     :to "26/09/2017" :from "22/09/2017"
+                     :series "patate" :group "seconde 1"}]
+        [work-input {:editing false :id "random-kindo-id"
+                     :to "26/09/2017" :from "22/09/2017"
+                     :series "patate" :group "seconde 1"}]
+        [:hr]
+        [work-input {:editing false :id "random-kindo-id"
+                     :to "26/09/2017" :from "22/09/2017"
+                     :series "patate" :group "seconde 1"}]
+        [work-input {:editing false :id "random-kindo-id"
+                     :to "26/09/2017" :from "22/09/2017"
+                     :series "patate" :group "seconde 1"}]
+        [work-input {:editing false :id "random-kindo-id"
+                     :to "26/09/2017" :from "22/09/2017"
+                     :series "patate" :group "seconde 1"}]
+      ]
     ]))
 
 (defn page-work-scholar

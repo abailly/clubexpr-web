@@ -3,6 +3,9 @@
             [clojure.walk :refer [keywordize-keys]]
             [goog.object :refer [getValueByKeys]]
             [reagent.core :as r]
+            [cljs-time.core :refer [date-time today before? plus days
+                                    year month day]]
+            [cljs-time.format :refer [formatter parse unparse]]
             [webpack.bundle]))
  
 (defn error
@@ -129,3 +132,41 @@
                                        ; this will presumably update the value
                                        ; in global state atom
                                        (original-on-change e)))))])})))
+
+(def date-formatter (formatter "dd/MM/yyyy"))
+
+(defn today-str
+  []
+  (unparse date-formatter (today)))
+
+(defn moment->str
+  [moment-obj]
+  (. moment-obj format "DD/MM/YYYY"))
+
+(defn moment->cljs-time
+  [moment-obj]
+  (parse date-formatter (moment->str moment-obj)))
+
+(defn str->cljs-time
+  [txt]
+  (parse date-formatter txt))
+
+(defn before?=
+  [d1 d2]
+  (before? d1 (plus d2 (days 1))))
+
+(defn after?=
+  [d1 d2]
+  (before?= d2 d1))
+
+(def moment (getValueByKeys js/window "deps" "react-datetime" "moment"))
+(. moment locale "fr")
+
+(defn pretty-date
+  [date]
+  (let [cljs-time (str->cljs-time date)
+        y (year cljs-time)
+        m (rem (+ 11 (month cljs-time)) 12) ; convert starting from 1 -> from 0
+        d (day cljs-time)
+        the-moment (.. (moment) (locale "fr") (year y) (month m) (date d))]
+    (. the-moment format "dddd Do MMM YYYY")))

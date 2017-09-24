@@ -1,6 +1,7 @@
 (defproject club "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
+                 [com.andrewmcveigh/cljs-time "0.5.0"]
                  [reagent  "0.6.0" :exclusions [cljsjs/react
                                                 cljsjs/react-dom]]
                  [re-frame "0.9.4"]]
